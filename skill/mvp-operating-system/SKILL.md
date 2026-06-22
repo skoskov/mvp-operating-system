@@ -1,6 +1,6 @@
 ---
 name: mvp-operating-system
-description: Run idea-to-MVP projects with idea intake, launch market research, brand/design/UX flow, standard stack preflight, memory preflight, analytics/observability planning, build/deploy/verification planning, decision cards, token budgeting, OpenSpec, Codex implementation, independent review, final review, and Obsidian learning updates.
+description: Run idea-to-MVP projects with idea intake, launch market research, brand/design/UX flow, standard stack preflight, memory preflight, analytics/observability planning, support planning, build/deploy/verification planning, pre-launch iteration, decision cards, token budgeting, OpenSpec, Codex implementation, independent review, final review, and Obsidian learning updates.
 ---
 
 # MVP Operating System Skill
