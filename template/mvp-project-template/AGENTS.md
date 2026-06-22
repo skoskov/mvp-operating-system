@@ -39,13 +39,14 @@ Before implementation:
 1. Create or update Idea Intake.
 2. Create or update Launch Market Research.
 3. Create or update Brand / Design System / UX Flow.
-4. Run Memory Preflight.
-5. Produce a short Product/Technical Brief.
-6. Ask only required Decision Cards.
-7. Present Token/Time Budget for expensive work.
-8. Create or update OpenSpec artifacts.
-9. Run independent review for technical artifacts.
-10. Prepare an approved implementation slice.
+4. Run Standard Stack / Environment Preflight.
+5. Run Memory Preflight.
+6. Produce a short Product/Technical Brief.
+7. Ask only required Decision Cards.
+8. Present Token/Time Budget for expensive work.
+9. Create or update OpenSpec artifacts.
+10. Run independent review for technical artifacts.
+11. Prepare an approved implementation slice.
 
 After implementation:
 

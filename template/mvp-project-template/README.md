@@ -17,6 +17,7 @@ Do not start feature work until:
 - Idea Intake exists;
 - Launch Market Research exists;
 - Brand / Design System / UX Flow exists;
+- Standard Stack / Environment Preflight is complete;
 - Memory Preflight is complete;
 - OpenSpec artifacts exist;
 - important Decision Cards are resolved or defaulted from memory;

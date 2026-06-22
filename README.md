@@ -18,20 +18,22 @@ It must not use the human as a terminal operator, log copier, code reviewer, lon
 2. Create a mandatory Idea Intake.
 3. Create mandatory Launch Market Research.
 4. Create mandatory Brand / Design System / UX Flow.
-5. Run Memory Preflight from the Obsidian LLM Knowledge Base.
-6. Ask the human only short Decision Cards when needed.
-7. Present Token/Time Budget before expensive work.
-8. Create OpenSpec proposal/spec/tasks.
-9. Run independent review for technical artifacts.
-10. Give Codex small approved implementation slices.
-11. Codex implements, runs commands, verifies, and repairs failures.
-12. Run final PR review with Codex GitHub Review.
-13. Update Obsidian memory with decisions, failures, defaults, token/time usage, and lessons learned.
+5. Run Standard Stack / Environment Preflight.
+6. Run Memory Preflight from the Obsidian LLM Knowledge Base.
+7. Ask the human only short Decision Cards when needed.
+8. Present Token/Time Budget before expensive work.
+9. Create OpenSpec proposal/spec/tasks.
+10. Run independent review for technical artifacts.
+11. Give Codex small approved implementation slices.
+12. Codex implements, runs commands, verifies, and repairs failures.
+13. Run final PR review with Codex GitHub Review.
+14. Update Obsidian memory with decisions, failures, defaults, token/time usage, and lessons learned.
 
 ## Repository contents
 
 ```text
 /global/AGENTS.md
+/global/standard-stack.md
 /skill/mvp-operating-system/
 /template/mvp-project-template/
 /obsidian/vault-template/

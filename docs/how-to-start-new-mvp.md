@@ -22,13 +22,13 @@ The script creates the project under `C:\Users\skoskov\Documents\_DEV`, copies `
 
 Use the Obsidian vault template in `/obsidian/vault-template` or connect an existing Obsidian vault.
 
-Before project work, create Idea Intake, Launch Market Research, and Brand / Design System / UX Flow, then run Memory Preflight.
+Before project work, create Idea Intake, Launch Market Research, and Brand / Design System / UX Flow, then run Standard Stack / Environment Preflight and Memory Preflight.
 
 ## 3. Start through the skill
 
 Use `mvp-operating-system` for the first planning step.
 
-The first outputs should be mandatory Idea Intake, Launch Market Research, and Brand / Design System / UX Flow. After that, produce a short Product/Technical Brief and, if needed, Decision Cards.
+The first outputs should be mandatory Idea Intake, Launch Market Research, Brand / Design System / UX Flow, and Standard Stack / Environment Preflight. After that, produce a short Product/Technical Brief and, if needed, Decision Cards.
 
 ## 4. Approve budget only when needed
 
@@ -36,7 +36,7 @@ The human approves token/time budget and important decisions, not long specs.
 
 ## 5. OpenSpec before implementation
 
-Create proposal/spec/tasks before implementation. Do not move to OpenSpec until Idea Intake, Launch Market Research, and Brand / Design System / UX Flow exist.
+Create proposal/spec/tasks before implementation. Do not move to OpenSpec until Idea Intake, Launch Market Research, Brand / Design System / UX Flow, and Standard Stack / Environment Preflight exist.
 
 ## 6. Independent review
 
