@@ -63,3 +63,16 @@ Impact:
 - New projects include `product/brand-design-ux.md`.
 - Bootstrap checks require the Brand / Design System / UX reference and template file.
 - Product/Technical Brief now references Idea Intake, Launch Market Research, and Brand / Design System / UX Flow as source inputs.
+
+## 2026-06-22 - Add Standard Stack / Environment Preflight gate
+
+Decision: add Standard Stack / Environment Preflight before Memory Preflight.
+
+Reason: new MVP projects must start from one approved working stack. If the stack check fails, implementation does not start.
+
+Impact:
+
+- Added `global/standard-stack.md`.
+- Added `ops/environment-preflight.md` to the project template.
+- Added `references/environment-preflight.md` to the skill and template skill.
+- Product/Technical Brief now references the environment preflight result.
