@@ -24,6 +24,10 @@ Implementation starts only after Idea Intake, Launch Market Research, Brand / De
 
 Do not call an MVP ready until the QA / Acceptance / Release Gate is complete.
 
+## No final launch without owner approval
+
+After every non-final deploy/check/review cycle, run Pre-launch Iteration Update, update Build / Deploy / Verification Plan, and continue with the next implementation slice. Stop only when the owner explicitly says the MVP is ready to launch.
+
 ## No launch without support path
 
 Every MVP must have a Support Plan before implementation starts.

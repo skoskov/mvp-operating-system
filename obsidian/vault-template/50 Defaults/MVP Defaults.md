@@ -11,6 +11,7 @@
 - Create User Ops Plan after Analytics / Observability Plan and before Build / Deploy / Verification Plan.
 - Optional test planning can be used for controlled user tests.
 - Create Build / Deploy / Verification Plan after Product/Technical Brief and before OpenSpec.
+- After deploy/check/review, run Pre-launch Iteration Update and return to Build Plan until owner says ready to launch.
 - Use OpenSpec before implementation.
 - Use Codex for implementation and repair loops.
 - Use CodeRabbit or independent reviewer for final PR review.

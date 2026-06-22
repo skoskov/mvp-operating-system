@@ -150,3 +150,16 @@ Impact:
 - Added `Secrets` to Build / Deploy / Verification Plan.
 - Added `Access map` to Build / Deploy / Verification Plan.
 - Added `Codex permissions` to Build / Deploy / Verification Plan.
+
+## 2026-06-22 - Add mandatory Pre-launch Iteration Update loop
+
+Decision: add Pre-launch Iteration Update as a mandatory loop after deploy/check/review cycles and before launch.
+
+Reason: before users, MVP work is still about layout, content, business logic, features, UX, bugs, analytics, support, and deploy fixes. After each non-final check, the process must return to Build / Deploy / Verification Plan with updates and the next small implementation slice.
+
+Impact:
+
+- Added `iteration/pre-launch-iteration-update.md` to the project template.
+- Added `references/pre-launch-iteration-update.md` to the skill and template skill.
+- Post-implementation rules now loop through Pre-launch Iteration Update until the owner explicitly says the MVP is ready to launch.
+- Bootstrap check requires the pre-launch iteration files.

@@ -57,9 +57,12 @@ After implementation:
 1. Run the single verification command.
 2. Repair failures without involving the human unless a real decision is required.
 3. Run QA / Acceptance / Release Gate.
-4. Run final PR review.
-5. Produce a short summary.
-6. Update the Obsidian LLM Knowledge Base.
+4. Run Pre-launch Iteration Update.
+5. Update Build / Deploy / Verification Plan.
+6. Continue with the next implementation slice until the owner explicitly says the MVP is ready to launch.
+7. Run final PR review only after explicit launch readiness approval.
+8. Produce a short summary.
+9. Update the Obsidian LLM Knowledge Base.
 
 ## Escalation rule
 

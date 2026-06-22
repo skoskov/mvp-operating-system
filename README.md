@@ -31,8 +31,10 @@ It must not use the human as a terminal operator, log copier, code reviewer, lon
 15. Give Codex small approved implementation slices.
 16. Codex implements, runs commands, verifies, and repairs failures.
 17. Run QA / Acceptance / Release Gate.
-18. Run final PR review with Codex GitHub Review.
-19. Update Obsidian memory with decisions, failures, defaults, token/time usage, and lessons learned.
+18. Run Pre-launch Iteration Update.
+19. Update Build / Deploy / Verification Plan and continue with the next implementation slice until the owner explicitly says the MVP is ready to launch.
+20. Run final PR review with Codex GitHub Review.
+21. Update Obsidian memory with decisions, failures, defaults, token/time usage, and lessons learned.
 
 ## Repository contents
 

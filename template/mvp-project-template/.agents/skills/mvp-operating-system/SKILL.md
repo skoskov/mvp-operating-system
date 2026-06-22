@@ -97,11 +97,18 @@ Do not use the human for terminal work, log copying, manual QA, code review, lon
    - Check product promise, core UX, verification results, content readiness, known limitations, and final status.
    - Use `references/acceptance-release-gate.md`.
 
-18. **Final Review**
+18. **Pre-launch Iteration Update**
+   - Use after each non-final deploy/check/review cycle.
+   - Capture layout, content, business logic, feature, UX, bug, analytics, support, deploy, or infra changes.
+   - Update Build / Deploy / Verification Plan and create the next small implementation slice.
+   - Continue this loop until the owner explicitly says the MVP is ready to launch.
+   - Use `references/pre-launch-iteration-update.md`.
+
+19. **Final Review**
    - Use CodeRabbit or another independent final reviewer for PR-level review.
    - Codex fixes blocking issues.
 
-19. **Learning Update**
+20. **Learning Update**
    - Save important decisions, failed decisions, defaults, token/time actuals, and lessons learned to the Obsidian LLM Knowledge Base.
    - Use `references/learning-update.md`.
 

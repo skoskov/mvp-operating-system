@@ -29,4 +29,5 @@ Do not start feature work until:
 - token/time budget is approved;
 - implementation slice is reviewed;
 - verification command works;
-- release gate is completed before launch.
+- release gate is completed before launch;
+- pre-launch iteration loop continues until owner approval.
