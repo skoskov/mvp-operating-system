@@ -20,6 +20,10 @@ Agents handle terminal work, logs, specs, code, tests, reviews, and repairs.
 
 Implementation starts only after Idea Intake, Launch Market Research, Brand / Design System / UX Flow, Standard Stack / Environment Preflight, Memory Preflight, Product/Technical Brief, Build / Deploy / Verification Plan, required Decision Cards, Token/Time Budget, OpenSpec, independent review, and approved implementation slice.
 
+## No launch without release gate
+
+Do not call an MVP ready until the QA / Acceptance / Release Gate is complete.
+
 ## Keep context small
 
 Use indexes, summaries, review packets, and small implementation slices.

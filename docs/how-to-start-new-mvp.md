@@ -50,10 +50,14 @@ Codex receives small approved slices.
 
 Codex runs `make verify` or the project equivalent.
 
-## 9. Final review
+## 9. Release gate
+
+Check whether the MVP is ready for users.
+
+## 10. Final review
 
 Use Codex GitHub Review or an independent reviewer.
 
-## 10. Learning update
+## 11. Learning update
 
 Save decisions, failed decisions, defaults, token/time actuals, and lessons learned to Obsidian.

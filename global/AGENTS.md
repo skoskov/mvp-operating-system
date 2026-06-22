@@ -53,9 +53,10 @@ After implementation:
 
 1. Run the single verification command.
 2. Repair failures without involving the human unless a real decision is required.
-3. Run final PR review.
-4. Produce a short summary.
-5. Update the Obsidian LLM Knowledge Base.
+3. Run QA / Acceptance / Release Gate.
+4. Run final PR review.
+5. Produce a short summary.
+6. Update the Obsidian LLM Knowledge Base.
 
 ## Escalation rule
 

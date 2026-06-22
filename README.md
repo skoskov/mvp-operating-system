@@ -27,8 +27,9 @@ It must not use the human as a terminal operator, log copier, code reviewer, lon
 11. Run independent review for technical artifacts.
 12. Give Codex small approved implementation slices.
 13. Codex implements, runs commands, verifies, and repairs failures.
-14. Run final PR review with Codex GitHub Review.
-15. Update Obsidian memory with decisions, failures, defaults, token/time usage, and lessons learned.
+14. Run QA / Acceptance / Release Gate.
+15. Run final PR review with Codex GitHub Review.
+16. Update Obsidian memory with decisions, failures, defaults, token/time usage, and lessons learned.
 
 ## Repository contents
 

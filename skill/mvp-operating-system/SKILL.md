@@ -78,11 +78,16 @@ Do not use the human for terminal work, log copying, manual QA, code review, lon
    - Repair failures within budget.
    - If repeated failures exceed stop conditions, escalate with a Decision Card.
 
-14. **Final Review**
+14. **Release Gate**
+   - Check product promise, core UX, verification results, content readiness, release readiness, known limitations, and final status.
+   - Use `references/acceptance-release-gate.md`.
+   - Do not call the MVP ready if final status is BLOCKED.
+
+15. **Final Review**
    - Use CodeRabbit or another independent final reviewer for PR-level review.
    - Codex fixes blocking issues.
 
-15. **Learning Update**
+16. **Learning Update**
    - Save important decisions, failed decisions, defaults, token/time actuals, and lessons learned to the Obsidian LLM Knowledge Base.
    - Use `references/learning-update.md`.
 

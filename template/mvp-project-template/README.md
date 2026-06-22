@@ -25,4 +25,5 @@ Do not start feature work until:
 - important Decision Cards are resolved or defaulted from memory;
 - token/time budget is approved;
 - implementation slice is reviewed;
-- verification command works.
+- verification command works;
+- release gate is completed before launch.

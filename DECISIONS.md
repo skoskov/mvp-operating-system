@@ -88,3 +88,15 @@ Impact:
 - Added `build/build-deploy-verification-plan.md` to the project template.
 - Added `references/build-deploy-verification-plan.md` to the skill and template skill.
 - OpenSpec tasks now use the Build / Deploy / Verification Plan as the source for slices and checks.
+
+## 2026-06-22 - Add QA / Acceptance / Release Gate
+
+Decision: add QA / Acceptance / Release Gate after verification and before final review.
+
+Reason: a passing build is not enough to call an MVP ready. The result must be checked against product promise, core UX, content readiness, acceptance criteria coverage, known limitations, and release readiness.
+
+Impact:
+
+- Added `qa/acceptance-release-gate.md` to the project template.
+- Added `references/acceptance-release-gate.md` to the skill and template skill.
+- Post-implementation rules now require the release gate before final review.
