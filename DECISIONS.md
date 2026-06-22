@@ -50,3 +50,16 @@ Impact:
 - Idea Intake now includes current workaround, why it is bad, problem frequency/urgency, trigger to try MVP, MVP scope, must-have items, explicit non-goals, and post-launch backlog.
 - Launch Market Research now explicitly researches the scoped MVP from Idea Intake.
 - New project templates include the expanded `product/idea-intake.md` fields.
+
+## 2026-06-22 — Add Brand / Design System / UX Flow gate
+
+Decision: add Brand / Design System / UX Flow as a mandatory gate after Launch Market Research and before Memory Preflight.
+
+Reason: mvp-os should produce implementation-ready product instructions, not only technical specs. Codex or developers need product name, logo direction, slogan, short description, positioning, tone of voice, design system, UX flows, core scenarios, edge cases, and acceptance criteria before OpenSpec and implementation.
+
+Impact:
+
+- The skill flow now runs `Idea Intake → Launch Market Research → Brand / Design System / UX Flow → Memory Preflight`.
+- New projects include `product/brand-design-ux.md`.
+- Bootstrap checks require the Brand / Design System / UX reference and template file.
+- Product/Technical Brief now references Idea Intake, Launch Market Research, and Brand / Design System / UX Flow as source inputs.

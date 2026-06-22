@@ -1,6 +1,6 @@
 ---
 name: mvp-operating-system
-description: Run idea-to-MVP projects with idea intake, launch market research, memory preflight, decision cards, token budgeting, OpenSpec, Codex implementation, independent review, final review, and Obsidian learning updates.
+description: Run idea-to-MVP projects with idea intake, launch market research, brand/design/UX flow, memory preflight, decision cards, token budgeting, OpenSpec, Codex implementation, independent review, final review, and Obsidian learning updates.
 ---
 
 # MVP Operating System Skill
@@ -26,48 +26,53 @@ Do not use the human for terminal work, log copying, manual QA, code review, lon
    - Use `references/launch-market-research.md`.
    - Do not produce TAM/SAM/SOM analysis.
 
-3. **Memory Preflight**
+3. **Brand / Design System / UX Flow**
+   - Define product name, logo, slogan, short description, positioning, tone of voice, design references, design system, UX flows, core scenarios, edge cases, and acceptance criteria.
+   - Use `references/brand-design-ux.md`.
+   - Keep this as implementation-ready instruction for Codex or developers.
+
+4. **Memory Preflight**
    - Read relevant Obsidian LLM Knowledge Base indexes and prior project notes.
    - Apply existing defaults without re-asking the human.
    - Surface only new or conflicting decisions.
 
-4. **Product/Technical Brief**
+5. **Product/Technical Brief**
    - Create a short brief: goal, user, core value, MVP success, non-goals, constraints, known defaults.
    - Do not produce long specs for human approval.
 
-5. **Decision Cards**
+6. **Decision Cards**
    - Ask the human only for important trade-offs.
    - Use `references/decision-cards.md`.
 
-6. **Token/Time Budget**
+7. **Token/Time Budget**
    - Before expensive work, estimate tokens, limit risk, agent time, human time, and stop conditions.
    - Use `references/token-budget.md`.
 
-7. **OpenSpec Handoff**
+8. **OpenSpec Handoff**
    - Create or update OpenSpec proposal/spec/tasks.
    - Treat OpenSpec as agent-readable project contract, not human approval material.
    - Use `references/openspec-handoff.md`.
 
-8. **Independent Review**
+9. **Independent Review**
    - Send technical artifacts to an independent reviewer in a clean context.
    - Resolve blocking issues before implementation.
    - Use `references/independent-review.md`.
 
-9. **Codex Implementation Slice**
+10. **Codex Implementation Slice**
    - Give Codex a small approved slice.
    - Codex runs commands, tests, and repair loops autonomously.
    - Do not ask the human to paste logs or run commands.
 
-10. **Verification**
+11. **Verification**
    - Run the repo's single verification command.
    - Repair failures within budget.
    - If repeated failures exceed stop conditions, escalate with a Decision Card.
 
-11. **Final Review**
+12. **Final Review**
    - Use CodeRabbit or another independent final reviewer for PR-level review.
    - Codex fixes blocking issues.
 
-12. **Learning Update**
+13. **Learning Update**
    - Save important decisions, failed decisions, defaults, token/time actuals, and lessons learned to the Obsidian LLM Knowledge Base.
    - Use `references/learning-update.md`.
 
