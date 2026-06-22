@@ -24,6 +24,10 @@ Implementation starts only after Idea Intake, Launch Market Research, Brand / De
 
 Do not call an MVP ready until the QA / Acceptance / Release Gate is complete.
 
+## No launch without support path
+
+Every MVP must have a Support Plan before implementation starts.
+
 ## Keep context small
 
 Use indexes, summaries, review packets, and small implementation slices.

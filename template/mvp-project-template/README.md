@@ -21,6 +21,7 @@ Do not start feature work until:
 - Memory Preflight is complete;
 - Product/Technical Brief exists;
 - Metrics Plan exists;
+- User Ops Plan exists;
 - Build / Deploy / Verification Plan exists;
 - OpenSpec artifacts exist;
 - important Decision Cards are resolved or defaulted from memory;

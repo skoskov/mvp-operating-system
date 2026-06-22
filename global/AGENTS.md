@@ -43,12 +43,13 @@ Before implementation:
 5. Run Memory Preflight.
 6. Produce a short Product/Technical Brief.
 7. Create or update Analytics / Observability Plan.
-8. Create or update Build / Deploy / Verification Plan.
-9. Ask only required Decision Cards.
-10. Present Token/Time Budget for expensive work.
-11. Create or update OpenSpec artifacts.
-12. Run independent review for technical artifacts.
-13. Prepare an approved implementation slice.
+8. Create or update Support / Feedback / User Operations.
+9. Create or update Build / Deploy / Verification Plan.
+10. Ask only required Decision Cards.
+11. Present Token/Time Budget for expensive work.
+12. Create or update OpenSpec artifacts.
+13. Run independent review for technical artifacts.
+14. Prepare an approved implementation slice.
 
 After implementation:
 

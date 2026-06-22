@@ -10,6 +10,7 @@ Source inputs:
 - Memory Preflight:
 - Product/Technical Brief:
 - Metrics Plan:
+- User Ops Plan:
 
 Stack:
 

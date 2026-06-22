@@ -50,48 +50,53 @@ Do not use the human for terminal work, log copying, manual QA, code review, lon
    - Use `references/analytics-observability-plan.md`.
    - Do not track every click in MVP.
 
-8. **Build / Deploy / Verification Plan**
+8. **Support / Feedback / User Operations**
+   - Define support channel, owner, response time, FAQ, known issues, feedback categories, report format, response templates, escalation rules, backlog rules, and daily support summary.
+   - Use `references/support-feedback-ops.md`.
+   - Keep support lightweight for MVP.
+
+9. **Build / Deploy / Verification Plan**
    - Define build goal, source inputs, approved stack, architecture, deployment plan, implementation slices, acceptance criteria mapping, test strategy, verification commands, autonomous repair loop, and stop conditions.
    - Use `references/build-deploy-verification-plan.md`.
    - Every acceptance criterion must map to a test, eval, smoke check, or verification command.
 
-9. **Decision Cards**
+10. **Decision Cards**
    - Ask the human only for important trade-offs.
    - Use `references/decision-cards.md`.
 
-10. **Token/Time Budget**
+11. **Token/Time Budget**
    - Before expensive work, estimate tokens, limit risk, agent time, human time, and stop conditions.
    - Use `references/token-budget.md`.
 
-11. **OpenSpec Handoff**
+12. **OpenSpec Handoff**
    - Create or update OpenSpec proposal/spec/tasks.
    - Treat OpenSpec as agent-readable project contract, not human approval material.
    - Use `references/openspec-handoff.md`.
 
-12. **Independent Review**
+13. **Independent Review**
    - Send technical artifacts to an independent reviewer in a clean context.
    - Resolve blocking issues before implementation.
    - Use `references/independent-review.md`.
 
-13. **Codex Implementation Slice**
+14. **Codex Implementation Slice**
    - Give Codex a small approved slice.
    - Codex runs commands, tests, and repair loops autonomously.
    - Do not ask the human to paste logs or run commands.
 
-14. **Verification**
+15. **Verification**
    - Run the repo's single verification command.
    - Repair failures within budget.
    - If repeated failures exceed stop conditions, escalate with a Decision Card.
 
-15. **Final Check**
+16. **Final Check**
    - Check product promise, core UX, verification results, content readiness, known limitations, and final status.
    - Use `references/acceptance-release-gate.md`.
 
-16. **Final Review**
+17. **Final Review**
    - Use CodeRabbit or another independent final reviewer for PR-level review.
    - Codex fixes blocking issues.
 
-17. **Learning Update**
+18. **Learning Update**
    - Save important decisions, failed decisions, defaults, token/time actuals, and lessons learned to the Obsidian LLM Knowledge Base.
    - Use `references/learning-update.md`.
 

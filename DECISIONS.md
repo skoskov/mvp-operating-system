@@ -113,3 +113,15 @@ Impact:
 - Added `references/analytics-observability-plan.md` to the skill and template skill.
 - Added Umami and GlitchTip defaults to `global/standard-stack.md`.
 - Build / Deploy / Verification Plan now includes metrics input and smoke check.
+
+## 2026-06-22 - Add Support / Feedback / User Operations
+
+Decision: add Support / Feedback / User Operations after Analytics / Observability Plan and before Build / Deploy / Verification Plan.
+
+Reason: MVP launch needs one support channel, an owner, FAQ, known issues, feedback categories, response templates, escalation rules, backlog rules, and daily support summary before implementation and launch.
+
+Impact:
+
+- Added `support/support-feedback-plan.md` to the project template.
+- Added `references/support-feedback-ops.md` to the skill and template skill.
+- Build / Deploy / Verification Plan now includes User Ops Plan as a source input.
