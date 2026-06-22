@@ -37,13 +37,14 @@ Do not ask the human to:
 Before implementation:
 
 1. Create or update Idea Intake.
-2. Run Memory Preflight.
-3. Produce a short Product/Technical Brief.
-4. Ask only required Decision Cards.
-5. Present Token/Time Budget for expensive work.
-6. Create or update OpenSpec artifacts.
-7. Run independent review for technical artifacts.
-8. Prepare an approved implementation slice.
+2. Create or update Launch Market Research.
+3. Run Memory Preflight.
+4. Produce a short Product/Technical Brief.
+5. Ask only required Decision Cards.
+6. Present Token/Time Budget for expensive work.
+7. Create or update OpenSpec artifacts.
+8. Run independent review for technical artifacts.
+9. Prepare an approved implementation slice.
 
 After implementation:
 

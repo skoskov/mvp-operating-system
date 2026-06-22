@@ -18,7 +18,7 @@ Agents handle terminal work, logs, specs, code, tests, reviews, and repairs.
 
 ## No implementation without gates
 
-Implementation starts only after Idea Intake, Memory Preflight, required Decision Cards, Token/Time Budget, OpenSpec, independent review, and approved implementation slice.
+Implementation starts only after Idea Intake, Launch Market Research, Memory Preflight, required Decision Cards, Token/Time Budget, OpenSpec, independent review, and approved implementation slice.
 
 ## Keep context small
 

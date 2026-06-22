@@ -15,6 +15,7 @@ Use the `mvp-operating-system` skill before implementation.
 Do not start feature work until:
 
 - Idea Intake exists;
+- Launch Market Research exists;
 - Memory Preflight is complete;
 - OpenSpec artifacts exist;
 - important Decision Cards are resolved or defaulted from memory;
