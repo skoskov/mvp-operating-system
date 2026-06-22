@@ -26,6 +26,12 @@ Deployment plan:
 - Required project settings:
 - Missing decisions:
 
+Secrets:
+
+Access map:
+
+Codex permissions:
+
 Implementation slices:
 1. Bootstrap / setup
 2. Core data or content model

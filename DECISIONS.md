@@ -138,3 +138,15 @@ Impact:
 - Added `references/limited-release-plan.md` to the skill and template skill.
 - Build / Deploy / Verification Plan can use it as an optional source input.
 - Bootstrap check does not require this plan as a blocking file.
+
+## 2026-06-22 - Keep security/access inside Build Plan
+
+Decision: do not add a separate Security / Privacy / Access Review gate for MVP.
+
+Reason: for MVP this is too heavy. Build / Deploy / Verification Plan only needs a compact access section.
+
+Impact:
+
+- Added `Secrets` to Build / Deploy / Verification Plan.
+- Added `Access map` to Build / Deploy / Verification Plan.
+- Added `Codex permissions` to Build / Deploy / Verification Plan.

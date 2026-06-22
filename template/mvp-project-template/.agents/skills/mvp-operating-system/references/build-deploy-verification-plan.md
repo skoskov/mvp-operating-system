@@ -39,6 +39,15 @@ Deployment plan:
 - required project settings:
 - missing decisions:
 
+Secrets:
+<which env vars, API keys, tokens, webhooks, or service credentials are needed; do not include actual values>
+
+Access map:
+<who has access to repository, deploy target, analytics, monitoring, admin panels, servers, and external services>
+
+Codex permissions:
+<what Codex may change, what it may inspect, and what it must not change without a Decision / Access Card>
+
 Implementation slices:
 1. Bootstrap / setup
 2. Core data or content model
