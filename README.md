@@ -2,6 +2,10 @@
 
 A reusable operating system for idea-to-MVP projects built with Codex, OpenSpec, independent review, Codex GitHub Review, automated verification, and an Obsidian-based LLM Knowledge Base.
 
+## Repository
+
+Public GitHub repository: https://github.com/skoskov/mvp-operating-system
+
 ## Purpose
 
 This system keeps the human focused on high-value product, business, risk, cost, scope, and important technical trade-off decisions.

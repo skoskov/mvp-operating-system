@@ -14,9 +14,21 @@ Put `mvp-operating-system` under local Git version control and publish it as a p
 
 Use a public GitHub repository named `mvp-operating-system`.
 
-## Verification planned
+## Verification completed
 
-- Initialize Git.
-- Commit current approved state.
-- Create public GitHub repository via GitHub CLI if authenticated.
-- Push `main` to GitHub.
+- Initialized Git.
+- Committed current approved state.
+- Created public GitHub repository via GitHub CLI.
+- Pushed `main` to GitHub.
+
+## Repository
+
+```text
+https://github.com/skoskov/mvp-operating-system
+```
+
+## First commit
+
+```text
+043e926 Initial MVP operating system
+```
