@@ -16,12 +16,12 @@ Do not use the human for terminal work, log copying, manual QA, code review, lon
 ## Flow
 
 1. **Idea Intake**
-   - Turn the raw idea into a compact starting point: idea, user, problem, main use case, MVP promise, first success moment, non-goals, constraints, and launch target.
+   - Turn the raw idea into a compact starting point: idea, user, problem, current workaround, problem urgency, trigger to try, main use case, MVP promise, first success moment, MVP scope, must-have items, explicit non-goals, backlog, constraints, and launch target.
    - Use `references/idea-intake.md`.
    - Do not move to OpenSpec until Idea Intake exists.
 
 2. **Launch Market Research**
-   - Assess competitors, alternatives, pricing, user complaints, acquisition channels, visible ads, partner/referral mechanics, launch opportunities, and launch risks.
+   - Assess the scoped MVP from Idea Intake against competitors, alternatives, pricing, user complaints, acquisition channels, visible ads, partner/referral mechanics, launch opportunities, and launch risks.
    - Focus on practical launch reach through network, minimal budget, partnerships, communities, and manual outreach.
    - Use `references/launch-market-research.md`.
    - Do not produce TAM/SAM/SOM analysis.

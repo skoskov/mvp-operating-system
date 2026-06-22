@@ -1,5 +1,7 @@
 # Launch Market Research
 
+Scoped MVP from Idea Intake:
+
 Competitors:
 
 Alternatives:

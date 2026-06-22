@@ -4,13 +4,16 @@ Use Launch Market Research as the second mandatory step for every new MVP or pro
 
 ## Purpose
 
-Assess whether the MVP can be realistically launched through available channels, network, minimal budget, partnerships, and visible competitor demand.
+Assess whether the scoped MVP from Idea Intake can be realistically launched through available channels, network, minimal budget, partnerships, and visible competitor demand.
 
-Do not produce TAM/SAM/SOM analysis. Focus on practical launch evidence.
+Do not produce TAM/SAM/SOM analysis. Focus on practical launch evidence for the first launch version.
 
 ## Required fields
 
 ```text
+Scoped MVP from Idea Intake:
+<the first launch version being researched>
+
 Competitors:
 <direct competitors and close substitutes>
 
@@ -47,6 +50,7 @@ Recommendation:
 
 ## Rules
 
+- Use the MVP scope from Idea Intake as the research target.
 - Prefer recent and source-backed evidence when external information is needed.
 - Keep the output compact and decision-oriented.
 - Do not ask the human for data that can be researched by agents.

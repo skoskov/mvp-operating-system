@@ -38,3 +38,15 @@ Impact:
 - New projects include `market/launch-market-research.md`.
 - Bootstrap checks require the Launch Market Research reference and template file.
 - Launch Market Research explicitly avoids TAM/SAM/SOM and focuses on practical launch reach through network, minimal budget, partnerships, communities, and manual outreach.
+
+## 2026-06-22 — Keep MVP scope inside Idea Intake
+
+Decision: do not add a separate MVP Scope gate. Discuss and record MVP scope inside Idea Intake before Launch Market Research.
+
+Reason: market research must know what is actually included in the first MVP version. A separate MVP Scope gate after research would make research evaluate an abstract idea instead of the intended launch version.
+
+Impact:
+
+- Idea Intake now includes current workaround, why it is bad, problem frequency/urgency, trigger to try MVP, MVP scope, must-have items, explicit non-goals, and post-launch backlog.
+- Launch Market Research now explicitly researches the scoped MVP from Idea Intake.
+- New project templates include the expanded `product/idea-intake.md` fields.
