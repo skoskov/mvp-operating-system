@@ -9,6 +9,7 @@ Source inputs:
 - Standard Stack / Environment Preflight:
 - Memory Preflight:
 - Product/Technical Brief:
+- Metrics Plan:
 
 Stack:
 
@@ -56,6 +57,7 @@ Test strategy:
 - Content or schema validation:
 - LLM evals, if AI behavior exists:
 - Visual / UX smoke check:
+- Metrics smoke check:
 - Deploy smoke check:
 - Regression tests:
 

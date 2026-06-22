@@ -20,16 +20,17 @@ It must not use the human as a terminal operator, log copier, code reviewer, lon
 4. Create mandatory Brand / Design System / UX Flow.
 5. Run Standard Stack / Environment Preflight.
 6. Run Memory Preflight from the Obsidian LLM Knowledge Base.
-7. Create Build / Deploy / Verification Plan.
-8. Ask the human only short Decision Cards when needed.
-9. Present Token/Time Budget before expensive work.
-10. Create OpenSpec proposal/spec/tasks.
-11. Run independent review for technical artifacts.
-12. Give Codex small approved implementation slices.
-13. Codex implements, runs commands, verifies, and repairs failures.
-14. Run QA / Acceptance / Release Gate.
-15. Run final PR review with Codex GitHub Review.
-16. Update Obsidian memory with decisions, failures, defaults, token/time usage, and lessons learned.
+7. Create Analytics / Observability Plan.
+8. Create Build / Deploy / Verification Plan.
+9. Ask the human only short Decision Cards when needed.
+10. Present Token/Time Budget before expensive work.
+11. Create OpenSpec proposal/spec/tasks.
+12. Run independent review for technical artifacts.
+13. Give Codex small approved implementation slices.
+14. Codex implements, runs commands, verifies, and repairs failures.
+15. Run QA / Acceptance / Release Gate.
+16. Run final PR review with Codex GitHub Review.
+17. Update Obsidian memory with decisions, failures, defaults, token/time usage, and lessons learned.
 
 ## Repository contents
 

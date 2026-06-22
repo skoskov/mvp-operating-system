@@ -18,7 +18,7 @@ Agents handle terminal work, logs, specs, code, tests, reviews, and repairs.
 
 ## No implementation without gates
 
-Implementation starts only after Idea Intake, Launch Market Research, Brand / Design System / UX Flow, Standard Stack / Environment Preflight, Memory Preflight, Product/Technical Brief, Build / Deploy / Verification Plan, required Decision Cards, Token/Time Budget, OpenSpec, independent review, and approved implementation slice.
+Implementation starts only after Idea Intake, Launch Market Research, Brand / Design System / UX Flow, Standard Stack / Environment Preflight, Memory Preflight, Product/Technical Brief, Analytics / Observability Plan, Build / Deploy / Verification Plan, required Decision Cards, Token/Time Budget, OpenSpec, independent review, and approved implementation slice.
 
 ## No launch without release gate
 

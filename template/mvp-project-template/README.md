@@ -20,6 +20,7 @@ Do not start feature work until:
 - Standard Stack / Environment Preflight is complete;
 - Memory Preflight is complete;
 - Product/Technical Brief exists;
+- Metrics Plan exists;
 - Build / Deploy / Verification Plan exists;
 - OpenSpec artifacts exist;
 - important Decision Cards are resolved or defaulted from memory;

@@ -7,6 +7,7 @@
 - Create Launch Market Research after Idea Intake and before Memory Preflight.
 - Create Brand / Design System / UX Flow after Launch Market Research and before Memory Preflight.
 - Run Standard Stack / Environment Preflight before Memory Preflight.
+- Create Analytics / Observability Plan after Product/Technical Brief and before Build / Deploy / Verification Plan.
 - Create Build / Deploy / Verification Plan after Product/Technical Brief and before OpenSpec.
 - Use OpenSpec before implementation.
 - Use Codex for implementation and repair loops.

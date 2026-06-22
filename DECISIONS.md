@@ -100,3 +100,16 @@ Impact:
 - Added `qa/acceptance-release-gate.md` to the project template.
 - Added `references/acceptance-release-gate.md` to the skill and template skill.
 - Post-implementation rules now require the release gate before final review.
+
+## 2026-06-22 - Add Analytics / Observability Plan
+
+Decision: add Analytics / Observability Plan after Product/Technical Brief and before Build / Deploy / Verification Plan.
+
+Reason: MVPs need minimal measurement without tracking every click. The default stack is Umami for product analytics and GlitchTip for issue and uptime monitoring.
+
+Impact:
+
+- Added `analytics/analytics-observability-plan.md` to the project template.
+- Added `references/analytics-observability-plan.md` to the skill and template skill.
+- Added Umami and GlitchTip defaults to `global/standard-stack.md`.
+- Build / Deploy / Verification Plan now includes metrics input and smoke check.

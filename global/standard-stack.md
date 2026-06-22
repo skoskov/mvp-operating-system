@@ -39,6 +39,15 @@ Use this as the approved baseline for new MVP projects unless a Decision Card ex
 - Use project-local dependency files.
 - Verification must be a single project command.
 
+## Analytics and observability defaults
+
+- Default product analytics: Umami.
+- Default issue and uptime monitoring: GlitchTip.
+- Do not use heavy product analytics by default.
+- PostHog requires an explicit Decision Card for complex MVPs with heavier analytics needs.
+- MVP event tracking must stay minimal: source, start, activation, core value, errors, and feedback.
+- Do not track every click or sensitive user content.
+
 ## Deployment defaults
 
 - Static/web MVP default: Vercel.
