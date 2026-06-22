@@ -1,6 +1,6 @@
 # Tasks
 
-Tasks must be generated as small approved implementation slices.
+Tasks must be generated as small approved implementation slices from `build/build-deploy-verification-plan.md`.
 
 Each task must include:
 
@@ -9,5 +9,6 @@ Each task must include:
 - non-goals;
 - verification command;
 - expected tests/evals;
+- acceptance criteria mapping;
 - review requirement;
 - token/time budget.

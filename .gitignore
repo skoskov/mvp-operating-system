@@ -16,6 +16,8 @@ node_modules/
 .next/
 dist/
 build/
+!template/mvp-project-template/build/
+!template/mvp-project-template/build/**
 out/
 coverage/
 

@@ -19,6 +19,8 @@ Do not start feature work until:
 - Brand / Design System / UX Flow exists;
 - Standard Stack / Environment Preflight is complete;
 - Memory Preflight is complete;
+- Product/Technical Brief exists;
+- Build / Deploy / Verification Plan exists;
 - OpenSpec artifacts exist;
 - important Decision Cards are resolved or defaulted from memory;
 - token/time budget is approved;

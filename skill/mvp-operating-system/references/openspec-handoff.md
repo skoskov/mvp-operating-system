@@ -2,6 +2,10 @@
 
 OpenSpec is the project contract for agents, not a long document for human approval.
 
+## Required source
+
+Use Build / Deploy / Verification Plan as the source for implementation slices, checks, and stop conditions.
+
 ## Required artifacts
 
 Create or update:
@@ -30,6 +34,7 @@ Each Codex slice must include:
 - non-goals;
 - relevant files;
 - expected tests/evals;
+- acceptance criteria mapping;
 - verification command;
 - stop conditions;
 - review requirement.

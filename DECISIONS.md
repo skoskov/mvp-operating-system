@@ -76,3 +76,15 @@ Impact:
 - Added `ops/environment-preflight.md` to the project template.
 - Added `references/environment-preflight.md` to the skill and template skill.
 - Product/Technical Brief now references the environment preflight result.
+
+## 2026-06-22 - Add Build / Deploy / Verification Plan gate
+
+Decision: add Build / Deploy / Verification Plan after Product/Technical Brief and before OpenSpec.
+
+Reason: Codex needs an explicit plan for slices, checks, deployment path, acceptance criteria mapping, repair loop, and stop conditions before implementation starts.
+
+Impact:
+
+- Added `build/build-deploy-verification-plan.md` to the project template.
+- Added `references/build-deploy-verification-plan.md` to the skill and template skill.
+- OpenSpec tasks now use the Build / Deploy / Verification Plan as the source for slices and checks.

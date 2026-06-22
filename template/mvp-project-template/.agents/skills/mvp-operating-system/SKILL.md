@@ -1,6 +1,6 @@
 ---
 name: mvp-operating-system
-description: Run idea-to-MVP projects with idea intake, launch market research, brand/design/UX flow, standard stack preflight, memory preflight, decision cards, token budgeting, OpenSpec, Codex implementation, independent review, final review, and Obsidian learning updates.
+description: Run idea-to-MVP projects with idea intake, launch market research, brand/design/UX flow, standard stack preflight, memory preflight, build/deploy/verification planning, decision cards, token budgeting, OpenSpec, Codex implementation, independent review, final review, and Obsidian learning updates.
 ---
 
 # MVP Operating System Skill
@@ -45,39 +45,44 @@ Do not use the human for terminal work, log copying, manual QA, code review, lon
    - Create a short brief: goal, user, core value, MVP success, non-goals, constraints, known defaults.
    - Do not produce long specs for human approval.
 
-7. **Decision Cards**
+7. **Build / Deploy / Verification Plan**
+   - Define build goal, source inputs, approved stack, architecture, deployment plan, implementation slices, acceptance criteria mapping, test strategy, verification commands, autonomous repair loop, and stop conditions.
+   - Use `references/build-deploy-verification-plan.md`.
+   - Every acceptance criterion must map to a test, eval, smoke check, or verification command.
+
+8. **Decision Cards**
    - Ask the human only for important trade-offs.
    - Use `references/decision-cards.md`.
 
-8. **Token/Time Budget**
+9. **Token/Time Budget**
    - Before expensive work, estimate tokens, limit risk, agent time, human time, and stop conditions.
    - Use `references/token-budget.md`.
 
-9. **OpenSpec Handoff**
+10. **OpenSpec Handoff**
    - Create or update OpenSpec proposal/spec/tasks.
    - Treat OpenSpec as agent-readable project contract, not human approval material.
    - Use `references/openspec-handoff.md`.
 
-10. **Independent Review**
+11. **Independent Review**
    - Send technical artifacts to an independent reviewer in a clean context.
    - Resolve blocking issues before implementation.
    - Use `references/independent-review.md`.
 
-11. **Codex Implementation Slice**
+12. **Codex Implementation Slice**
    - Give Codex a small approved slice.
    - Codex runs commands, tests, and repair loops autonomously.
    - Do not ask the human to paste logs or run commands.
 
-12. **Verification**
+13. **Verification**
    - Run the repo's single verification command.
    - Repair failures within budget.
    - If repeated failures exceed stop conditions, escalate with a Decision Card.
 
-13. **Final Review**
+14. **Final Review**
    - Use CodeRabbit or another independent final reviewer for PR-level review.
    - Codex fixes blocking issues.
 
-14. **Learning Update**
+15. **Learning Update**
    - Save important decisions, failed decisions, defaults, token/time actuals, and lessons learned to the Obsidian LLM Knowledge Base.
    - Use `references/learning-update.md`.
 
