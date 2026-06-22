@@ -1,0 +1,9 @@
+reviews:
+  auto_review:
+    enabled: true
+    drafts: false
+  profile: assertive
+  request_changes_workflow: true
+
+chat:
+  auto_reply: true
