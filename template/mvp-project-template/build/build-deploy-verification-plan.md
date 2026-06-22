@@ -11,6 +11,7 @@ Source inputs:
 - Product/Technical Brief:
 - Metrics Plan:
 - User Ops Plan:
+- Limited Release Plan, if used:
 
 Stack:
 

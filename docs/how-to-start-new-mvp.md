@@ -28,7 +28,7 @@ Before project work, create Idea Intake, Launch Market Research, and Brand / Des
 
 Use `mvp-operating-system` for the first planning step.
 
-The first outputs should be mandatory Idea Intake, Launch Market Research, Brand / Design System / UX Flow, Standard Stack / Environment Preflight, Product/Technical Brief, Analytics / Observability Plan, Support Plan, and Build / Deploy / Verification Plan. After that, ask only needed Decision Cards.
+The first outputs should be mandatory Idea Intake, Launch Market Research, Brand / Design System / UX Flow, Standard Stack / Environment Preflight, Product/Technical Brief, Analytics / Observability Plan, Support Plan, and Build / Deploy / Verification Plan. Limited release planning is optional. After that, ask only needed Decision Cards.
 
 ## 4. Approve budget only when needed
 
@@ -36,7 +36,7 @@ The human approves token/time budget and important decisions, not long specs.
 
 ## 5. OpenSpec before implementation
 
-Create proposal/spec/tasks before implementation. Do not move to OpenSpec until Idea Intake, Launch Market Research, Brand / Design System / UX Flow, Standard Stack / Environment Preflight, Product/Technical Brief, Analytics / Observability Plan, Support Plan, and Build / Deploy / Verification Plan exist.
+Create proposal/spec/tasks before implementation. Do not move to OpenSpec until Idea Intake, Launch Market Research, Brand / Design System / UX Flow, Standard Stack / Environment Preflight, Product/Technical Brief, Analytics / Observability Plan, Support Plan, and Build / Deploy / Verification Plan exist. Optional limited release planning does not block implementation.
 
 ## 6. Independent review
 

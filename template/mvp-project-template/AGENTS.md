@@ -44,12 +44,13 @@ Before implementation:
 6. Produce a short Product/Technical Brief.
 7. Create or update Analytics / Observability Plan.
 8. Create or update Support / Feedback / User Operations.
-9. Create or update Build / Deploy / Verification Plan.
-10. Ask only required Decision Cards.
-11. Present Token/Time Budget for expensive work.
-12. Create or update OpenSpec artifacts.
-13. Run independent review for technical artifacts.
-14. Prepare an approved implementation slice.
+9. Optionally create Limited Release / Launch Plan for closed beta, controlled test, or explicit GTM request.
+10. Create or update Build / Deploy / Verification Plan.
+11. Ask only required Decision Cards.
+12. Present Token/Time Budget for expensive work.
+13. Create or update OpenSpec artifacts.
+14. Run independent review for technical artifacts.
+15. Prepare an approved implementation slice.
 
 After implementation:
 

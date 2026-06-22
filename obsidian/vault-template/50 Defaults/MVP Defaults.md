@@ -9,6 +9,7 @@
 - Run Standard Stack / Environment Preflight before Memory Preflight.
 - Create Analytics / Observability Plan after Product/Technical Brief and before Build / Deploy / Verification Plan.
 - Create User Ops Plan after Analytics / Observability Plan and before Build / Deploy / Verification Plan.
+- Optional test planning can be used for controlled user tests.
 - Create Build / Deploy / Verification Plan after Product/Technical Brief and before OpenSpec.
 - Use OpenSpec before implementation.
 - Use Codex for implementation and repair loops.

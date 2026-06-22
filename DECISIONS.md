@@ -125,3 +125,16 @@ Impact:
 - Added `support/support-feedback-plan.md` to the project template.
 - Added `references/support-feedback-ops.md` to the skill and template skill.
 - Build / Deploy / Verification Plan now includes User Ops Plan as a source input.
+
+## 2026-06-22 - Add optional test plan
+
+Decision: add a limited user test plan as an optional gate, not a mandatory GTM gate.
+
+Reason: before GTM, MVPs usually need a controlled test with a limited group of users. Full GTM requires a separate decision.
+
+Impact:
+
+- Added `launch/limited-release-plan.md` to the project template.
+- Added `references/limited-release-plan.md` to the skill and template skill.
+- Build / Deploy / Verification Plan can use it as an optional source input.
+- Bootstrap check does not require this plan as a blocking file.
