@@ -1,5 +1,20 @@
 # Decisions — mvp-os
 
+## 2026-07-08 - Add Codex multiagent coordination layer
+
+Decision: add a repository-based Codex multiagent coordination layer to the MVP project template.
+
+Reason: multiple Codex chats or agents should not exchange project meaning through chat history. They should coordinate through one repository source of truth while MVP OS remains responsible for what to do.
+
+Impact:
+
+- New projects include `docs/agent-protocol.md` for role, handoff, evidence, and escalation rules.
+- New projects include `docs/project-state.md` as a status index only, not a requirements source.
+- New projects include project-scoped custom agents in `.codex/agents/`.
+- Bootstrap validation now requires the agent protocol and custom agent files.
+- `global/AGENTS.md` and template `AGENTS.md` now state that the multiagent protocol coordinates how agents work and does not replace MVP OS artifacts.
+- Final launch still requires explicit owner approval.
+
 ## 2026-06-22 — Make Idea Intake mandatory
 
 Decision: add Idea Intake as the first mandatory gate for every new MVP or project restart.

@@ -8,6 +8,16 @@ Use the `mvp-operating-system` skill for every new MVP, major feature, or recove
 
 The human is not a terminal operator, log copier, QA engineer, code reviewer, long-spec approver, or checklist validator.
 
+## Agent coordination
+
+For multiagent Codex work, use `docs/agent-protocol.md` and project-scoped agents from `.codex/agents/`.
+
+The agent protocol defines how agents coordinate work. It does not replace MVP OS source files.
+
+Do not use chat history as project memory. Coordinate through repository files, branches, worktrees, checks, and pull requests.
+
+`docs/project-state.md` is a status index only. It must not introduce requirements that are absent from MVP OS artifacts.
+
 ## Ask the human only through Decision Cards
 
 Ask only when a decision affects:

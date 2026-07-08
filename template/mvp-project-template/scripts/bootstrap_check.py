@@ -2,6 +2,11 @@ from pathlib import Path
 
 REQUIRED = [
     "AGENTS.md",
+    ".codex/config.toml",
+    ".codex/agents/architect.toml",
+    ".codex/agents/implementer.toml",
+    ".codex/agents/devops_qa.toml",
+    ".codex/agents/release_manager.toml",
     ".agents/skills/mvp-operating-system/SKILL.md",
     ".agents/skills/mvp-operating-system/references/idea-intake.md",
     ".agents/skills/mvp-operating-system/references/launch-market-research.md",
@@ -22,6 +27,8 @@ REQUIRED = [
     Path("qa") / "acceptance-release-gate.md",
     Path("iteration") / "pre-launch-iteration-update.md",
     "openspec/README.md",
+    "docs/agent-protocol.md",
+    "docs/project-state.md",
     "docs/memory-policy.md",
     "docs/verification.md",
     "Makefile",

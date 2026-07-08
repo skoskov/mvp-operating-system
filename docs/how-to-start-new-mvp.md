@@ -46,6 +46,8 @@ Technical artifacts are reviewed by independent agents before Codex implementati
 
 Codex receives small approved slices.
 
+For parallel Codex work, use the project agent protocol in `docs/agent-protocol.md` and project-scoped agents in `.codex/agents/`.
+
 ## 8. Verification
 
 Codex runs `make verify` or the project equivalent.

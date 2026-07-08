@@ -46,6 +46,7 @@ It must not use the human as a terminal operator, log copier, code reviewer, lon
 /obsidian/vault-template/
 /docs/how-to-start-new-mvp.md
 /docs/operating-principles.md
+/docs/codex-multiagent-protocol.md
 ```
 
 ## How to use
