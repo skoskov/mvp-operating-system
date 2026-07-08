@@ -20,7 +20,7 @@ Launch a working MVP demo through the MVP OS flow.
 
 ## Active branch
 
-`main`
+TBD. Do not implement directly on `main`.
 
 ## Last completed work
 
