@@ -90,6 +90,14 @@ Verification commands:
 - primary:
 - secondary, if needed:
 
+Hard execution gate:
+- required stack elements:
+- baseline screenshots/DOM/click map:
+- public route checks, if any:
+- rollback evidence:
+- stop conditions for broken tools/infrastructure:
+- forbidden degraded workarounds:
+
 Autonomous repair loop:
 1. implement slice
 2. run verification

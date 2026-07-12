@@ -13,6 +13,20 @@ Move from high-level idea to working MVP while keeping the human focused on impo
 
 Do not use the human for terminal work, log copying, manual QA, code review, long-spec approval, or routine technical validation.
 
+## Hard execution gate
+
+Before product implementation, deployment, or public-demo work, run the hard execution gate.
+
+Execution is allowed only when the full required stack for the task is verified and working: repository state, dependency manager, build, tests/evals, local runtime, browser QA, deployment service, reverse proxy/CDN/public URL, screenshots/DOM/click checks, and rollback path where applicable.
+
+If any required element is broken, flaky, unavailable, blocked, or unverified, stop immediately and report a P0 blocker. Do not continue with a degraded workaround.
+
+Infrastructure failure is not permission to simplify the product, replace the UI, remove navigation, reduce interactivity, fake integrations, or narrow demo scope.
+
+Static shells, mock fallbacks, route bypasses, screenshots-as-proof, or narrower flows are forbidden unless the human explicitly approves that exact tradeoff through a Decision Card.
+
+For substantial user-visible tasks, capture baseline and final comparison for public URL behavior, screenshots, visible UI structure, clickable controls, page transitions, browser/runtime errors, and product-specific acceptance criteria. A task is not READY if the final state regresses from baseline.
+
 ## Flow
 
 1. **Idea Intake**

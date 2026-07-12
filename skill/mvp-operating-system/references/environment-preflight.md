@@ -8,6 +8,14 @@ Check that the approved project stack and local environment are ready before imp
 
 If the common environment is broken, stop and report it. Do not fix one project with one-off workarounds.
 
+## Hard execution gate requirement
+
+This preflight is the first enforcement point for the hard execution gate.
+
+Execution must stop when any required stack element is broken, flaky, blocked, unavailable, or unverified. Do not patch around the failure inside the project. Do not continue product work by changing the product, reducing UX, replacing UI, narrowing demo scope, or hiding the failure behind a mock/static fallback.
+
+If public demo work is in scope, verify the public URL path, reverse proxy/CDN/DNS behavior, browser QA, screenshots, click/navigation checks, and rollback path before implementation or deployment proceeds.
+
 ## Inputs
 
 - `global/standard-stack.md`

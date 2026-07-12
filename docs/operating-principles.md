@@ -16,6 +16,14 @@ The human decides important product, business, risk, token/budget, scope, and te
 
 Agents handle terminal work, logs, specs, code, tests, reviews, and repairs.
 
+## Hard execution gate
+
+Execution is allowed only when the full required stack for the task is verified and working.
+
+A broken required tool, runtime, dependency manager, browser QA path, deploy service, reverse proxy, CDN route, public URL, screenshot path, click/navigation check, or rollback path is a P0 blocker. Stop immediately and report the blocker instead of continuing with a degraded workaround.
+
+Do not complete goals by non-optimal means that change product behavior, UX fidelity, architecture, demo scope, data realism, or user-visible functionality. Static shells, mock fallbacks, route bypasses, screenshots-as-proof, and narrower flows require explicit user approval through a Decision Card before implementation.
+
 ## No implementation without gates
 
 Implementation starts only after Idea Intake, Launch Market Research, Brand / Design System / UX Flow, Standard Stack / Environment Preflight, Memory Preflight, Product/Technical Brief, Analytics / Observability Plan, Support Plan, Build / Deploy / Verification Plan, required Decision Cards, Token/Time Budget, OpenSpec, independent review, and approved implementation slice.

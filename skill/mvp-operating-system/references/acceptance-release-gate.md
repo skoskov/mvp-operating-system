@@ -59,6 +59,14 @@ Acceptance criteria coverage:
   command or check:
   status: PASS / FAIL / LIMITATION
 
+Regression gate:
+- baseline capabilities preserved:
+- final UI is not less functional:
+- final UI is not less clickable:
+- final UI is not less navigable:
+- final UI is not less visually faithful:
+- no fallback/mock/static shell replaced the intended product without explicit Decision Card approval:
+
 Release readiness:
 - release URL:
 - analytics ready or explicitly deferred:

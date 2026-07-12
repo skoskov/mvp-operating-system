@@ -18,6 +18,39 @@ Do not use chat history as project memory. Coordinate through repository files, 
 
 `docs/project-state.md` is a status index only. It must not introduce requirements that are absent from MVP OS artifacts.
 
+## Hard execution gate
+
+Execution is allowed only when the full required stack is verified and working.
+
+Before implementation, deployment, or public-demo work, the agent must prove the required technical path is operational:
+- repository state and allowed write scope;
+- dependency manager;
+- build command;
+- test or verification command;
+- local runtime when the task needs a running app;
+- browser QA tool when the task has UI or click requirements;
+- VPS/runtime service when deployment is in scope;
+- reverse proxy, CDN, DNS, and public URL path when public demo is in scope;
+- screenshots, DOM inspection, and click/navigation checks when user-visible behavior is in scope;
+- rollback path before any public route or deploy change.
+
+If any required element is broken, flaky, unavailable, blocked, or unverified, work must stop immediately. Record the exact blocker and the exact next action. Do not continue the product task with a degraded workaround.
+
+Infrastructure failure is a P0 blocker. It is not permission to simplify the product, replace the UI, remove navigation, reduce interactivity, fake integrations, or change demo scope.
+
+Goal completion by non-optimal means is prohibited when it changes product behavior, UX fidelity, demo scope, data realism, architecture, or user-visible functionality. Static shells, mock fallbacks, route bypasses, screenshots-as-proof, or narrower flows are forbidden unless the human explicitly approves that exact tradeoff through a Decision Card.
+
+Every substantial user-visible task must capture and compare baseline and final state:
+- public URL availability;
+- desktop and mobile screenshots;
+- visible UI structure;
+- clickable controls;
+- page transitions;
+- browser console/runtime errors where available;
+- product-specific acceptance criteria.
+
+If the final state is less functional, less clickable, less navigable, less visually faithful, or less product-complete than the baseline, the task is not complete and must not be reported as READY.
+
 ## Ask the human only through Decision Cards
 
 Ask only when a decision affects:

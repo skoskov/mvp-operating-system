@@ -178,3 +178,22 @@ Impact:
 - Added `references/pre-launch-iteration-update.md` to the skill and template skill.
 - Post-implementation rules now loop through Pre-launch Iteration Update until the owner explicitly says the MVP is ready to launch.
 - Bootstrap check requires the pre-launch iteration files.
+
+## 2026-07-08 — Hard execution gate for MVP-OS work
+
+Decision:
+Require a hard execution gate before implementation, deployment, or public-demo work.
+
+Reason:
+Product work must not proceed on top of broken tools, broken infrastructure, unstable browser QA, or unverified public delivery. A broken required stack element must stop the task as a P0 blocker instead of being hidden by a degraded workaround.
+
+Status:
+Accepted by user `IMPLEMENT` request on 2026-07-08.
+
+Consequences:
+- Execution is allowed only with a fully verified working stack for the task.
+- Broken, flaky, blocked, unavailable, or unverified required elements are immediate P0 blockers.
+- Infrastructure failure is not permission to simplify UI, remove navigation, reduce interactivity, fake integrations, or narrow demo scope.
+- Static shells, mock fallbacks, route bypasses, screenshots-as-proof, or narrower flows require explicit user approval through a Decision Card before implementation.
+- Substantial user-visible work must compare baseline and final state.
+- A task cannot be reported as `READY` if the final state is less functional, less clickable, less navigable, less visually faithful, or less product-complete than the baseline.
