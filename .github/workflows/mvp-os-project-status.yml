@@ -1,0 +1,48 @@
+name: MVP OS Project Status
+
+on:
+  schedule:
+    - cron: "47 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  status:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout MVP OS
+        uses: actions/checkout@v4
+
+      - name: Collect active project lock status
+        env:
+          GH_TOKEN: ${{ secrets.MVP_OS_PROJECTS_READ_TOKEN || github.token }}
+        run: |
+          python3 scripts/mvp_os_status.py \
+            --registry compatibility/projects.json \
+            --output outputs/mvp-os-project-status.json
+
+      - name: Create status PR when registry changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -z "$(git status --short)" ]; then
+            echo "No project status change."
+            exit 0
+          fi
+          branch="codex/mvp-os-project-status"
+          if gh pr list --head "$branch" --state open --json number --jq 'length > 0' | grep -q true; then
+            echo "A project status PR is already open."
+            exit 0
+          fi
+          git switch -c "$branch"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add compatibility/projects.json outputs/mvp-os-project-status.json
+          git commit -m "Update MVP OS project status"
+          git push --set-upstream origin "$branch"
+          gh pr create --title "Update MVP OS project status" \
+            --body "Automated status report from active project mvp-os.lock files." \
+            --base main --head "$branch"

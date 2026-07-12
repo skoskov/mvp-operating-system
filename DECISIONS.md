@@ -197,3 +197,22 @@ Consequences:
 - Static shells, mock fallbacks, route bypasses, screenshots-as-proof, or narrower flows require explicit user approval through a Decision Card before implementation.
 - Substantial user-visible work must compare baseline and final state.
 - A task cannot be reported as `READY` if the final state is less functional, less clickable, less navigable, less visually faithful, or less product-complete than the baseline.
+
+## 2026-07-12 — Versioned MVP OS propagation
+
+Decision:
+Use MVP OS releases, an active-project registry, project `mvp-os.lock` files,
+and pull-based project PRs as the default propagation mechanism.
+
+Reason:
+MVP OS must remain the source of truth while project-specific rules remain
+safe to review. Pull-based PRs limit write access, provide an audit trail, and
+allow only active projects to receive automated rollout work.
+
+Consequences:
+- SemVer is used for MVP OS releases, starting with `1.0.0`.
+- `compatibility/projects.json` controls `active`, `paused`, and `archived` projects.
+- Only release-manifest `managed_paths` are copied automatically.
+- `AGENTS.md`, `DECISIONS.md`, product docs, and OpenSpec remain review-only.
+- Sync opens a project PR and never auto-merges it.
+- The project lock is the actual applied-version record; the central registry stores desired state and last-known reporting data.

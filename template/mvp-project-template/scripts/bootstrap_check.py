@@ -31,6 +31,8 @@ REQUIRED = [
     "docs/project-state.md",
     "docs/memory-policy.md",
     "docs/verification.md",
+    "mvp-os.lock",
+    ".github/workflows/mvp-os-sync.yml",
     "Makefile",
 ]
 

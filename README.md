@@ -68,3 +68,10 @@ WSL/bash:
 The script creates the project under `C:\Users\skoskov\Documents\_DEV`, copies the MVP template, initializes Git, creates the first commit, and pushes to GitHub when `gh` is installed and authenticated.
 
 Do not start from a blank chat or blank repository.
+
+## Versioned project sync
+
+MVP OS releases are tracked in `VERSION`, `CHANGELOG.md`, and
+`compatibility/projects.json`. Active projects use `mvp-os.lock` and the
+template `MVP OS Sync` workflow to receive reviewed pull requests for managed
+operating-layer files. See `docs/mvp-os-sync.md` for the contract.

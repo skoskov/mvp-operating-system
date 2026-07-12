@@ -1,0 +1,76 @@
+name: MVP OS Sync
+
+on:
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Checkout MVP OS source
+        uses: actions/checkout@v4
+        with:
+          repository: skoskov/mvp-operating-system
+          path: .mvp-os-source
+          ref: main
+          token: ${{ secrets.MVP_OS_READ_TOKEN || github.token }}
+
+      - name: Resolve published MVP OS release
+        run: |
+          cd .mvp-os-source
+          git fetch --tags --force
+          git checkout "v$(cat VERSION)"
+
+      - name: Verify release tag identity
+        run: |
+          cd .mvp-os-source
+          expected="v$(cat VERSION)"
+          actual="$(git describe --exact-match --tags HEAD)"
+          test "$actual" = "$expected"
+
+      - name: Check and apply active MVP OS release
+        id: sync
+        run: |
+          project_version=$(python3 -c 'import json; print(json.load(open("mvp-os.lock"))["mvp_os_version"])')
+          source_version=$(cat .mvp-os-source/VERSION)
+          overwrite=""
+          if [ "$project_version" != "$source_version" ]; then
+            overwrite="--allow-overwrite"
+          fi
+          python3 .mvp-os-source/scripts/mvp_os_sync.py sync \
+            --source-root .mvp-os-source \
+            --project-root . \
+            --repository "${{ github.repository }}" $overwrite
+
+      - name: Create sync PR when files changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet; then
+            echo "No MVP OS update required."
+            exit 0
+          fi
+          version=$(python3 -c 'import json; print(json.load(open("mvp-os.lock"))["mvp_os_version"])')
+          branch="codex/mvp-os-sync-v${version}"
+          if gh pr list --head "$branch" --state open --json number --jq 'length > 0' | grep -q true; then
+            echo "An MVP OS sync PR is already open for ${version}."
+            exit 0
+          fi
+          git switch -c "$branch"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .agents/skills/mvp-operating-system mvp-os.lock
+          git commit -m "Sync MVP OS v${version}"
+          git push --set-upstream origin "$branch"
+          gh pr create --title "Sync MVP OS v${version}" \
+            --body "Automated update from the active MVP OS release. Review AGENTS.md, DECISIONS.md, and release notes before merging." \
+            --base main --head "$branch"

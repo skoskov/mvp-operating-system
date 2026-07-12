@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "project_id": "replace-me",
+  "mvp_os_version": "1.0.0",
+  "release": "v1.0.0",
+  "sync_status": "pending-project-registration",
+  "sync_mode": "pull-pr",
+  "source_repository": "skoskov/mvp-operating-system",
+  "managed_paths": [
+    ".agents/skills/mvp-operating-system"
+  ]
+}

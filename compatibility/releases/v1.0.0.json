@@ -1,0 +1,18 @@
+{
+  "version": "1.0.0",
+  "previous_version": "0.0.0",
+  "summary": "Introduce the versioned MVP OS sync contract and active-project rollout flow.",
+  "human_summary_ru": "Добавлены версии MVP OS, реестр активных проектов и безопасная раскатка через PR.",
+  "managed_paths": [
+    {
+      "source": "skill/mvp-operating-system",
+      "destination": ".agents/skills/mvp-operating-system"
+    }
+  ],
+  "review_paths": [
+    "AGENTS.md",
+    "DECISIONS.md",
+    "docs/",
+    "openspec/"
+  ]
+}
