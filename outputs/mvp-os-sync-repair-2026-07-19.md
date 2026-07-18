@@ -19,6 +19,17 @@
 - Git SSH confirms that the published `crm-agent-mvp` `master` branch contains
   its `mvp-os.lock` at `v1.0.0` with `sync_status: synced`.
 
+## Publication status
+
+- MVP OS `main` was fast-forwarded to the repaired release and is synchronized
+  with GitHub; annotated tag `v1.0.1` is published.
+- A separate project review branch,
+  `codex/mvp-os-sync-v1.0.1`, is published with exactly one change:
+  `mvp-os.lock` from `v1.0.0` to `v1.0.1`.
+- The local `crm-agent-mvp/master` remains one commit ahead of its remote with
+  an unrelated real-tester roadmap commit. It was deliberately not pushed or
+  included in the sync branch.
+
 ## External blocker
 
 The local GitHub CLI is unauthenticated and an unauthenticated GitHub Contents
