@@ -1,0 +1,18 @@
+{
+  "version": "1.0.1",
+  "previous_version": "1.0.0",
+  "summary": "Track project default branches for accurate central status collection.",
+  "human_summary_ru": "Сбор статусов читает lock из настроенной основной ветки каждого проекта.",
+  "managed_paths": [
+    {
+      "source": "skill/mvp-operating-system",
+      "destination": ".agents/skills/mvp-operating-system"
+    }
+  ],
+  "review_paths": [
+    "AGENTS.md",
+    "DECISIONS.md",
+    "docs/",
+    "openspec/"
+  ]
+}

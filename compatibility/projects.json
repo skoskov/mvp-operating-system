@@ -1,17 +1,18 @@
 {
   "schema_version": 1,
-  "current_version": "1.0.0",
+  "current_version": "1.0.1",
   "statuses": ["active", "paused", "archived"],
   "projects": [
     {
       "id": "crm-agent-mvp",
       "repository": "skoskov/crm-agent-mvp",
+      "default_branch": "master",
       "status": "active",
       "lock_path": "mvp-os.lock",
-      "last_known_version": null,
-      "last_known_status": null,
+      "last_known_version": "1.0.0",
+      "last_known_status": "synced",
       "status_source": "project-lock",
-      "migration": "pending",
+      "migration": "completed",
       "sync_mode": "pull-pr"
     }
   ]

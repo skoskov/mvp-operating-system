@@ -1,5 +1,20 @@
 # Decisions — mvp-os
 
+## 2026-07-19 — Track every project's default branch in the sync registry
+
+Decision: store `default_branch` per project in `compatibility/projects.json`
+and use it for central lock collection.
+
+Reason: active repositories can use `master` or another default branch. A
+hardcoded `main` makes a valid applied lock appear unavailable.
+
+Impact:
+
+- New registry entries should declare their default branch.
+- Existing entries without the field remain compatible through the `main`
+  fallback.
+- `crm-agent-mvp` is recorded as `master`, migrated, and synced at `v1.0.0`.
+
 ## 2026-07-08 - Add Codex multiagent coordination layer
 
 Decision: add a repository-based Codex multiagent coordination layer to the MVP project template.

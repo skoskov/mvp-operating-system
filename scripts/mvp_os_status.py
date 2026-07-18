@@ -16,8 +16,13 @@ def load_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def fetch_lock(repository: str, lock_path: str, token: str | None) -> dict:
-    url = f"https://api.github.com/repos/{repository}/contents/{lock_path}?ref=main"
+def fetch_lock(
+    repository: str, lock_path: str, default_branch: str, token: str | None
+) -> dict:
+    url = (
+        f"https://api.github.com/repos/{repository}/contents/{lock_path}"
+        f"?ref={default_branch}"
+    )
     headers = {"Accept": "application/vnd.github+json", "User-Agent": "mvp-os-status"}
     if token:
         headers["Authorization"] = f"Bearer {token}"
@@ -38,8 +43,9 @@ def collect(registry_path: Path, output_path: Path, token: str | None) -> bool:
             continue
         project_id = project["id"]
         lock_path = project.get("lock_path", "mvp-os.lock")
+        default_branch = project.get("default_branch", "main")
         try:
-            lock = fetch_lock(project["repository"], lock_path, token)
+            lock = fetch_lock(project["repository"], lock_path, default_branch, token)
             if lock.get("project_id") != project_id:
                 raise ValueError(
                     f"lock project_id mismatch: {lock.get('project_id')!r}"

@@ -24,9 +24,10 @@ The project lock is the actual applied-version source. The central registry's
 from a project status report or review PR.
 
 The central `MVP OS Project Status` workflow checks only `active` projects,
-reads their lock through the GitHub Contents API, and opens a PR when the
-reported version or sync status changes. Paused and archived projects are not
-queried. Private project repositories require the optional
+reads each lock through the GitHub Contents API from the project's configured
+`default_branch` (falling back to `main` for older registry entries), and opens
+a PR when the reported version or sync status changes. Paused and archived
+projects are not queried. Private project repositories require the optional
 `MVP_OS_PROJECTS_READ_TOKEN` repository secret.
 
 The sync script manages only paths listed in the release manifest. Project

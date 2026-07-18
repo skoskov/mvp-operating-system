@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.1] - 2026-07-19
+
+### Fixed
+
+- Read each active project lock from its configured default branch instead of
+  assuming `main`.
+- Record the verified MVP OS status for `crm-agent-mvp` in the central registry.
+
 ## [1.0.0] - 2026-07-12
 
 ### Added

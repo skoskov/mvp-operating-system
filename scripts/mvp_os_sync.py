@@ -155,6 +155,9 @@ def validate(source_root: Path) -> None:
             raise SystemExit(f"Invalid status for {project_id}: {project.get('status')!r}")
         if project.get("sync_mode") != "pull-pr":
             raise SystemExit(f"Unsupported sync_mode for {project_id}")
+        default_branch = project.get("default_branch", "main")
+        if not isinstance(default_branch, str) or not default_branch.strip():
+            raise SystemExit(f"Invalid default_branch for {project_id}: {default_branch!r}")
 
     releases = release_manifests(source_root, "0.0.0", current)
     if not releases or releases[-1].get("version") != current:
