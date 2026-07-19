@@ -10,6 +10,11 @@ released versions through a pull-based GitHub Actions workflow.
 - `compatibility/releases/v<version>.json` declares managed and review-only paths.
 - `compatibility/projects.json` is the active-project registry and desired-state control plane.
 
+`VERSION` can describe a local release candidate. Official publication also
+requires root `mvp-os.lock.publication_status` to be `published`, its `release`
+to match `v<VERSION>`, successful verification, merge to `main`, and push of the
+matching tag. Candidate source locks keep `release: null`.
+
 Only projects with registry status `active` receive automated sync work. `paused`
 and `archived` projects remain visible but are not updated.
 
@@ -18,6 +23,12 @@ and `archived` projects remain visible but are not updated.
 Every project declares `mvp-os.lock`. It records the applied release and the
 source repository. The template workflow checks weekly and can also be started
 manually. It opens a PR in the project; it never auto-merges.
+
+From v2.0.0 the lock also reports Project Control status. Sync installs the
+validator/bootstrap tooling, but never auto-generates project-specific current
+decisions. An unmigrated active project receives
+`project-control-migration-required`; a reviewed project migration must create
+and activate `project-control/CURRENT.json`.
 
 The project lock is the actual applied-version source. The central registry's
 `last_known_version` is a reporting field, not a live claim; it must be updated
@@ -34,6 +45,9 @@ The sync script manages only paths listed in the release manifest. Project
 `AGENTS.md`, `DECISIONS.md`, product docs, and OpenSpec files are review-only so
 project-specific rules cannot be overwritten silently.
 
+Project Control releases are project-owned review paths. Their history and
+current pointer are never overwritten by central sync.
+
 ## Candidate propagation
 
 1. A project records a reusable improvement in its context improvement log.
@@ -46,6 +60,9 @@ Every published version must also have a matching Git tag, for example `v1.0.0`.
 Projects resolve `VERSION` from `main` and then check out that tag before sync.
 Each release manifest declares `previous_version`; projects apply the complete
 chain and refuse to skip a migration.
+
+The MVP OS repository itself uses `sync_mode: source`. It self-hosts Project
+Control but never enters the downstream pull-request sync loop.
 
 The sync command requires the repository identity from the registry. A local
 run must pass `--repository owner/name`. Current-version drift is blocked by

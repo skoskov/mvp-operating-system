@@ -1,0 +1,1 @@
+{"decisions":[{"id":"OS-ADR-001","status":"active","statement":"The hash-verified Project Control release is the only startup authority.","source_events":["mvp-os:v2.0.0"],"supersedes":[]}]}

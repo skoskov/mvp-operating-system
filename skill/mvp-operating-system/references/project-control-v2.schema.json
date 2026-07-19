@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mvp-os.local/schemas/project-control-v2.schema.json",
+  "title": "MVP OS Project Control v2",
+  "description": "Normative field contract. Cross-file hashes and startup invariants are enforced by bin/project_control.py.",
+  "type": "object",
+  "required": ["schema_version", "release_id", "manifest_sha256", "activated_at"],
+  "properties": {
+    "schema_version": {"const": 2},
+    "release_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]+$"},
+    "manifest_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "activated_at": {"type": "string", "format": "date-time"}
+  },
+  "additionalProperties": false
+}

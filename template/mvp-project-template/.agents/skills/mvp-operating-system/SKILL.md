@@ -5,6 +5,18 @@ description: Run idea-to-MVP projects with idea intake, launch market research, 
 
 # MVP Operating System Skill
 
+## Mandatory project startup
+
+Before reading project documentation, run:
+
+```bash
+python3 .agents/skills/mvp-operating-system/bin/project_control.py bootstrap --project-root .
+```
+
+The verified current release is the sole startup authority. Legacy decisions,
+README files, outputs, old OpenSpec changes, context repositories, chats, and
+history are excluded unless the current release explicitly links them for trace.
+
 Use this skill for new MVPs, major features, recovery slices, and project restarts.
 
 ## Mission
@@ -12,6 +24,20 @@ Use this skill for new MVPs, major features, recovery slices, and project restar
 Move from high-level idea to working MVP while keeping the human focused on important product, business, scope, risk, budget, and technical trade-off decisions.
 
 Do not use the human for terminal work, log copying, manual QA, code review, long-spec approval, or routine technical validation.
+
+## Hard execution gate
+
+Before product implementation, deployment, or public-demo work, run the hard execution gate.
+
+Execution is allowed only when the full required stack for the task is verified and working: repository state, dependency manager, build, tests/evals, local runtime, browser QA, deployment service, reverse proxy/CDN/public URL, screenshots/DOM/click checks, and rollback path where applicable.
+
+If any required element is broken, flaky, unavailable, blocked, or unverified, stop immediately and report a P0 blocker. Do not continue with a degraded workaround.
+
+Infrastructure failure is not permission to simplify the product, replace the UI, remove navigation, reduce interactivity, fake integrations, or narrow demo scope.
+
+Static shells, mock fallbacks, route bypasses, screenshots-as-proof, or narrower flows are forbidden unless the human explicitly approves that exact tradeoff through a Decision Card.
+
+For substantial user-visible tasks, capture baseline and final comparison for public URL behavior, screenshots, visible UI structure, clickable controls, page transitions, browser/runtime errors, and product-specific acceptance criteria. A task is not READY if the final state regresses from baseline.
 
 ## Flow
 
@@ -93,9 +119,10 @@ Do not use the human for terminal work, log copying, manual QA, code review, lon
    - Repair failures within budget.
    - If repeated failures exceed stop conditions, escalate with a Decision Card.
 
-17. **Final Check**
-   - Check product promise, core UX, verification results, content readiness, known limitations, and final status.
+17. **Release Gate**
+   - Check product promise, core UX, verification results, content readiness, release readiness, known limitations, and final status.
    - Use `references/acceptance-release-gate.md`.
+   - Do not call the MVP ready if final status is BLOCKED.
 
 18. **Pre-launch Iteration Update**
    - Use after each non-final deploy/check/review cycle.

@@ -1,5 +1,23 @@
 # Decisions — mvp-os
 
+## 2026-07-19 — Self-host Project Control without self-sync
+
+Decision: manage the MVP OS source repository through root `AGENTS.md`, a
+source-role `mvp-os.lock`, and hash-verified root Project Control. Keep release
+distribution as a separate downstream pull-request mechanism.
+
+Reason: MVP OS cannot require Project Control from every project while leaving
+its own current operating truth implicit. Reusing consumer self-sync would
+create a circular and misleading release path.
+
+Impact:
+
+- Root startup uses the canonical CLI under `skill/`.
+- `publication_status: candidate` cannot claim a release tag.
+- Local `VERSION` alone is not official release evidence.
+- Secret detection covers command arguments and source-event references.
+- Existing decisions and historical artifacts remain preserved.
+
 ## 2026-07-19 — Track every project's default branch in the sync registry
 
 Decision: store `default_branch` per project in `compatibility/projects.json`

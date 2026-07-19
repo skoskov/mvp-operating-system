@@ -45,6 +45,9 @@ fi
 cp -R "$TEMPLATE_DIR" "$PROJECT_DIR"
 cd "$PROJECT_DIR"
 
+python3 .agents/skills/mvp-operating-system/bin/project_control.py initialize \
+  --project-root . --project-id "$PROJECT_NAME"
+
 # Keep placeholder files out of the first commit only if they are empty scaffolding.
 find . -name ".gitkeep" -type f -delete || true
 

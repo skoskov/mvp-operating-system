@@ -8,6 +8,19 @@ Use the `mvp-operating-system` skill for every new MVP, major feature, or recove
 
 The human is not a terminal operator, log copier, QA engineer, code reviewer, long-spec approver, or checklist validator.
 
+## Current-state startup gate
+
+Before reading project documentation, run:
+
+```bash
+python3 .agents/skills/mvp-operating-system/bin/project_control.py bootstrap --project-root .
+```
+
+Only the hash-verified release referenced by `project-control/CURRENT.json` is
+current operating truth. Do not startup-read `DECISIONS.md`, README files,
+`outputs/`, old OpenSpec changes, context repositories, chats, or history. Read
+them only for an explicit trace linked from the current release.
+
 ## Agent coordination
 
 For multiagent Codex work, use `docs/agent-protocol.md` and project-scoped agents from `.codex/agents/`.

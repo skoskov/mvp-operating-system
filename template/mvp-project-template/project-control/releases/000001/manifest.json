@@ -1,0 +1,17 @@
+{
+  "schema_version": 2,
+  "release_id": "000001",
+  "project_id": "replace-with-project-id",
+  "created_at": "2026-07-18T19:00:00+00:00",
+  "source_commit": "mvp-os-v2.0.0",
+  "files": {
+    "goal.json": "sha256:3e43a0d648400e25155c8903f2e40220ff891f1787b23df3b783bc9bd32defb0",
+    "decisions.json": "sha256:62d38816ceb3866d637cb7aad72771d0fc9c497f5bb3be378905e991c640ccee",
+    "scope.json": "sha256:21b927480f091322238500f61959f9dbf05a13be5c5fd6d9bb09db47972fd1e7",
+    "architecture.json": "sha256:f9cdf2cb30f1e03b78a390fa6a48f24eac343f706985eba644e3424dab9874aa",
+    "commands.json": "sha256:6dc6bdce5f4c1347b67000a62f956535fdad8d77ceca1f8261be4ac3e51543d5",
+    "access.json": "sha256:aa335b27c1f5f5075e208bc57344d1c6131b5c422937555bb3a5d77aa5b5e04f",
+    "runtime-requirements.json": "sha256:661690bada7e10b4b48032222a563b7a74c810a6eb5561ca2befc3b00397abe4",
+    "acceptance.json": "sha256:474f3b17b5c886d3c8acf4c2ae44784b5af2a256c5727d3fd96b03d7776a20fc"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "included": [
+    "self-hosted Project Control startup",
+    "source-repository candidate state",
+    "secret-value enforcement",
+    "release verification and review"
+  ],
+  "excluded": [
+    "self-sync",
+    "automatic merge or tag publication",
+    "P1 and P2 hardening outside the release blockers"
+  ]
+}

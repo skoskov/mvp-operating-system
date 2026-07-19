@@ -14,6 +14,15 @@ It must not use the human as a terminal operator, log copier, code reviewer, lon
 
 ## Core flow
 
+Every project startup first resolves current truth through Project Control v2:
+
+```bash
+python3 .agents/skills/mvp-operating-system/bin/project_control.py bootstrap --project-root .
+```
+
+This prevents preserved but superseded decisions from silently becoming active
+in a new chat. See `docs/project-control-v2.md`.
+
 1. Start from a high-level idea.
 2. Create a mandatory Idea Intake.
 3. Create mandatory Launch Market Research.
@@ -47,6 +56,7 @@ It must not use the human as a terminal operator, log copier, code reviewer, lon
 /docs/how-to-start-new-mvp.md
 /docs/operating-principles.md
 /docs/codex-multiagent-protocol.md
+/docs/project-control-v2.md
 ```
 
 ## How to use
@@ -75,3 +85,8 @@ MVP OS releases are tracked in `VERSION`, `CHANGELOG.md`, and
 `compatibility/projects.json`. Active projects use `mvp-os.lock` and the
 template `MVP OS Sync` workflow to receive reviewed pull requests for managed
 operating-layer files. See `docs/mvp-os-sync.md` for the contract.
+
+This source repository also self-hosts Project Control through root
+`AGENTS.md`, `mvp-os.lock`, and `project-control/CURRENT.json`. Its lock uses
+the `source` role and never runs downstream self-sync. A local `VERSION` with
+`publication_status: candidate` is not an official release.
