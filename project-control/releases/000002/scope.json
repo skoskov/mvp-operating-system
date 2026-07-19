@@ -1,0 +1,13 @@
+{
+  "included": [
+    "published MVP OS v2.0.0",
+    "self-hosted Project Control",
+    "downstream pull-request sync",
+    "active-project v2 migration"
+  ],
+  "excluded": [
+    "source-repository self-sync",
+    "automatic project merge",
+    "secret values in release metadata"
+  ]
+}

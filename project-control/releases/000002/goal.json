@@ -1,0 +1,6 @@
+{
+  "project_id": "mvp-operating-system",
+  "project_version": "2.0.0",
+  "objective": "Maintain the published MVP OS v2.0.0 release and distribute reviewed updates through project pull requests.",
+  "next_safe_step": "Use the v2.0.0 tag for active-project migration and create a new reviewed Project Control release for the next source change."
+}

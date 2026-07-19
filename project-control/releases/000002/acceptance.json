@@ -1,0 +1,9 @@
+{
+  "gates": [
+    "root Project Control validate, bootstrap, and doctor pass",
+    "bootstrap reports LEGACY_STARTUP_READS: 0",
+    "source lock reports published with release v2.0.0",
+    "tag v2.0.0 resolves to the current source release commit",
+    "independent review has no unresolved findings"
+  ]
+}
