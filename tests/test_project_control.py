@@ -63,6 +63,7 @@ def make_project(
     manifest = {"schema_version": 2, "release_id": "000001", "project_id": "demo", "created_at": now.isoformat(), "source_commit": "abc", "files": hashes}
     write_json(release / "manifest.json", manifest)
     write_json(root / "project-control/CURRENT.json", {"schema_version": 2, "release_id": "000001", "manifest_sha256": sha(release / "manifest.json"), "activated_at": now.isoformat()})
+    write_json(root / "mvp-os.lock", {"project_id": "demo"})
     (root / "DECISIONS.md").write_text("Twenty is active and mandatory.\n", encoding="utf-8")
 
 
@@ -146,6 +147,60 @@ class ProjectControlTests(unittest.TestCase):
             current["manifest_sha256"] = sha(manifest_path)
             write_json(current_path, current)
             with self.assertRaises(project_control.ControlError):
+                project_control.validate_bundle(root)
+
+    def test_secret_value_in_manifest_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            make_project(root)
+            manifest_path = root / "project-control/releases/000001/manifest.json"
+            manifest = json.loads(manifest_path.read_text())
+            manifest["source_commit"] = "ghp_ABCDEFGHIJKLMNOPQRSTUVWXYZ123456"
+            write_json(manifest_path, manifest)
+            current_path = root / "project-control/CURRENT.json"
+            current = json.loads(current_path.read_text())
+            current["manifest_sha256"] = sha(manifest_path)
+            write_json(current_path, current)
+            with self.assertRaises(project_control.ControlError):
+                project_control.validate_bundle(root)
+
+    def test_symlinked_release_file_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            make_project(root)
+            goal_path = root / "project-control/releases/000001/goal.json"
+            outside = root / "outside-goal.json"
+            outside.write_bytes(goal_path.read_bytes())
+            goal_path.unlink()
+            try:
+                goal_path.symlink_to(outside)
+            except OSError as exc:
+                self.skipTest(f"symlink unavailable: {exc}")
+            with self.assertRaises(project_control.ControlError):
+                project_control.validate_bundle(root)
+
+    def test_manifest_and_lock_project_ids_must_match_goal(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            make_project(root)
+            manifest_path = root / "project-control/releases/000001/manifest.json"
+            manifest = json.loads(manifest_path.read_text())
+            manifest["project_id"] = "other-project"
+            write_json(manifest_path, manifest)
+            current_path = root / "project-control/CURRENT.json"
+            current = json.loads(current_path.read_text())
+            current["manifest_sha256"] = sha(manifest_path)
+            write_json(current_path, current)
+            with self.assertRaisesRegex(
+                project_control.ControlError, "manifest project_id"
+            ):
+                project_control.validate_bundle(root)
+
+            make_project(root)
+            write_json(root / "mvp-os.lock", {"project_id": "other-project"})
+            with self.assertRaisesRegex(
+                project_control.ControlError, "mvp-os.lock project_id"
+            ):
                 project_control.validate_bundle(root)
 
     def test_current_hash_mismatch_is_rejected(self) -> None:

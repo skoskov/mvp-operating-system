@@ -9,7 +9,7 @@
   "source_repository": "skoskov/mvp-operating-system",
   "project_control": {
     "schema_version": 2,
-    "status": "pending-review",
+    "status": "active",
     "current_path": "project-control/CURRENT.json"
   }
 }

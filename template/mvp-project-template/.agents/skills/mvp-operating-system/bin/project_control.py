@@ -71,7 +71,6 @@ def parse_time(value: str) -> datetime:
 SAFE_REFERENCE_KEYS = {
     "contract_version",
     "id",
-    "source_commit",
     "secret_ref",
 }
 KNOWN_SECRET_PATTERNS = (
@@ -80,6 +79,10 @@ KNOWN_SECRET_PATTERNS = (
     re.compile(r"(?<![A-Za-z0-9])\d{6,12}:[A-Za-z0-9_-]{25,}"),
 )
 SECRET_REF_PATTERN = re.compile(r"^secret://[A-Za-z0-9._-]+(?:/[A-Za-z0-9._-]+)+$")
+RELEASE_ID_PATTERN = re.compile(r"^[A-Za-z0-9._-]+$")
+SOURCE_COMMIT_PATTERN = re.compile(
+    r"^(?:[0-9a-f]{3,64}|project-bootstrap|uncommitted-migration|mvp-os-v\d+\.\d+\.\d+|working-tree:[A-Za-z0-9._/-]+)$"
+)
 
 
 def string_entropy(value: str) -> float:
@@ -92,6 +95,8 @@ def string_entropy(value: str) -> float:
 def looks_like_secret(value: str, key: str | None) -> bool:
     if any(pattern.search(value) for pattern in KNOWN_SECRET_PATTERNS):
         return True
+    if key == "source_commit" and SOURCE_COMMIT_PATTERN.fullmatch(value):
+        return False
     if key in SAFE_REFERENCE_KEYS or value.startswith(("context:", "working-tree:", "sha256:")):
         return False
     candidates = [
@@ -116,19 +121,42 @@ def walk_values(value: Any, location: str = "$", key: str | None = None) -> None
         raise ControlError(f"possible secret value forbidden at {location}")
 
 
+def safe_child(root: Path, *parts: str) -> Path:
+    if root.is_symlink():
+        raise ControlError(f"symlink is forbidden in Project Control path: {root}")
+    root_resolved = root.resolve(strict=False)
+    candidate = root.joinpath(*parts)
+    if candidate.is_symlink():
+        raise ControlError(f"symlink is forbidden in Project Control path: {candidate}")
+    try:
+        candidate.resolve(strict=False).relative_to(root_resolved)
+    except ValueError as exc:
+        raise ControlError(f"Project Control path escapes root: {candidate}") from exc
+    return candidate
+
+
+def project_file(project_root: Path, name: str) -> Path:
+    root = project_root.resolve()
+    return safe_child(root, name)
+
+
 def read_bundle(
     project_root: Path, current_override: dict | None = None
 ) -> tuple[dict, Path, dict[str, Any]]:
-    control_root = project_root.resolve() / "project-control"
-    current = current_override or load_json(control_root / "CURRENT.json")
+    control_root = project_file(project_root, "project-control")
+    current = current_override or load_json(safe_child(control_root, "CURRENT.json"))
     if not isinstance(current, dict) or current.get("schema_version") != 2:
         raise ControlError("CURRENT.json must use schema_version 2")
+    walk_values(current)
     release_id = current.get("release_id")
-    if not isinstance(release_id, str) or not release_id or "/" in release_id or ".." in release_id:
+    if not isinstance(release_id, str) or not RELEASE_ID_PATTERN.fullmatch(release_id):
         raise ControlError("CURRENT.json has unsafe release_id")
-    release_root = control_root / "releases" / release_id
-    manifest_path = release_root / "manifest.json"
+    release_root = safe_child(control_root, "releases", release_id)
+    manifest_path = safe_child(release_root, "manifest.json")
     manifest = load_json(manifest_path)
+    if not isinstance(manifest, dict):
+        raise ControlError("manifest.json must be an object")
+    walk_values(manifest)
     if current.get("manifest_sha256") != digest(manifest_path):
         raise ControlError("CURRENT.json manifest_sha256 mismatch")
     if manifest.get("schema_version") != 2 or manifest.get("release_id") != release_id:
@@ -139,7 +167,7 @@ def read_bundle(
     bundle: dict[str, Any] = {}
     for name in REQUIRED_FILES:
         expected = files.get(name)
-        path = release_root / name
+        path = safe_child(release_root, name)
         if expected != digest(path):
             raise ControlError(f"release hash mismatch: {name}")
         payload = load_json(path)
@@ -183,6 +211,21 @@ def validate_bundle(
     goal = bundle["goal.json"]
     if not isinstance(goal, dict) or not goal.get("objective") or not goal.get("next_safe_step"):
         raise ControlError("goal.json needs objective and next_safe_step")
+    project_id = goal.get("project_id")
+    if not isinstance(project_id, str) or not project_id:
+        raise ControlError("goal.json needs project_id")
+    manifest = load_json(safe_child(release_root, "manifest.json"))
+    template_identity = (
+        project_id == "replace-with-project-id"
+        and manifest.get("project_id") == "replace-with-project-id"
+    )
+    if manifest.get("project_id") != project_id:
+        raise ControlError("manifest project_id does not match goal.json")
+    lock = load_json(project_file(project_root, "mvp-os.lock"))
+    if lock.get("project_id") != project_id and not (
+        template_identity and lock.get("project_id") == "replace-me"
+    ):
+        raise ControlError("mvp-os.lock project_id does not match goal.json")
 
     decisions = bundle["decisions.json"].get("decisions", [])
     ids: set[str] = set()
@@ -326,12 +369,12 @@ def doctor(project_root: Path) -> int:
 
 
 def publish(project_root: Path, release_id: str, source_commit: str, activated_at: str) -> int:
-    if not release_id or "/" in release_id or ".." in release_id:
+    if not RELEASE_ID_PATTERN.fullmatch(release_id):
         raise ControlError("unsafe release_id")
-    control_root = project_root.resolve() / "project-control"
-    release_root = control_root / "releases" / release_id
-    manifest_path = release_root / "manifest.json"
-    current_path = control_root / "CURRENT.json"
+    control_root = project_file(project_root, "project-control")
+    release_root = safe_child(control_root, "releases", release_id)
+    manifest_path = safe_child(release_root, "manifest.json")
+    current_path = safe_child(control_root, "CURRENT.json")
     if manifest_path.exists():
         raise ControlError("publish refuses to overwrite an existing release")
     parent_release = None
@@ -342,7 +385,7 @@ def publish(project_root: Path, release_id: str, source_commit: str, activated_a
             raise ControlError("new release_id must differ from CURRENT")
     files: dict[str, str] = {}
     for name in REQUIRED_FILES:
-        path = release_root / name
+        path = safe_child(release_root, name)
         payload = load_json(path)
         walk_values(payload)
         files[name] = digest(path)
@@ -384,7 +427,7 @@ def initialize(project_root: Path, project_id: str) -> int:
     goal = bundle["goal.json"]
     if goal.get("project_id") != "replace-with-project-id":
         raise ControlError("initialize is allowed only on an untouched project template")
-    lock_path = project_root.resolve() / "mvp-os.lock"
+    lock_path = project_file(project_root, "mvp-os.lock")
     lock = load_json(lock_path)
     if lock.get("project_id") != "replace-me":
         raise ControlError("template lock project_id was already initialized")
@@ -403,7 +446,7 @@ def initialize(project_root: Path, project_id: str) -> int:
     )
 
     current["manifest_sha256"] = digest(manifest_path)
-    current_path = project_root.resolve() / "project-control" / "CURRENT.json"
+    current_path = safe_child(project_file(project_root, "project-control"), "CURRENT.json")
     current_path.write_text(
         json.dumps(current, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )

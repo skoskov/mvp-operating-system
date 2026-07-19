@@ -1,6 +1,6 @@
 # Project Control v2 self-host P0
 
-Status: implementation complete, independent review pending.
+Status: implementation complete, independent review passed.
 
 Implemented:
 
@@ -15,7 +15,7 @@ Implemented:
 Verification:
 
 - `python3 scripts/verify.py`: PASS;
-- 16/16 unit tests: PASS;
+- 19/19 unit tests: PASS;
 - root Project Control validate/bootstrap/doctor: PASS;
 - template Project Control validate/doctor: PASS;
 - `LEGACY_STARTUP_READS: 0`;
@@ -23,10 +23,11 @@ Verification:
 
 Review:
 
-- automated external review was not run because sandbox policy blocked transfer
-  of uncommitted repository content;
-- root lock remains `project_control.status: pending-review`;
-- merge, tag, and publication remain blocked until independent PR review passes.
+- first independent review found three P1 findings: manifest secret bypass,
+  symlink escape, and cross-file project identity mismatch;
+- all findings have regression coverage and passed repeat independent review;
+- root lock is now `project_control.status: active`;
+- merge, tag, and publication remain gated by this PR's final merge step.
 
 Preserved:
 
