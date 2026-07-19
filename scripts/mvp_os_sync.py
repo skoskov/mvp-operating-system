@@ -123,6 +123,15 @@ def path_differs(source: Path, destination: Path) -> bool:
     return False
 
 
+def effective_managed_paths(releases: list[dict]) -> list[dict]:
+    """Return each destination once, using the newest release declaration."""
+    by_destination: dict[str, dict] = {}
+    for release in releases:
+        for item in release["managed_paths"]:
+            by_destination[item["destination"]] = item
+    return list(by_destination.values())
+
+
 def validate(source_root: Path) -> None:
     current = source_version(source_root)
     version_key(current)
@@ -226,13 +235,13 @@ def sync(
                 source_root / "compatibility" / "releases" / f"v{current}.json"
             )
         ]
+    managed_paths = effective_managed_paths(releases)
     drift = any(
         path_differs(
             safe_path(source_root, item["source"]),
             safe_path(project_root, item["destination"]),
         )
-        for release in releases
-        for item in release["managed_paths"]
+        for item in managed_paths
     )
     if applied == current and not drift:
         print(f"OK {project_id}: already on MVP OS v{current}")
@@ -245,27 +254,38 @@ def sync(
                 "Managed files drifted at the current version; "
                 "rerun with --allow-overwrite after review"
             )
-    for release in releases:
-        for item in release["managed_paths"]:
-            source = safe_path(source_root, item["source"])
-            destination = safe_path(project_root, item["destination"])
-            ensure_tree_safe(source)
-            if destination.exists():
-                ensure_tree_safe(destination)
-            if not source.exists():
-                raise SystemExit(f"Managed source path does not exist: {source}")
-            print(f"SYNC {item['source']} -> {item['destination']}")
-            if not dry_run:
-                if source.is_dir():
-                    shutil.copytree(source, destination, dirs_exist_ok=True)
-                else:
-                    destination.parent.mkdir(parents=True, exist_ok=True)
-                    shutil.copy2(source, destination)
+    for item in managed_paths:
+        source = safe_path(source_root, item["source"])
+        destination = safe_path(project_root, item["destination"])
+        ensure_tree_safe(source)
+        if destination.exists():
+            ensure_tree_safe(destination)
+        if not source.exists():
+            raise SystemExit(f"Managed source path does not exist: {source}")
+        print(f"SYNC {item['source']} -> {item['destination']}")
+        if not dry_run:
+            if source.is_dir():
+                shutil.copytree(source, destination, dirs_exist_ok=True)
+            else:
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(source, destination)
 
     if not dry_run:
+        control_current = project_root / "project-control" / "CURRENT.json"
         lock["mvp_os_version"] = current
         lock["release"] = f"v{current}"
-        lock["sync_status"] = "synced"
+        lock["schema_version"] = 2
+        project_control = lock.setdefault("project_control", {})
+        project_control["schema_version"] = 2
+        project_control["current_path"] = "project-control/CURRENT.json"
+        if not control_current.exists():
+            project_control["status"] = "pending"
+            lock["sync_status"] = "project-control-migration-required"
+        else:
+            project_control.setdefault("status", "pending-review")
+            lock["sync_status"] = (
+                "synced" if project_control["status"] == "active" else "project-control-review-required"
+            )
         (project_root / lock_path).write_text(
             json.dumps(lock, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
         )

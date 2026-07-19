@@ -14,6 +14,15 @@ It must not use the human as a terminal operator, log copier, code reviewer, lon
 
 ## Core flow
 
+Every project startup first resolves current truth through Project Control v2:
+
+```bash
+python3 .agents/skills/mvp-operating-system/bin/project_control.py bootstrap --project-root .
+```
+
+This prevents preserved but superseded decisions from silently becoming active
+in a new chat. See `docs/project-control-v2.md`.
+
 1. Start from a high-level idea.
 2. Create a mandatory Idea Intake.
 3. Create mandatory Launch Market Research.
@@ -47,6 +56,7 @@ It must not use the human as a terminal operator, log copier, code reviewer, lon
 /docs/how-to-start-new-mvp.md
 /docs/operating-principles.md
 /docs/codex-multiagent-protocol.md
+/docs/project-control-v2.md
 ```
 
 ## How to use

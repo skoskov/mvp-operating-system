@@ -54,11 +54,14 @@ def collect(registry_path: Path, output_path: Path, token: str | None) -> bool:
                 raise ValueError("lock source_repository mismatch")
             reported_version = lock.get("mvp_os_version")
             reported_status = lock.get("sync_status", "unknown")
+            project_control = lock.get("project_control", {})
             report.append(
                 {
                     "id": project_id,
                     "status": reported_status,
                     "mvp_os_version": reported_version,
+                    "project_control_status": project_control.get("status", "not-migrated"),
+                    "project_control_current": project_control.get("current_path"),
                 }
             )
         except (

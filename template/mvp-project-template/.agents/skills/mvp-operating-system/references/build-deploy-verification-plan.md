@@ -23,6 +23,7 @@ Source inputs:
 - Product/Technical Brief:
 - Metrics Plan:
 - User Ops Plan:
+- Limited Release Plan, if used:
 
 Stack:
 <approved stack from preflight>
@@ -88,6 +89,14 @@ Test strategy:
 Verification commands:
 - primary:
 - secondary, if needed:
+
+Hard execution gate:
+- required stack elements:
+- baseline screenshots/DOM/click map:
+- public route checks, if any:
+- rollback evidence:
+- stop conditions for broken tools/infrastructure:
+- forbidden degraded workarounds:
 
 Autonomous repair loop:
 1. implement slice

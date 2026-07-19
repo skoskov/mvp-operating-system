@@ -19,6 +19,12 @@ Every project declares `mvp-os.lock`. It records the applied release and the
 source repository. The template workflow checks weekly and can also be started
 manually. It opens a PR in the project; it never auto-merges.
 
+From v2.0.0 the lock also reports Project Control status. Sync installs the
+validator/bootstrap tooling, but never auto-generates project-specific current
+decisions. An unmigrated active project receives
+`project-control-migration-required`; a reviewed project migration must create
+and activate `project-control/CURRENT.json`.
+
 The project lock is the actual applied-version source. The central registry's
 `last_known_version` is a reporting field, not a live claim; it must be updated
 from a project status report or review PR.
@@ -33,6 +39,9 @@ projects are not queried. Private project repositories require the optional
 The sync script manages only paths listed in the release manifest. Project
 `AGENTS.md`, `DECISIONS.md`, product docs, and OpenSpec files are review-only so
 project-specific rules cannot be overwritten silently.
+
+Project Control releases are project-owned review paths. Their history and
+current pointer are never overwritten by central sync.
 
 ## Candidate propagation
 

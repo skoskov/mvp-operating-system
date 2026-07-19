@@ -1,12 +1,17 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "project_id": "replace-me",
-  "mvp_os_version": "1.0.0",
-  "release": "v1.0.0",
+  "mvp_os_version": "2.0.0",
+  "release": "v2.0.0",
   "sync_status": "pending-project-registration",
   "sync_mode": "pull-pr",
   "source_repository": "skoskov/mvp-operating-system",
   "managed_paths": [
     ".agents/skills/mvp-operating-system"
-  ]
+  ],
+  "project_control": {
+    "schema_version": 2,
+    "status": "pending-review",
+    "current_path": "project-control/CURRENT.json"
+  }
 }

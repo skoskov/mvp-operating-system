@@ -33,6 +33,9 @@ New-Item -ItemType Directory -Force -Path $DevRoot | Out-Null
 Copy-Item -Recurse -Path $TemplateDir -Destination $ProjectDir
 Set-Location $ProjectDir
 
+python .agents/skills/mvp-operating-system/bin/project_control.py initialize `
+  --project-root . --project-id $ProjectName
+
 Get-ChildItem -Recurse -Filter ".gitkeep" | Remove-Item -Force -ErrorAction SilentlyContinue
 
 if (-not (Test-Path "README.md")) {

@@ -1,0 +1,1 @@
+{"components":[{"id":"project-control","role":"current operating truth"},{"id":"legacy-history","role":"preserved trace evidence only"}],"invariants":["one CURRENT.json","immutable published releases","secret references only"]}

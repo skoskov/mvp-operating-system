@@ -5,6 +5,18 @@ description: Run idea-to-MVP projects with idea intake, launch market research, 
 
 # MVP Operating System Skill
 
+## Mandatory project startup
+
+Before reading project documentation, run:
+
+```bash
+python3 .agents/skills/mvp-operating-system/bin/project_control.py bootstrap --project-root .
+```
+
+The verified current release is the sole startup authority. Legacy decisions,
+README files, outputs, old OpenSpec changes, context repositories, chats, and
+history are excluded unless the current release explicitly links them for trace.
+
 Use this skill for new MVPs, major features, recovery slices, and project restarts.
 
 ## Mission
