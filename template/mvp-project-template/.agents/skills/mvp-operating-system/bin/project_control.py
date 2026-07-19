@@ -69,12 +69,9 @@ def parse_time(value: str) -> datetime:
 
 
 SAFE_REFERENCE_KEYS = {
-    "argv",
-    "artifact_refs",
     "contract_version",
     "id",
     "source_commit",
-    "source_events",
     "secret_ref",
 }
 KNOWN_SECRET_PATTERNS = (
@@ -93,10 +90,10 @@ def string_entropy(value: str) -> float:
 
 
 def looks_like_secret(value: str, key: str | None) -> bool:
-    if key in SAFE_REFERENCE_KEYS or value.startswith(("context:", "working-tree:", "sha256:")):
-        return False
     if any(pattern.search(value) for pattern in KNOWN_SECRET_PATTERNS):
         return True
+    if key in SAFE_REFERENCE_KEYS or value.startswith(("context:", "working-tree:", "sha256:")):
+        return False
     candidates = [
         candidate
         for candidate in re.findall(r"[A-Za-z0-9_+=/.-]{24,}", value)

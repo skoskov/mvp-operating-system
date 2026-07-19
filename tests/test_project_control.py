@@ -108,6 +108,46 @@ class ProjectControlTests(unittest.TestCase):
             with self.assertRaises(project_control.ControlError):
                 project_control.validate_bundle(root)
 
+    def test_secret_value_in_command_argv_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            make_project(root)
+            commands_path = root / "project-control/releases/000001/commands.json"
+            commands = json.loads(commands_path.read_text())
+            commands["commands"][0]["argv"].append("A9f3Kp7Lm2Nx8Qr4Ts6Uv1Wx5Yz0BcDe")
+            write_json(commands_path, commands)
+            manifest_path = root / "project-control/releases/000001/manifest.json"
+            manifest = json.loads(manifest_path.read_text())
+            manifest["files"]["commands.json"] = sha(commands_path)
+            write_json(manifest_path, manifest)
+            current_path = root / "project-control/CURRENT.json"
+            current = json.loads(current_path.read_text())
+            current["manifest_sha256"] = sha(manifest_path)
+            write_json(current_path, current)
+            with self.assertRaises(project_control.ControlError):
+                project_control.validate_bundle(root)
+
+    def test_secret_value_in_source_events_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            make_project(root)
+            decisions_path = root / "project-control/releases/000001/decisions.json"
+            decisions = json.loads(decisions_path.read_text())
+            decisions["decisions"][0]["source_events"] = [
+                "ghp_ABCDEFGHIJKLMNOPQRSTUVWXYZ123456"
+            ]
+            write_json(decisions_path, decisions)
+            manifest_path = root / "project-control/releases/000001/manifest.json"
+            manifest = json.loads(manifest_path.read_text())
+            manifest["files"]["decisions.json"] = sha(decisions_path)
+            write_json(manifest_path, manifest)
+            current_path = root / "project-control/CURRENT.json"
+            current = json.loads(current_path.read_text())
+            current["manifest_sha256"] = sha(manifest_path)
+            write_json(current_path, current)
+            with self.assertRaises(project_control.ControlError):
+                project_control.validate_bundle(root)
+
     def test_current_hash_mismatch_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

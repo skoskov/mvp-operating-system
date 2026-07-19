@@ -85,3 +85,8 @@ MVP OS releases are tracked in `VERSION`, `CHANGELOG.md`, and
 `compatibility/projects.json`. Active projects use `mvp-os.lock` and the
 template `MVP OS Sync` workflow to receive reviewed pull requests for managed
 operating-layer files. See `docs/mvp-os-sync.md` for the contract.
+
+This source repository also self-hosts Project Control through root
+`AGENTS.md`, `mvp-os.lock`, and `project-control/CURRENT.json`. Its lock uses
+the `source` role and never runs downstream self-sync. A local `VERSION` with
+`publication_status: candidate` is not an official release.

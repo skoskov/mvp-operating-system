@@ -1,0 +1,9 @@
+{
+  "gates": [
+    "root Project Control validate, bootstrap, and doctor pass",
+    "bootstrap reports LEGACY_STARTUP_READS: 0",
+    "source lock reports candidate and never claims an unpublished tag",
+    "secret-value bypass regression tests pass",
+    "independent review finds no release blocker"
+  ]
+}

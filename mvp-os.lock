@@ -1,0 +1,15 @@
+{
+  "schema_version": 2,
+  "project_id": "mvp-operating-system",
+  "mvp_os_version": "2.0.0",
+  "release": null,
+  "publication_status": "candidate",
+  "repository_role": "source",
+  "sync_mode": "source",
+  "source_repository": "skoskov/mvp-operating-system",
+  "project_control": {
+    "schema_version": 2,
+    "status": "pending-review",
+    "current_path": "project-control/CURRENT.json"
+  }
+}

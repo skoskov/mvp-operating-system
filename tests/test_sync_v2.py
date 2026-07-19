@@ -7,6 +7,7 @@ import unittest
 from contextlib import redirect_stdout
 from io import StringIO
 from pathlib import Path
+from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -18,6 +19,74 @@ SPEC.loader.exec_module(mvp_os_sync)
 
 
 class SyncV2Tests(unittest.TestCase):
+    def test_source_lock_candidate_does_not_claim_release_tag(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            source = Path(tmp)
+            lock = {
+                "schema_version": 2,
+                "project_id": "mvp-operating-system",
+                "mvp_os_version": "2.0.0",
+                "release": None,
+                "publication_status": "candidate",
+                "repository_role": "source",
+                "sync_mode": "source",
+                "source_repository": "skoskov/mvp-operating-system",
+                "project_control": {
+                    "schema_version": 2,
+                    "status": "pending-review",
+                    "current_path": "project-control/CURRENT.json",
+                },
+            }
+            (source / "mvp-os.lock").write_text(
+                json.dumps(lock) + "\n", encoding="utf-8"
+            )
+            mvp_os_sync.validate_source_lock(source, "2.0.0")
+            lock["release"] = "v2.0.0"
+            (source / "mvp-os.lock").write_text(
+                json.dumps(lock) + "\n", encoding="utf-8"
+            )
+            with self.assertRaisesRegex(
+                SystemExit, "Candidate source lock must not claim a release tag"
+            ):
+                mvp_os_sync.validate_source_lock(source, "2.0.0")
+
+    def test_published_source_lock_requires_matching_release_tag(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            source = Path(tmp)
+            lock = {
+                "schema_version": 2,
+                "project_id": "mvp-operating-system",
+                "mvp_os_version": "2.0.0",
+                "release": None,
+                "publication_status": "published",
+                "repository_role": "source",
+                "sync_mode": "source",
+                "source_repository": "skoskov/mvp-operating-system",
+                "project_control": {
+                    "schema_version": 2,
+                    "status": "active",
+                    "current_path": "project-control/CURRENT.json",
+                },
+            }
+            (source / "mvp-os.lock").write_text(
+                json.dumps(lock) + "\n", encoding="utf-8"
+            )
+            with self.assertRaisesRegex(
+                SystemExit, "Published source lock must claim the matching release tag"
+            ):
+                mvp_os_sync.validate_source_lock(source, "2.0.0")
+            lock["release"] = "v2.0.0"
+            (source / "mvp-os.lock").write_text(
+                json.dumps(lock) + "\n", encoding="utf-8"
+            )
+            with patch.object(mvp_os_sync, "tag_points_to_head", return_value=True):
+                mvp_os_sync.validate_source_lock(source, "2.0.0")
+            with patch.object(mvp_os_sync, "tag_points_to_head", return_value=False):
+                with self.assertRaisesRegex(
+                    SystemExit, "Published source lock release tag must point to HEAD"
+                ):
+                    mvp_os_sync.validate_source_lock(source, "2.0.0")
+
     def test_v1_project_becomes_pending_project_control_migration(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             project = Path(tmp)

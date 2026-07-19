@@ -23,6 +23,27 @@ def run(argv: list[str]) -> None:
 
 def main() -> None:
     run([sys.executable, "scripts/mvp_os_sync.py", "validate", "--source-root", "."])
+    run([
+        sys.executable,
+        "skill/mvp-operating-system/bin/project_control.py",
+        "validate",
+        "--project-root",
+        ".",
+    ])
+    run([
+        sys.executable,
+        "skill/mvp-operating-system/bin/project_control.py",
+        "bootstrap",
+        "--project-root",
+        ".",
+    ])
+    run([
+        sys.executable,
+        "skill/mvp-operating-system/bin/project_control.py",
+        "doctor",
+        "--project-root",
+        ".",
+    ])
     run([sys.executable, "-m", "unittest", "discover", "-s", "tests", "-p", "test_*.py", "-v"])
     run([
         sys.executable,

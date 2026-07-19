@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import json
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -106,6 +107,64 @@ def source_version(source_root: Path) -> str:
     return path.read_text(encoding="utf-8").strip()
 
 
+def tag_points_to_head(source_root: Path, tag: str) -> bool:
+    tag_result = subprocess.run(
+        ["git", "-C", str(source_root), "rev-parse", f"{tag}^{{commit}}"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    head_result = subprocess.run(
+        ["git", "-C", str(source_root), "rev-parse", "HEAD"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return (
+        tag_result.returncode == 0
+        and head_result.returncode == 0
+        and tag_result.stdout.strip() == head_result.stdout.strip()
+    )
+
+
+def validate_source_lock(source_root: Path, current: str) -> None:
+    lock = load_json(source_root / "mvp-os.lock")
+    expected = {
+        "schema_version": 2,
+        "project_id": "mvp-operating-system",
+        "mvp_os_version": current,
+        "repository_role": "source",
+        "sync_mode": "source",
+        "source_repository": "skoskov/mvp-operating-system",
+    }
+    for key, value in expected.items():
+        if lock.get(key) != value:
+            raise SystemExit(
+                f"Source lock {key} mismatch: {lock.get(key)!r} != {value!r}"
+            )
+    publication_status = lock.get("publication_status")
+    release = lock.get("release")
+    if publication_status == "candidate":
+        if release is not None:
+            raise SystemExit("Candidate source lock must not claim a release tag")
+    elif publication_status == "published":
+        if release != f"v{current}":
+            raise SystemExit("Published source lock must claim the matching release tag")
+        if not tag_points_to_head(source_root, release):
+            raise SystemExit("Published source lock release tag must point to HEAD")
+    else:
+        raise SystemExit(f"Invalid source publication_status: {publication_status!r}")
+    project_control = lock.get("project_control")
+    if not isinstance(project_control, dict):
+        raise SystemExit("Source lock needs project_control metadata")
+    if project_control.get("schema_version") != 2:
+        raise SystemExit("Source lock project_control must use schema_version 2")
+    if project_control.get("status") not in {"pending-review", "active"}:
+        raise SystemExit("Source lock project_control status must be pending-review or active")
+    if project_control.get("current_path") != "project-control/CURRENT.json":
+        raise SystemExit("Source lock project_control current_path mismatch")
+
+
 def path_differs(source: Path, destination: Path) -> bool:
     """Return whether managed source content is missing or different.
 
@@ -135,6 +194,7 @@ def effective_managed_paths(releases: list[dict]) -> list[dict]:
 def validate(source_root: Path) -> None:
     current = source_version(source_root)
     version_key(current)
+    validate_source_lock(source_root, current)
     registry = load_json(source_root / "compatibility" / "projects.json")
     if registry.get("current_version") != current:
         raise SystemExit(

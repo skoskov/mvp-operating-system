@@ -1,0 +1,22 @@
+{
+  "components": [
+    {
+      "id": "project-control",
+      "role": "current operating truth for the MVP OS source repository"
+    },
+    {
+      "id": "release-source",
+      "role": "canonical source for reviewed MVP OS release candidates"
+    },
+    {
+      "id": "downstream-sync",
+      "role": "pull-request distribution to registered projects only"
+    }
+  ],
+  "invariants": [
+    "one hash-verified CURRENT.json",
+    "no source-repository self-sync",
+    "candidate is not published",
+    "secret references only"
+  ]
+}

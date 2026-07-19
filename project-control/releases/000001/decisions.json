@@ -1,0 +1,41 @@
+{
+  "decisions": [
+    {
+      "id": "MVPOS-ADR-001",
+      "status": "active",
+      "statement": "The MVP OS source repository self-hosts Project Control as its only startup authority.",
+      "source_events": [
+        "user:IMPLEMENT:2026-07-19"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "MVPOS-ADR-002",
+      "status": "active",
+      "statement": "The source repository never self-syncs; downstream pull-request sync remains a separate distribution mechanism.",
+      "source_events": [
+        "user:IMPLEMENT:2026-07-19"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "MVPOS-ADR-003",
+      "status": "active",
+      "statement": "Local VERSION 2.0.0 remains a candidate until merge, verification, matching tag, and push complete.",
+      "source_events": [
+        "user:IMPLEMENT:2026-07-19"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "MVPOS-ADR-004",
+      "status": "active",
+      "statement": "Secret values are forbidden in every Project Control field, including command arguments and source-event references.",
+      "source_events": [
+        "review:d15975c",
+        "user:IMPLEMENT:2026-07-19"
+      ],
+      "supersedes": []
+    }
+  ]
+}

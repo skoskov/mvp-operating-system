@@ -95,3 +95,15 @@ not infer project-specific truth from contradictory history.
 New-project bootstrap scripts run `initialize --project-id <name>` before the
 first commit. This replaces template identifiers and recomputes hashes exactly
 once; `initialize` refuses an already initialized project.
+
+## MVP OS self-hosting
+
+The MVP OS source repository follows the same startup-authority contract. Its
+root `AGENTS.md` points to the canonical source CLI under `skill/`, and its root
+Project Control release describes current release-engineering truth.
+
+The source repository does not consume itself through downstream sync. Root
+`mvp-os.lock` therefore uses `repository_role: source` and `sync_mode: source`.
+While `publication_status` is `candidate`, `release` must be `null`; local
+`VERSION` must not be reported as an official release. Published state requires
+the matching release tag after merge, verification, and push.

@@ -10,6 +10,11 @@ released versions through a pull-based GitHub Actions workflow.
 - `compatibility/releases/v<version>.json` declares managed and review-only paths.
 - `compatibility/projects.json` is the active-project registry and desired-state control plane.
 
+`VERSION` can describe a local release candidate. Official publication also
+requires root `mvp-os.lock.publication_status` to be `published`, its `release`
+to match `v<VERSION>`, successful verification, merge to `main`, and push of the
+matching tag. Candidate source locks keep `release: null`.
+
 Only projects with registry status `active` receive automated sync work. `paused`
 and `archived` projects remain visible but are not updated.
 
@@ -55,6 +60,9 @@ Every published version must also have a matching Git tag, for example `v1.0.0`.
 Projects resolve `VERSION` from `main` and then check out that tag before sync.
 Each release manifest declares `previous_version`; projects apply the complete
 chain and refuse to skip a migration.
+
+The MVP OS repository itself uses `sync_mode: source`. It self-hosts Project
+Control but never enters the downstream pull-request sync loop.
 
 The sync command requires the repository identity from the registry. A local
 run must pass `--repository owner/name`. Current-version drift is blocked by
