@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "projects": [
+    {
+      "id": "crm-agent-mvp",
+      "status": "lock-unavailable",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ]
+}
