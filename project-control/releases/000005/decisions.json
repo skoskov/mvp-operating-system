@@ -1,0 +1,119 @@
+{
+  "decisions": [
+    {
+      "id": "MVPOS-ADR-001",
+      "status": "active",
+      "statement": "The MVP OS source repository self-hosts Project Control as its only startup authority.",
+      "source_events": [
+        "user:IMPLEMENT:2026-07-19"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "MVPOS-ADR-002",
+      "status": "active",
+      "statement": "The source repository never self-syncs; downstream pull-request sync remains a separate distribution mechanism.",
+      "source_events": [
+        "user:IMPLEMENT:2026-07-19"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "MVPOS-ADR-004",
+      "status": "active",
+      "statement": "Secret values are forbidden in every Project Control field, including command arguments, source-event references, and manifests.",
+      "source_events": [
+        "review:pr-1"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "MVPOS-ADR-005",
+      "status": "active",
+      "statement": "Custom implementation requires a validated Outcome-First and Reuse-First contract; final conditional evidence is machine-validated before READY.",
+      "source_events": [
+        "context:mvp-os-improvement-handoff:2026-07-21",
+        "context:mvp-os-v2.1-implement:2026-07-21"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "MVPOS-ADR-006",
+      "status": "active",
+      "statement": "Hermes is an optional non-authoritative runtime for connectors, schedules, local tasks, files, tools, and gateway lifecycle; it is not a mandatory LLM proxy.",
+      "source_events": [
+        "context:mvp-os-improvement-handoff:2026-07-21"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "MVPOS-ADR-007",
+      "status": "active",
+      "statement": "New Project Control releases catalog decision source events with sanitized durable references, timestamps, and content hashes while startup remains history-free.",
+      "source_events": [
+        "context:mvp-os-improvement-handoff:2026-07-21"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "MVPOS-ADR-008",
+      "status": "active",
+      "statement": "MVP OS v2.1.0 becomes official only after merge to main, matching tag creation, successful verification, independent review, and push of both main and tag.",
+      "source_events": [
+        "context:mvp-os-v2.1-implement:2026-07-21"
+      ],
+      "supersedes": [
+        "MVPOS-ADR-003"
+      ]
+    }
+  ],
+  "source_event_catalog_version": 2,
+  "source_event_catalog": {
+    "user:IMPLEMENT:2026-07-19": {
+      "reference": "project-control/releases/000002/decisions.json",
+      "reference_type": "local_file",
+      "captured_at": "2026-07-19T10:08:04+00:00",
+      "captured_content": "IMPLEMENT received for Project Control v2 on 2026-07-19.",
+      "content_sha256": "sha256:8a47c39c3f85e2e4c5b67149ec1cf7ccad5cc73df76f6c14c56022b144d5fca9",
+      "reference_content_sha256": "sha256:5c71338217b0f7e5d520442faf0d7d69ac1f7632c441b85330d70cfd0d16c875"
+    },
+    "review:pr-1": {
+      "reference": "project-control/releases/000002/decisions.json",
+      "reference_type": "local_file",
+      "captured_at": "2026-07-19T10:08:04+00:00",
+      "captured_content": "Independent review PR-1 approved Project Control v2 release hardening.",
+      "content_sha256": "sha256:0e2c3faf619adf9ca1cc2f59ce51fe3ea8690a5ead12cf0e502055404746161d",
+      "reference_content_sha256": "sha256:5c71338217b0f7e5d520442faf0d7d69ac1f7632c441b85330d70cfd0d16c875"
+    },
+    "context:mvp-os-improvement-handoff:2026-07-21": {
+      "reference": "https://github.com/skoskov/context/blob/5502cc9eb7b64591c06b732aed83eff8c84debb7/mvp-operating-system-context/08-message-log/2026-07-21-improvement-handoff.md",
+      "reference_type": "immutable_external",
+      "captured_at": "2026-07-21T00:00:00+05:00",
+      "captured_content": "изучи вот этот handoff там не только Hermes, но и прочие важные вещи\n/Users/skoskov/Documents/_DEV/crm-agent-mvp/outputs/mvp-os-improvement-handoff-2026-07-21.md",
+      "content_sha256": "sha256:7a9aa8511923c1f95c8b933b7db02bf66cc20f32be93aabc96b82816e9d09410",
+      "reference_content_sha256": "sha256:0ca19008f181082431c736bfda8654e9994ff811309b6b247d3e3576c14996cc",
+      "resolution": {
+        "method": "resolved_content_sha256",
+        "resolved_at": "2026-07-21T08:27:32+00:00",
+        "resolver": "git-context-commit:5502cc9eb7b64591c06b732aed83eff8c84debb7",
+        "commit": "5502cc9eb7b64591c06b732aed83eff8c84debb7",
+        "reference_content_sha256": "sha256:0ca19008f181082431c736bfda8654e9994ff811309b6b247d3e3576c14996cc"
+      }
+    },
+    "context:mvp-os-v2.1-implement:2026-07-21": {
+      "reference": "https://github.com/skoskov/context/blob/5502cc9eb7b64591c06b732aed83eff8c84debb7/mvp-operating-system-context/08-message-log/2026-07-21-release-v2.1.0.md",
+      "reference_type": "immutable_external",
+      "captured_at": "2026-07-21T00:00:00+05:00",
+      "captured_content": "окей давай Выпустить обратно совместимый MVP OS v2.1.0\nIMPLEMENT",
+      "content_sha256": "sha256:b2cb1c4fca8c63531b4002918f1e00734bccddb6d01e8aed76c273ce1b8f8fb6",
+      "reference_content_sha256": "sha256:e02464e41529c45502e583f08a9774f281d7fbfcfc2d113f1bcd5771294c4f74",
+      "resolution": {
+        "method": "resolved_content_sha256",
+        "resolved_at": "2026-07-21T08:27:32+00:00",
+        "resolver": "git-context-commit:5502cc9eb7b64591c06b732aed83eff8c84debb7",
+        "commit": "5502cc9eb7b64591c06b732aed83eff8c84debb7",
+        "reference_content_sha256": "sha256:e02464e41529c45502e583f08a9774f281d7fbfcfc2d113f1bcd5771294c4f74"
+      }
+    }
+  }
+}
