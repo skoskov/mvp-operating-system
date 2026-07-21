@@ -1,0 +1,18 @@
+{
+  "schema_version": 2,
+  "release_id": "000003",
+  "project_id": "mvp-operating-system",
+  "created_at": "2026-07-21T08:27:32+00:00",
+  "source_commit": "7df1db5",
+  "parent_release": "000002",
+  "files": {
+    "goal.json": "sha256:8925f2325794026e45923cee2485ed1fad37bea5ccb575850aeb662a1cb903f4",
+    "decisions.json": "sha256:5a5957f419b21b952ad86e641f0ebdc263921655ad512620f76bc800568e838a",
+    "scope.json": "sha256:35c4973e90c8767c41990b7755ef652faace43392ecec5086a9ffc75b07aee71",
+    "architecture.json": "sha256:070d0de386558f4316989eeebf98052302e253c9fff09c0808705c708e4fdb98",
+    "commands.json": "sha256:6cf9979462b875ec824c9a331499f823d87d269815ad848cab8b49b93400adee",
+    "access.json": "sha256:03c57d964d67250ba4e8be0ca59ef8f465045d9e5235e534010b63255104d95c",
+    "runtime-requirements.json": "sha256:82589a72a6f7a42ceb3623eae23b5f933309673ff73a05bab857fefc8a7b98c2",
+    "acceptance.json": "sha256:54fe29eb701c19e6136194029f8ed02eb375bf44de9217c9d3fcb2dea0c2b71c"
+  }
+}

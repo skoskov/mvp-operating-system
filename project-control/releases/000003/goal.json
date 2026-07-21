@@ -1,0 +1,6 @@
+{
+  "project_id": "mvp-operating-system",
+  "project_version": "2.1.0",
+  "objective": "Publish backward-compatible MVP OS v2.1.0 with executable conditional gates and distribute it through reviewed project pull requests.",
+  "next_safe_step": "Complete independent reviews, verify the candidate on main, create matching tag v2.1.0, and push branch and tag."
+}
