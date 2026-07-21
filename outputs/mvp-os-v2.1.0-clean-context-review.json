@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "evidence_type": "clean_context_review",
+  "task_id": "mvp-os-v2.1.0-release",
+  "result": "PASS",
+  "details": {
+    "reviewer": "independent clean-context reviewer",
+    "head": "9d15af60bb320ab8ef34f1b63e063d2036e2e333",
+    "summary": "Project Control 000008 bootstrap reconstructed the v2.1 architecture, exclusions, commands, next step, and optional non-authoritative Hermes boundary with zero legacy startup reads.",
+    "findings": []
+  }
+}
