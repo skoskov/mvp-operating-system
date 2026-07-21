@@ -51,6 +51,7 @@ WORK_TYPES = {
 }
 SHORT_WORK_TYPES = {"bugfix", "refactor", "maintenance", "test"}
 REVIEW_CHECKS = (
+    "gate_classification",
     "outcome_alignment",
     "component_substitution",
     "reuse",
@@ -250,21 +251,40 @@ def evidence_result(
         nonempty(item.get("rationale"), f"{location}.rationale")
 
 
-def validate_gate_mode(contract: dict[str, Any], scope: dict[str, bool]) -> str:
+def validate_gate_mode(
+    contract: dict[str, Any], scope: dict[str, bool], schema_version: int
+) -> str:
     gate_mode = contract.get("gate_mode")
-    if gate_mode is None:
+    if schema_version == 1:
+        if gate_mode is not None:
+            raise GateError("schema_version 1 is legacy and must not define gate_mode")
         return "legacy_full"
+    if gate_mode is None:
+        raise GateError("schema_version 2 requires gate_mode")
     if gate_mode not in {"short", "full"}:
         raise GateError("gate_mode must be short or full")
     work_type = contract.get("work_type")
     if work_type not in WORK_TYPES:
         raise GateError("work_type is invalid")
     nonempty(contract.get("gate_mode_rationale"), "gate_mode_rationale")
+    classification = mapping(contract.get("classification"), "classification")
+    string_list(classification.get("planned_paths"), "classification.planned_paths")
+    behavior_change = classification.get("behavior_change")
+    if behavior_change not in {"none", "internal", "user_visible", "external"}:
+        raise GateError("classification.behavior_change is invalid")
+    for key in ("public_api_change", "data_contract_change", "dependency_change"):
+        if not isinstance(classification.get(key), bool):
+            raise GateError(f"classification.{key} must be boolean")
     if gate_mode == "short":
         if work_type not in SHORT_WORK_TYPES:
             raise GateError("short gate_mode is limited to local bugfix, refactor, maintenance, or test work")
         if any(scope.values()):
             raise GateError("short gate_mode requires every conditional scope to be false")
+        if behavior_change not in {"none", "internal"}:
+            raise GateError("short gate_mode cannot change user-visible or external behavior")
+        for key in ("public_api_change", "data_contract_change", "dependency_change"):
+            if classification[key]:
+                raise GateError(f"short gate_mode requires classification.{key} to be false")
     if work_type in {"integration", "external_action"} and not scope["integration"]:
         raise GateError(f"work_type {work_type} requires integration scope")
     return gate_mode
@@ -317,7 +337,37 @@ def validate_reuse(contract: dict[str, Any], gate_mode: str) -> None:
         if item.get("status") == "reused" and reuse.get("custom_code") is True:
             nonempty(item.get("remaining_gap"), f"reuse.discovery[{index}].remaining_gap")
     if reuse.get("custom_code") is True:
+        if gate_mode != "legacy_full" and any(
+            item.get("status") == "not_applicable" for item in discovery
+        ):
+            raise GateError("custom code requires every reuse candidate to be reused or rejected")
         nonempty(reuse.get("custom_code_reason"), "reuse.custom_code_reason")
+
+
+def validate_preflight_review(
+    contract: dict[str, Any], gate_mode: str, project_root: Path, task_id: str
+) -> None:
+    item = mapping(contract.get("preflight_review"), "preflight_review")
+    result(item.get("result"), "preflight_review.result", allow_na=False)
+    details = {
+        "reviewer": nonempty(item.get("reviewer"), "preflight_review.reviewer"),
+        "summary": nonempty(item.get("summary"), "preflight_review.summary"),
+        "findings": item.get("findings"),
+    }
+    if not isinstance(details["findings"], list):
+        raise GateError("preflight_review.findings must be a list")
+    if details["findings"]:
+        raise GateError("preflight_review.findings must be empty before implementation")
+    checks = mapping(item.get("checks"), "preflight_review.checks")
+    required_checks = FULL_REVIEW_CHECKS if gate_mode == "full" else REVIEW_CHECKS
+    for check in required_checks:
+        if checks.get(check) is not True:
+            raise GateError(f"preflight_review.checks.{check} must be true")
+    details["checks"] = checks
+    artifact(
+        item.get("artifact"), project_root, "preflight_review.artifact",
+        "preflight_review", task_id, expected_details=details,
+    )
 
 
 def validate_scope(contract: dict[str, Any]) -> dict[str, bool]:
@@ -562,13 +612,16 @@ def current_release_source_commit(project_root: Path) -> str:
 
 
 def validate_contract(contract: dict[str, Any], phase: str, project_root: Path) -> None:
-    if contract.get("schema_version") != 1:
-        raise GateError("schema_version must be 1")
+    schema_version = contract.get("schema_version")
+    if schema_version not in {1, 2}:
+        raise GateError("schema_version must be 1 or 2")
     task_id = nonempty(contract.get("task_id"), "task_id")
     scope = validate_scope(contract)
-    gate_mode = validate_gate_mode(contract, scope)
+    gate_mode = validate_gate_mode(contract, scope, schema_version)
     validate_outcome(contract, gate_mode)
     validate_reuse(contract, gate_mode)
+    if schema_version == 2:
+        validate_preflight_review(contract, gate_mode, project_root, task_id)
     if phase == "preflight":
         return
     evidence = mapping(contract.get("evidence"), "evidence")

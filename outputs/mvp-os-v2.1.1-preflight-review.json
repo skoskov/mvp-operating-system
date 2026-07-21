@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "evidence_type": "preflight_review",
+  "task_id": "mvp-os-v2.1.1-proportional-gate",
+  "result": "PASS",
+  "details": {
+    "reviewer": "independent-preflight-reviewer-019f864d",
+    "summary": "Full-mode classification, outcome, reuse decision, evidence plan, end-to-end chain, and cost/scale constraints are coherent and complete; no blocking findings.",
+    "findings": [],
+    "checks": {
+      "gate_classification": true,
+      "outcome_alignment": true,
+      "component_substitution": true,
+      "reuse": true,
+      "evidence": true,
+      "end_to_end": true,
+      "cost_scale": true
+    }
+  }
+}

@@ -1,9 +1,30 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "task_id": "mvp-os-v2.1.1-proportional-gate",
   "gate_mode": "full",
   "work_type": "feature",
   "gate_mode_rationale": "The release changes mandatory task classification and acceptance policy for all downstream projects.",
+  "classification": {
+    "planned_paths": [
+      "skill/mvp-operating-system/bin/gate_check.py",
+      "skill/mvp-operating-system/assets/",
+      "skill/mvp-operating-system/references/",
+      "global/AGENTS.md",
+      "docs/",
+      "template/mvp-project-template/",
+      "tests/",
+      "outputs/mvp-os-v2.1.1-task-contract.json",
+      "outputs/mvp-os-v2.1.1-preflight-review.json",
+      "DECISIONS.md",
+      "CHANGELOG.md",
+      "compatibility/",
+      "project-control/"
+    ],
+    "behavior_change": "user_visible",
+    "public_api_change": true,
+    "data_contract_change": true,
+    "dependency_change": false
+  },
   "scope": {
     "web": false,
     "public_deploy": false,
@@ -73,7 +94,7 @@
       },
       {
         "kind": "official_api_sdk",
-        "status": "not_applicable",
+        "status": "rejected",
         "rationale": "The task is local policy validation and has no external platform API.",
         "evaluation": {
           "maintenance": "Not applicable to local policy validation.",
@@ -85,7 +106,7 @@
       },
       {
         "kind": "platform_connector",
-        "status": "not_applicable",
+        "status": "rejected",
         "rationale": "No platform connector participates in offline task-contract validation.",
         "evaluation": {
           "maintenance": "Not applicable.",
@@ -122,6 +143,25 @@
     ],
     "custom_code": true,
     "custom_code_reason": "A small extension to the existing validator is the missing layer and preserves dependency-free offline enforcement."
+  },
+  "preflight_review": {
+    "result": "PASS",
+    "reviewer": "independent-preflight-reviewer-019f864d",
+    "summary": "Full-mode classification, outcome, reuse decision, evidence plan, end-to-end chain, and cost/scale constraints are coherent and complete; no blocking findings.",
+    "findings": [],
+    "checks": {
+      "gate_classification": true,
+      "outcome_alignment": true,
+      "component_substitution": true,
+      "reuse": true,
+      "evidence": true,
+      "end_to_end": true,
+      "cost_scale": true
+    },
+    "artifact": {
+      "path": "outputs/mvp-os-v2.1.1-preflight-review.json",
+      "sha256": "sha256:623b5bf75ca927a40990cd5e76d6a946efd98f938efe1bf2c631223c8a53f27d"
+    }
   },
   "evidence": {}
 }

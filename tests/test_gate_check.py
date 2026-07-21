@@ -25,6 +25,7 @@ def json_artifact(
     build_id: str | None = None,
     details: dict | None = None,
     name: str | None = None,
+    task_id: str = "web-integration-proof",
 ) -> dict:
     relative = Path("outputs") / f"{name or evidence_type}.json"
     path = project_root / relative
@@ -32,7 +33,7 @@ def json_artifact(
     payload = {
         "schema_version": 1,
         "evidence_type": evidence_type,
-        "task_id": "web-integration-proof",
+        "task_id": task_id,
         "result": "PASS",
         "details": details or {"observed": f"verified {evidence_type}"},
     }
@@ -332,13 +333,27 @@ def valid_contract(project_root: Path) -> dict:
     }
 
 
-def short_contract() -> dict:
+def short_contract(project_root: Path) -> dict:
+    checks = {key: True for key in gate_check.REVIEW_CHECKS}
+    review_details = {
+        "reviewer": "independent-classification-reviewer",
+        "summary": "Short mode and planned evidence are justified.",
+        "findings": [],
+        "checks": checks,
+    }
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "task_id": "local-bugfix",
         "gate_mode": "short",
         "work_type": "bugfix",
         "gate_mode_rationale": "A bounded local bugfix changes no external or user-facing flow.",
+        "classification": {
+            "planned_paths": ["validator.py", "tests/test_validator.py"],
+            "behavior_change": "internal",
+            "public_api_change": False,
+            "data_contract_change": False,
+            "dependency_change": False,
+        },
         "scope": {
             "web": False,
             "public_deploy": False,
@@ -371,6 +386,16 @@ def short_contract() -> dict:
             "custom_code": True,
             "custom_code_reason": "The defect is in the existing local implementation.",
         },
+        "preflight_review": {
+            "result": "PASS",
+            **review_details,
+            "artifact": json_artifact(
+                project_root,
+                "preflight_review",
+                details=review_details,
+                task_id="local-bugfix",
+            ),
+        },
         "evidence": {},
     }
 
@@ -378,9 +403,17 @@ def short_contract() -> dict:
 def explicit_full_contract(project_root: Path) -> dict:
     contract = valid_contract(project_root)
     contract.update({
+        "schema_version": 2,
         "gate_mode": "full",
         "work_type": "feature",
         "gate_mode_rationale": "The feature changes an observable end-to-end product flow.",
+        "classification": {
+            "planned_paths": ["app/flow.py", "tests/test_flow.py"],
+            "behavior_change": "user_visible",
+            "public_api_change": False,
+            "data_contract_change": False,
+            "dependency_change": False,
+        },
     })
     contract["outcome"].update({
         "beneficiary": "A user completing the public flow.",
@@ -404,6 +437,19 @@ def explicit_full_contract(project_root: Path) -> dict:
         for kind in gate_check.FULL_REUSE_ORDER
     ]
     checks = {key: True for key in gate_check.FULL_REVIEW_CHECKS}
+    preflight_details = {
+        "reviewer": "independent-classification-reviewer",
+        "summary": "Full mode, product outcome, reuse, and evidence plan are justified.",
+        "findings": [],
+        "checks": checks.copy(),
+    }
+    contract["preflight_review"] = {
+        "result": "PASS",
+        **preflight_details,
+        "artifact": json_artifact(
+            project_root, "preflight_review", details=preflight_details,
+        ),
+    }
     for key, evidence_type in (
         ("implementation", "implementation_review"),
         ("clean_context", "clean_context_review"),
@@ -421,6 +467,32 @@ def explicit_full_contract(project_root: Path) -> dict:
                 "checks": review["checks"],
             },
         )
+    return contract
+
+
+def short_acceptance_contract(project_root: Path) -> dict:
+    contract = short_contract(project_root)
+    checks = {key: True for key in gate_check.REVIEW_CHECKS}
+    contract["evidence"]["review"] = {}
+    for key, evidence_type in (
+        ("implementation", "implementation_review"),
+        ("clean_context", "clean_context_review"),
+    ):
+        details = {
+            "reviewer": f"independent-{key}-reviewer",
+            "head": "a" * 40,
+            "summary": f"{key} review passed.",
+            "findings": [],
+            "checks": checks.copy(),
+        }
+        contract["evidence"]["review"][key] = {
+            "result": "PASS",
+            **details,
+            "artifact": json_artifact(
+                project_root, evidence_type, details=details,
+                task_id="local-bugfix",
+            ),
+        }
     return contract
 
 
@@ -446,18 +518,62 @@ class GateCheckTests(unittest.TestCase):
         gate_check.validate_contract(contract, "acceptance", self.root)
 
     def test_short_mode_passes_for_bounded_local_bugfix(self) -> None:
-        gate_check.validate_contract(short_contract(), "preflight", self.root)
+        gate_check.validate_contract(short_contract(self.root), "preflight", self.root)
 
     def test_short_mode_rejects_feature_work(self) -> None:
-        contract = short_contract()
+        contract = short_contract(self.root)
         contract["work_type"] = "feature"
         with self.assertRaisesRegex(gate_check.GateError, "short gate_mode"):
             gate_check.validate_contract(contract, "preflight", self.root)
 
     def test_short_mode_rejects_conditional_scope(self) -> None:
-        contract = short_contract()
+        contract = short_contract(self.root)
         contract["scope"]["web"] = True
         with self.assertRaisesRegex(gate_check.GateError, "every conditional scope"):
+            gate_check.validate_contract(contract, "preflight", self.root)
+
+    def test_schema_v2_cannot_omit_gate_mode(self) -> None:
+        contract = short_contract(self.root)
+        del contract["gate_mode"]
+        with self.assertRaisesRegex(gate_check.GateError, "requires gate_mode"):
+            gate_check.validate_contract(contract, "preflight", self.root)
+
+    def test_schema_v1_remains_legacy_and_rejects_new_mode_fields(self) -> None:
+        contract = valid_contract(self.root)
+        contract["gate_mode"] = "full"
+        with self.assertRaisesRegex(gate_check.GateError, "schema_version 1 is legacy"):
+            gate_check.validate_contract(contract, "preflight", self.root)
+
+    def test_short_mode_rejects_user_visible_behavior(self) -> None:
+        contract = short_contract(self.root)
+        contract["classification"]["behavior_change"] = "user_visible"
+        with self.assertRaisesRegex(gate_check.GateError, "user-visible"):
+            gate_check.validate_contract(contract, "preflight", self.root)
+
+    def test_short_mode_rejects_public_api_change(self) -> None:
+        contract = short_contract(self.root)
+        contract["classification"]["public_api_change"] = True
+        with self.assertRaisesRegex(gate_check.GateError, "public_api_change"):
+            gate_check.validate_contract(contract, "preflight", self.root)
+
+    def test_short_mode_acceptance_requires_and_passes_classification_review(self) -> None:
+        contract = short_acceptance_contract(self.root)
+        gate_check.validate_contract(contract, "acceptance", self.root)
+        contract["evidence"]["review"]["implementation"]["checks"]["gate_classification"] = False
+        with self.assertRaisesRegex(gate_check.GateError, "gate_classification"):
+            gate_check.validate_contract(contract, "acceptance", self.root)
+
+    def test_preflight_review_must_confirm_gate_classification(self) -> None:
+        contract = short_contract(self.root)
+        contract["preflight_review"]["checks"]["gate_classification"] = False
+        with self.assertRaisesRegex(gate_check.GateError, "gate_classification"):
+            gate_check.validate_contract(contract, "preflight", self.root)
+
+    def test_custom_code_rejects_not_applicable_reuse_candidates(self) -> None:
+        contract = explicit_full_contract(self.root)
+        for candidate in contract["reuse"]["discovery"]:
+            candidate["status"] = "not_applicable"
+        with self.assertRaisesRegex(gate_check.GateError, "reused or rejected"):
             gate_check.validate_contract(contract, "preflight", self.root)
 
     def test_full_mode_passes_with_structured_outcome_reuse_and_review(self) -> None:

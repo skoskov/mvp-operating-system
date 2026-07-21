@@ -1,9 +1,16 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "task_id": "replace-with-task-id",
   "gate_mode": "short",
   "work_type": "bugfix",
   "gate_mode_rationale": "replace",
+  "classification": {
+    "planned_paths": ["replace"],
+    "behavior_change": "internal",
+    "public_api_change": false,
+    "data_contract_change": false,
+    "dependency_change": false
+  },
   "scope": {
     "web": false,
     "public_deploy": false,
@@ -40,6 +47,23 @@
     ],
     "custom_code": false,
     "custom_code_reason": ""
+  },
+  "preflight_review": {
+    "result": "PASS",
+    "reviewer": "replace",
+    "summary": "replace",
+    "findings": [],
+    "checks": {
+      "gate_classification": true,
+      "outcome_alignment": true,
+      "component_substitution": true,
+      "reuse": true,
+      "evidence": true
+    },
+    "artifact": {
+      "path": "replace",
+      "sha256": "replace"
+    }
   },
   "evidence": {}
 }

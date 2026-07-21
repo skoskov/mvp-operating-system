@@ -1,12 +1,15 @@
 # Outcome-First / Reuse-First Gate
 
-Run this gate before custom implementation. Set `gate_mode`, `work_type`, and a
-specific `gate_mode_rationale`.
+New contracts use schema v2. Before custom implementation, set `gate_mode`,
+`work_type`, a specific `gate_mode_rationale`, planned paths, and behavior/API/
+data/dependency classification. Schema v1 is accepted only as the unchanged
+legacy full-contract format.
 
 ## Proportional modes
 
 - `short`: only local `bugfix`, `refactor`, `maintenance`, or `test` work with
-  every conditional scope set to `false`.
+  internal/no behavior change, no public API/data/dependency change, and every
+  conditional scope set to `false`.
 - `full`: features, integrations, external actions, product experiments, and
   any web, public-deploy, integration, Hermes, or stateful scope.
 
@@ -58,8 +61,9 @@ reuse discovery when the limit is exceeded.
 
 Every scope flag includes a rationale. Template placeholders are invalid. When an
 existing component is reused but custom code is still needed, record the remaining
-gap; otherwise custom code is blocked. Legacy v2.1 contracts without `gate_mode`
-remain valid as full contracts.
+gap; otherwise custom code is blocked. Custom code requires every candidate to
+be either reused with a remaining gap or rejected; `not_applicable` is not a
+build-vs-reuse decision.
 
 ## Product review
 
@@ -67,6 +71,10 @@ Both independent reviews explicitly confirm outcome alignment, absence of
 component substitution, reuse analysis, and evidence quality. Full mode also
 confirms the complete end-to-end result and cost/scale contract. Any failed check
 or unresolved finding blocks acceptance.
+
+Schema v2 preflight also requires an independent typed review artifact confirming
+gate classification and those checks before implementation starts. Post-
+implementation reviews repeat them against the completed source commit.
 
 ## Enforcement
 

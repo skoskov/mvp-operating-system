@@ -7,6 +7,8 @@
 - Proportional short/full Outcome-First and Reuse-First contract modes.
 - Work classification, beneficiary, result owner, non-goals, minimum proof, and
   explicit independent-review verdicts.
+- Schema v2 planned-path and behavior/API/data/dependency classification with a
+  typed independent preflight review.
 - Full-mode reuse evaluation for maintenance, license, security, lock-in, and
   integration cost.
 
@@ -16,7 +18,7 @@
   work with every conditional scope disabled.
 - Features, integrations, external actions, product experiments, and conditional
   scopes require full mode.
-- Legacy v2.1 contracts remain valid as full contracts.
+- Unchanged schema v1 contracts remain valid as legacy full contracts.
 
 ## [2.1.0] - 2026-07-21
 

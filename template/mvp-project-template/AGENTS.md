@@ -80,9 +80,11 @@ external result, cost/scale, time budget, stop condition, forbidden
 simplifications, rollback, and ordered reuse discovery.
 
 Use short mode only for bounded local bugfix, refactor, maintenance, or test work
-with every conditional scope disabled. Use full mode for features, integrations,
-external actions, product experiments, and any conditional scope. Legacy v2.1
-contracts without an explicit mode remain full contracts.
+with internal/no behavior change, no public API/data/dependency change, and every
+conditional scope disabled. Use full mode for features, integrations, external
+actions, product experiments, and any conditional scope. New contracts use schema
+v2 and include an independent preflight classification review. Unchanged schema
+v1 contracts remain legacy full contracts.
 
 Hermes is opt-in. It is a connector, schedule, local task, file/tool, and gateway
 runtime, not a mandatory LLM proxy or authoritative product store.

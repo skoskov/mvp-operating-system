@@ -288,8 +288,9 @@ without reducing material product risk. Unrestricted short mode would recreate
 the original failure by letting agents classify product work as a component.
 
 Consequences:
-- Legacy v2.1 contracts remain valid as full contracts.
+- Unchanged schema v1 contracts remain valid as legacy full contracts; new contracts use schema v2.
 - New contracts name beneficiary, result owner, non-goals, and minimum proof.
+- New contracts classify planned paths and behavior/API/data/dependency changes and require independent preflight review.
 - Full reuse discovery evaluates maintenance, license, security, lock-in, and integration cost.
 - Short mode searches existing project capability and escalates to full when scope grows.
 - Reviews explicitly reject component substitution and, in full mode, missing end-to-end or cost/scale proof.

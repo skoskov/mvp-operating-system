@@ -23,8 +23,10 @@ Use this skill for new MVPs, major features, recovery slices, and project restar
 
 Before custom implementation, classify work and choose a proportional gate.
 Short mode is limited to bounded local bugfix, refactor, maintenance, or test
-work with every conditional scope disabled. Features, integrations, external
-actions, product experiments, and any conditional scope use full mode. Define
+work with internal/no behavior change, no public API/data/dependency change, and
+every conditional scope disabled. Features, integrations, external actions,
+product experiments, and any conditional scope use full mode. New contracts use
+schema v2 and require an independent preflight classification review. Define
 the observable product outcome and required proof. Full mode also defines the
 complete chain from input to independent verification and structured reuse risk.
 Use

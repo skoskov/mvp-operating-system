@@ -44,8 +44,10 @@ Hermes, public-deploy, or stateful scope applies, declare it explicitly so the
 final acceptance validator activates the matching evidence requirements.
 
 Use the short template only for bounded local bugfix, refactor, maintenance, or
-test work with every scope disabled. Features, integrations, external actions,
-product experiments, and any conditional scope require the full template.
+test work with internal/no behavior change, no public API/data/dependency change,
+and every scope disabled. Features, integrations, external actions, product
+experiments, and any conditional scope require the full template. An independent
+reviewer validates classification and the evidence plan before preflight passes.
 
 ## 6. Independent review
 

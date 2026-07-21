@@ -24,6 +24,7 @@ Checks:
 - token/time risk
 - whether human escalation is required
 - gate mode and work classification are justified
+- planned paths and behavior/API/data/dependency classification match the task
 - observable outcome matches the original goal
 - no technical component substitutes for the product result
 - reuse discovery supports the build/reuse decision
@@ -41,6 +42,10 @@ Human decision required:
 ## Rule
 
 Builder agents cannot approve their own work.
+
+Schema v2 task contracts store a typed independent preflight review before
+implementation. Final implementation and clean-context reviews repeat the
+classification and product checks against the current source commit.
 
 If the issue is technical, agents resolve it without the human.
 

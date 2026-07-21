@@ -34,9 +34,11 @@ acceptance, realistic data/external result, cost and scale, time and stop limits
 forbidden simplifications, rollback, and ordered reuse discovery.
 
 The gate is proportional. Short mode is limited to bounded local bugfix,
-refactor, maintenance, or test work with no conditional scope. Features,
-integrations, external actions, product experiments, and conditional scopes use
-full mode. Legacy v2.1 contracts remain full contracts.
+refactor, maintenance, or test work with internal/no behavior change, no public
+API/data/dependency change, and no conditional scope. Features, integrations,
+external actions, product experiments, and conditional scopes use full mode. New
+schema v2 contracts require independent preflight classification review;
+unchanged schema v1 contracts remain legacy full contracts.
 
 ## Truthful external results
 
