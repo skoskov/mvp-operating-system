@@ -79,6 +79,11 @@ defines the complete observable outcome, end-to-end chain, acceptance, realistic
 data/external result, cost/scale, time budget, stop condition, forbidden
 simplifications, rollback, and ordered reuse discovery.
 
+Use short mode only for bounded local bugfix, refactor, maintenance, or test work
+with every conditional scope disabled. Use full mode for features, integrations,
+external actions, product experiments, and any conditional scope. Legacy v2.1
+contracts without an explicit mode remain full contracts.
+
 Hermes is opt-in and non-authoritative. Use it for connectors, schedules, local
 tasks, files/tools, and gateway runtime when those capabilities add value. Do not
 route direct LLM calls through Hermes by default.

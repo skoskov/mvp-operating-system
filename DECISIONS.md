@@ -273,3 +273,23 @@ Consequences:
 - PASS evidence uses typed, claim-bound artifacts; screenshots must be distinct structurally valid PNGs with capture metadata.
 - Source-event catalog v3 proves embedded local evidence occurs in the referenced hash-matched file while retaining compatibility with older v2 bundles.
 - Acceptance requires zero review findings and binds both reviews to the current Project Control release source commit.
+
+## 2026-07-22 — Proportional Outcome / Reuse gate
+
+Decision:
+Keep the v2.1 gate mandatory, but add explicit short and full modes. Short mode
+is allowed only for bounded local bugfix, refactor, maintenance, or test work
+with every conditional scope disabled. All features, integrations, external
+actions, product experiments, and conditional scopes use full mode.
+
+Reason:
+A full end-to-end and market-scale contract for every local fix adds process cost
+without reducing material product risk. Unrestricted short mode would recreate
+the original failure by letting agents classify product work as a component.
+
+Consequences:
+- Legacy v2.1 contracts remain valid as full contracts.
+- New contracts name beneficiary, result owner, non-goals, and minimum proof.
+- Full reuse discovery evaluates maintenance, license, security, lock-in, and integration cost.
+- Short mode searches existing project capability and escalates to full when scope grows.
+- Reviews explicitly reject component substitution and, in full mode, missing end-to-end or cost/scale proof.

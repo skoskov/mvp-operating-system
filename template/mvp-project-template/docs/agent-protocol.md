@@ -41,6 +41,8 @@ Owns scope and consistency.
 
 - Checks that scope, acceptance criteria, architecture, and tasks do not contradict each other.
 - Checks the observable outcome, full end-to-end chain, and ordered reuse discovery before implementation.
+- Rejects unjustified short mode, component substitution, missing minimum proof,
+  and missing cost/scale evidence in full mode.
 - Updates planning docs only when needed.
 - Does not implement product code.
 - Does not expand scope without a Decision Card.

@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "task_id": "replace-with-task-id",
+  "gate_mode": "short",
+  "work_type": "bugfix",
+  "gate_mode_rationale": "replace",
+  "scope": {
+    "web": false,
+    "public_deploy": false,
+    "integration": false,
+    "hermes": false,
+    "stateful": false
+  },
+  "scope_rationale": {
+    "web": "replace",
+    "public_deploy": "replace",
+    "integration": "replace",
+    "hermes": "replace",
+    "stateful": "replace"
+  },
+  "outcome": {
+    "beneficiary": "replace",
+    "result_owner": "replace",
+    "observable_result": "replace",
+    "acceptance_criteria": ["replace"],
+    "non_goals": ["replace"],
+    "minimum_proof": "replace",
+    "time_budget": "replace",
+    "stop_condition": "replace",
+    "rollback": "replace"
+  },
+  "reuse": {
+    "discovery": [
+      {
+        "kind": "existing_project",
+        "status": "not_applicable",
+        "rationale": "replace",
+        "remaining_gap": ""
+      }
+    ],
+    "custom_code": false,
+    "custom_code_reason": ""
+  },
+  "evidence": {}
+}

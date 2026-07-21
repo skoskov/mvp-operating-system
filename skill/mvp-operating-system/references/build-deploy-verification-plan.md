@@ -16,9 +16,13 @@ Build goal:
 
 Outcome / Reuse contract:
 - task contract path under outputs/:
+- gate mode / work type:
+- mode rationale:
 - preflight validation command:
 - preflight result:
 - observable end-to-end result:
+- beneficiary / result owner:
+- minimum proof:
 - custom-code reason, if any:
 
 Source inputs:

@@ -1,12 +1,25 @@
 # Outcome-First / Reuse-First Gate
 
-Run this gate before custom implementation.
+Run this gate before custom implementation. Set `gate_mode`, `work_type`, and a
+specific `gate_mode_rationale`.
+
+## Proportional modes
+
+- `short`: only local `bugfix`, `refactor`, `maintenance`, or `test` work with
+  every conditional scope set to `false`.
+- `full`: features, integrations, external actions, product experiments, and
+  any web, public-deploy, integration, Hermes, or stateful scope.
+
+When uncertain, use `full`. A technical spike is a `product_experiment`; its
+minimum proof and stop condition must be explicit, and it must not be reported
+as a finished product function.
 
 ## Outcome contract
 
-Define the observable end-to-end result, acceptance criteria, realistic data and
-external result, cost/scale contract, time budget, stop condition, forbidden
-simplifications, and rollback. Integration work must cover:
+Both modes define beneficiary, result owner, observable result, acceptance,
+non-goals, minimum proof, time budget, stop condition, and rollback. Full mode
+also defines realistic data and external result, cost/scale contract, forbidden
+simplifications, and the complete chain. Integration work must cover:
 
 ```text
 external signal
@@ -23,22 +36,37 @@ missing. Resolve the outcome first.
 
 ## Reuse discovery
 
-Document the search in this order:
+Full mode documents the search in this order:
 
 1. existing project solution;
-2. official API, SDK, or connector;
-3. supported GitHub project;
-4. MCP server;
-5. library;
-6. ready service/API;
-7. custom code only with a recorded rejection reason for earlier options.
+2. official API or SDK;
+3. platform connector;
+4. maintained open-source project or library;
+5. ready service/API;
+6. custom code only with a recorded rejection reason for earlier options.
+
+For every full-mode candidate, record maintenance, license, security, lock-in,
+and integration cost. Reuse is not automatically better: reject a candidate
+when total integration or operating risk exceeds a small local extension.
+
+Short mode checks the existing project solution only. If discovery exposes a
+feature, external action, product experiment, or conditional scope, switch to
+full mode before implementation.
 
 Record scale limits and the acceptable time to add another source. Stop and reopen
 reuse discovery when the limit is exceeded.
 
 Every scope flag includes a rationale. Template placeholders are invalid. When an
 existing component is reused but custom code is still needed, record the remaining
-gap; otherwise custom code is blocked.
+gap; otherwise custom code is blocked. Legacy v2.1 contracts without `gate_mode`
+remain valid as full contracts.
+
+## Product review
+
+Both independent reviews explicitly confirm outcome alignment, absence of
+component substitution, reuse analysis, and evidence quality. Full mode also
+confirms the complete end-to-end result and cost/scale contract. Any failed check
+or unresolved finding blocks acceptance.
 
 ## Enforcement
 

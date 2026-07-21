@@ -23,6 +23,13 @@ Checks:
 - security/privacy implications
 - token/time risk
 - whether human escalation is required
+- gate mode and work classification are justified
+- observable outcome matches the original goal
+- no technical component substitutes for the product result
+- reuse discovery supports the build/reuse decision
+- evidence proves the claimed result
+- full mode only: complete end-to-end chain
+- full mode only: cost and scale limits
 
 Output:
 PASS / FAIL

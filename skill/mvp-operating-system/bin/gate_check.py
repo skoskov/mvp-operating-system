@@ -22,7 +22,7 @@ CHAIN = [
     "product_display",
     "independent_verification",
 ]
-REUSE_ORDER = [
+LEGACY_REUSE_ORDER = [
     "existing_project",
     "official_api_sdk_connector",
     "supported_github_project",
@@ -30,6 +30,33 @@ REUSE_ORDER = [
     "library",
     "service_api",
 ]
+REUSE_ORDER = LEGACY_REUSE_ORDER
+FULL_REUSE_ORDER = [
+    "existing_project",
+    "official_api_sdk",
+    "platform_connector",
+    "maintained_open_source",
+    "service_api",
+]
+SHORT_REUSE_ORDER = ["existing_project"]
+WORK_TYPES = {
+    "bugfix",
+    "refactor",
+    "maintenance",
+    "test",
+    "feature",
+    "integration",
+    "external_action",
+    "product_experiment",
+}
+SHORT_WORK_TYPES = {"bugfix", "refactor", "maintenance", "test"}
+REVIEW_CHECKS = (
+    "outcome_alignment",
+    "component_substitution",
+    "reuse",
+    "evidence",
+)
+FULL_REVIEW_CHECKS = REVIEW_CHECKS + ("end_to_end", "cost_scale")
 OUTCOME_MEANINGS = {
     "intent_created": "durable intent exists; no connector invocation claimed",
     "dispatched": "connector invocation started; no platform acceptance claimed",
@@ -223,20 +250,43 @@ def evidence_result(
         nonempty(item.get("rationale"), f"{location}.rationale")
 
 
-def validate_outcome(contract: dict[str, Any]) -> None:
+def validate_gate_mode(contract: dict[str, Any], scope: dict[str, bool]) -> str:
+    gate_mode = contract.get("gate_mode")
+    if gate_mode is None:
+        return "legacy_full"
+    if gate_mode not in {"short", "full"}:
+        raise GateError("gate_mode must be short or full")
+    work_type = contract.get("work_type")
+    if work_type not in WORK_TYPES:
+        raise GateError("work_type is invalid")
+    nonempty(contract.get("gate_mode_rationale"), "gate_mode_rationale")
+    if gate_mode == "short":
+        if work_type not in SHORT_WORK_TYPES:
+            raise GateError("short gate_mode is limited to local bugfix, refactor, maintenance, or test work")
+        if any(scope.values()):
+            raise GateError("short gate_mode requires every conditional scope to be false")
+    if work_type in {"integration", "external_action"} and not scope["integration"]:
+        raise GateError(f"work_type {work_type} requires integration scope")
+    return gate_mode
+
+
+def validate_outcome(contract: dict[str, Any], gate_mode: str) -> None:
     outcome = mapping(contract.get("outcome"), "outcome")
-    for key in (
-        "observable_result",
-        "realistic_data",
-        "external_result",
-        "cost_scale_contract",
-        "time_budget",
-        "stop_condition",
-        "rollback",
-    ):
+    required = ["observable_result", "time_budget", "stop_condition", "rollback"]
+    if gate_mode in {"full", "legacy_full"}:
+        required.extend(("realistic_data", "external_result", "cost_scale_contract"))
+    if gate_mode in {"short", "full"}:
+        required.extend(("beneficiary", "result_owner", "minimum_proof"))
+        string_list(outcome.get("non_goals"), "outcome.non_goals")
+    for key in required:
         nonempty(outcome.get(key), f"outcome.{key}")
     string_list(outcome.get("acceptance_criteria"), "outcome.acceptance_criteria")
-    string_list(outcome.get("forbidden_simplifications"), "outcome.forbidden_simplifications")
+    if gate_mode in {"full", "legacy_full"}:
+        string_list(outcome.get("forbidden_simplifications"), "outcome.forbidden_simplifications")
+    if gate_mode == "short":
+        if "chain" in outcome:
+            raise GateError("short gate_mode must not carry a partial outcome.chain; use full mode")
+        return
     chain = mapping(outcome.get("chain"), "outcome.chain")
     if list(chain) != CHAIN:
         raise GateError("outcome.chain must contain the canonical ordered end-to-end chain")
@@ -244,17 +294,26 @@ def validate_outcome(contract: dict[str, Any]) -> None:
         nonempty(chain[key], f"outcome.chain.{key}")
 
 
-def validate_reuse(contract: dict[str, Any]) -> None:
+def validate_reuse(contract: dict[str, Any], gate_mode: str) -> None:
     reuse = mapping(contract.get("reuse"), "reuse")
     discovery = nonempty_list(reuse.get("discovery"), "reuse.discovery")
     kinds = [mapping(item, "reuse.discovery item").get("kind") for item in discovery]
-    if kinds != REUSE_ORDER:
+    expected_order = {
+        "legacy_full": LEGACY_REUSE_ORDER,
+        "full": FULL_REUSE_ORDER,
+        "short": SHORT_REUSE_ORDER,
+    }[gate_mode]
+    if kinds != expected_order:
         raise GateError("reuse.discovery must follow the canonical search order")
     for index, item in enumerate(discovery):
         item = mapping(item, f"reuse.discovery[{index}]")
         if item.get("status") not in {"reused", "rejected", "not_applicable"}:
             raise GateError(f"reuse.discovery[{index}].status is invalid")
         nonempty(item.get("rationale"), f"reuse.discovery[{index}].rationale")
+        if gate_mode == "full":
+            evaluation = mapping(item.get("evaluation"), f"reuse.discovery[{index}].evaluation")
+            for key in ("maintenance", "license", "security", "lock_in", "integration_cost"):
+                nonempty(evaluation.get(key), f"reuse.discovery[{index}].evaluation.{key}")
         if item.get("status") == "reused" and reuse.get("custom_code") is True:
             nonempty(item.get("remaining_gap"), f"reuse.discovery[{index}].remaining_gap")
     if reuse.get("custom_code") is True:
@@ -506,9 +565,10 @@ def validate_contract(contract: dict[str, Any], phase: str, project_root: Path) 
     if contract.get("schema_version") != 1:
         raise GateError("schema_version must be 1")
     task_id = nonempty(contract.get("task_id"), "task_id")
-    validate_outcome(contract)
-    validate_reuse(contract)
     scope = validate_scope(contract)
+    gate_mode = validate_gate_mode(contract, scope)
+    validate_outcome(contract, gate_mode)
+    validate_reuse(contract, gate_mode)
     if phase == "preflight":
         return
     evidence = mapping(contract.get("evidence"), "evidence")
@@ -537,6 +597,13 @@ def validate_contract(contract: dict[str, Any], phase: str, project_root: Path) 
             raise GateError(f"evidence.review.{key}.findings must be a list")
         if details["findings"]:
             raise GateError(f"evidence.review.{key}.findings must be empty before acceptance")
+        if gate_mode in {"short", "full"}:
+            checks = mapping(item.get("checks"), f"evidence.review.{key}.checks")
+            required_checks = FULL_REVIEW_CHECKS if gate_mode == "full" else REVIEW_CHECKS
+            for check in required_checks:
+                if checks.get(check) is not True:
+                    raise GateError(f"evidence.review.{key}.checks.{check} must be true")
+            details["checks"] = checks
         if not FULL_COMMIT_PATTERN.fullmatch(details["head"]) or details["head"] != reviewed_head:
             raise GateError(
                 f"evidence.review.{key}.head must match current Project Control source_commit"

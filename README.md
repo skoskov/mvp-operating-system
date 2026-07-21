@@ -29,7 +29,7 @@ in a new chat. See `docs/project-control-v2.md`.
 4. Create mandatory Brand / Design System / UX Flow.
 5. Run Standard Stack / Environment Preflight.
 6. Run Memory Preflight from the Obsidian LLM Knowledge Base.
-7. Validate the Outcome-First / Reuse-First task contract.
+7. Validate the proportional Outcome-First / Reuse-First task contract.
 8. Create Analytics / Observability Plan.
 9. Create Support / Feedback / User Operations.
 10. Optionally create Limited Release / Launch Plan for closed beta, controlled test, or explicit GTM request.

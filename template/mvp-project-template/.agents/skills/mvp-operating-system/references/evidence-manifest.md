@@ -22,6 +22,9 @@ target, and image hash. Missing files, hash mismatches, placeholders, contradict
 observations, reused screenshots, and unlinked PASS claims block acceptance.
 Both independent reviews must have no findings and identify the same full commit
 recorded as `source_commit` in the current Project Control manifest.
+For explicit short/full contracts, both review records also carry machine-checked
+outcome-alignment, component-substitution, reuse, and evidence verdicts. Full mode
+adds end-to-end and cost/scale verdicts. Every required verdict must be `true`.
 
 For stateful work, preserve and compare authoritative-row and authorization-ledger
 fingerprints across export, build, browser QA, and deployment.

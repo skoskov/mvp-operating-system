@@ -21,15 +21,19 @@ Use this skill for new MVPs, major features, recovery slices, and project restar
 
 ## Outcome-First and Reuse-First gate
 
-Before custom implementation, define the complete observable product outcome and
-the full chain from input to independent verification. Document reuse discovery in
-the required order before choosing custom code. Use
+Before custom implementation, classify work and choose a proportional gate.
+Short mode is limited to bounded local bugfix, refactor, maintenance, or test
+work with every conditional scope disabled. Features, integrations, external
+actions, product experiments, and any conditional scope use full mode. Define
+the observable product outcome and required proof. Full mode also defines the
+complete chain from input to independent verification and structured reuse risk.
+Use
 `references/outcome-reuse-gate.md` and validate the JSON contract under `outputs/`
 with `bin/gate_check.py preflight`.
 
-If a required chain link, acceptance criterion, realistic external result,
-cost/scale contract, time budget, stop condition, forbidden simplification, or
-rollback is missing, stop before implementation.
+If a required owner, non-goal, proof, chain link, acceptance criterion, realistic
+external result, cost/scale contract, time budget, stop condition, forbidden
+simplification, reuse evaluation, or rollback is missing, stop before implementation.
 
 ## Mission
 

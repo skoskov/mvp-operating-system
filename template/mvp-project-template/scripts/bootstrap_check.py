@@ -10,6 +10,7 @@ REQUIRED = [
     ".agents/skills/mvp-operating-system/SKILL.md",
     ".agents/skills/mvp-operating-system/bin/gate_check.py",
     ".agents/skills/mvp-operating-system/assets/task-contract-template.json",
+    ".agents/skills/mvp-operating-system/assets/task-contract-short-template.json",
     ".agents/skills/mvp-operating-system/references/outcome-reuse-gate.md",
     ".agents/skills/mvp-operating-system/references/hermes-runtime.md",
     ".agents/skills/mvp-operating-system/references/evidence-manifest.md",

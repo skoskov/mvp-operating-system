@@ -37,7 +37,9 @@ The following remain canonical:
 ## Roles
 
 - `release_manager`: coordinates agents, prioritizes blockers, consolidates evidence, reports readiness for owner review.
-- `architect`: checks outcome, reuse discovery, scope, architecture consistency, acceptance coverage, and task decomposition.
+- `architect`: checks gate-mode classification, outcome, component substitution,
+  reuse, scope, architecture consistency, acceptance coverage, cost/scale in full
+  mode, and task decomposition.
 - `implementer`: implements approved slices with small changes and verification.
 - `devops_qa`: verifies the exact environment, deployment path, browser evidence,
   state transitions, fingerprints, logs, rollback, and release evidence.

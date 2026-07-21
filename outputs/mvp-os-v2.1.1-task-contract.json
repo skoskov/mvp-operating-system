@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "task_id": "mvp-os-v2.1.1-proportional-gate",
+  "gate_mode": "full",
+  "work_type": "feature",
+  "gate_mode_rationale": "The release changes mandatory task classification and acceptance policy for all downstream projects.",
+  "scope": {
+    "web": false,
+    "public_deploy": false,
+    "integration": false,
+    "hermes": false,
+    "stateful": false
+  },
+  "scope_rationale": {
+    "web": "The change affects a dependency-free JSON validator and documentation, not a web UI.",
+    "public_deploy": "No public deployment is part of this release.",
+    "integration": "The release changes task-contract policy without invoking an external integration.",
+    "hermes": "Hermes behavior is unchanged.",
+    "stateful": "No authoritative product data or authorization ledger is changed."
+  },
+  "outcome": {
+    "beneficiary": "MVP owners and agents using MVP OS to avoid wasteful implementation.",
+    "result_owner": "MVP OS release manager.",
+    "observable_result": "MVP OS accepts a reduced contract only for bounded local work and requires the full contract for features, integrations, external actions, product experiments, and conditional scopes.",
+    "acceptance_criteria": [
+      "Legacy v2.1 contracts remain valid.",
+      "Short mode passes only for allowed local work types with every conditional scope disabled.",
+      "Full mode requires beneficiary, result owner, non-goals, minimum proof, complete outcome chain, cost and scale limits, and structured reuse evaluation.",
+      "Independent review records explicit outcome, component-substitution, reuse, evidence, end-to-end, and cost-scale checks.",
+      "Canonical and project-template skill trees remain byte-identical."
+    ],
+    "non_goals": [
+      "Do not change Project Control schema v2.",
+      "Do not alter web, integration, state, or Hermes acceptance semantics.",
+      "Do not auto-merge downstream project updates."
+    ],
+    "minimum_proof": "Positive and negative validator tests, full repository verification, and two independent reviews pass against one source commit.",
+    "realistic_data": "Positive and negative JSON fixtures exercise short, full, legacy, feature, product-experiment, integration, and conditional-scope contracts.",
+    "external_result": "A published MVP OS release exposes the validator and templates through the existing reviewed sync path.",
+    "cost_scale_contract": "No runtime dependency is added; validation remains one local Python process and contract size grows only with task complexity.",
+    "time_budget": "Stop if a backward-compatible implementation cannot be verified in one bounded release slice.",
+    "stop_condition": "Stop before publication on legacy-contract regression, canonical/template drift, unresolved review findings, or failed Project Control verification.",
+    "forbidden_simplifications": [
+      "Do not weaken full mode to make short mode easier.",
+      "Do not classify product features or external actions as short local work.",
+      "Do not add third-party dependencies."
+    ],
+    "rollback": "Keep v2.1.0 published and do not advance VERSION, tag, or downstream desired state if verification fails.",
+    "chain": {
+      "external_signal": "The accepted incident correction and IMPLEMENT authorization define the requested policy change.",
+      "interpretation": "The current v2.1.0 gate is compared against the accepted proportionality requirements.",
+      "decision_policy": "Short mode is limited to bounded local work; all higher-risk work remains full mode.",
+      "action": "Validator, templates, docs, tests, decisions, and release metadata are updated.",
+      "external_result": "A verified tagged release becomes available to active projects through reviewed sync.",
+      "product_display": "CLI gate output and durable release/context records expose the result.",
+      "independent_verification": "Automated tests, Project Control verification, and separate clean-context and implementation reviews pass."
+    }
+  },
+  "reuse": {
+    "discovery": [
+      {
+        "kind": "existing_project",
+        "status": "reused",
+        "rationale": "Extend the existing dependency-free gate_check.py validator and synchronized templates.",
+        "evaluation": {
+          "maintenance": "Existing validator is actively maintained in MVP OS.",
+          "license": "Same repository and license boundary.",
+          "security": "No external execution or data transfer added.",
+          "lock_in": "No new lock-in; contract remains plain JSON and Python standard library.",
+          "integration_cost": "Small extension to existing validation and tests."
+        },
+        "remaining_gap": "v2.1.0 has no proportional mode, work classification, richer outcome ownership, or explicit reviewer checks."
+      },
+      {
+        "kind": "official_api_sdk",
+        "status": "not_applicable",
+        "rationale": "The task is local policy validation and has no external platform API.",
+        "evaluation": {
+          "maintenance": "Not applicable to local policy validation.",
+          "license": "Not applicable.",
+          "security": "No API boundary exists.",
+          "lock_in": "Not applicable.",
+          "integration_cost": "Any external API would add unjustified cost."
+        }
+      },
+      {
+        "kind": "platform_connector",
+        "status": "not_applicable",
+        "rationale": "No platform connector participates in offline task-contract validation.",
+        "evaluation": {
+          "maintenance": "Not applicable.",
+          "license": "Not applicable.",
+          "security": "No connector access is needed.",
+          "lock_in": "Not applicable.",
+          "integration_cost": "Connector setup would be pure overhead."
+        }
+      },
+      {
+        "kind": "maintained_open_source",
+        "status": "rejected",
+        "rationale": "An external policy engine would add dependency and integration cost without matching MVP OS contracts.",
+        "evaluation": {
+          "maintenance": "Would create a second maintenance boundary.",
+          "license": "Would require new license review.",
+          "security": "Would expand dependency supply-chain risk.",
+          "lock_in": "Would couple contracts to another policy model.",
+          "integration_cost": "Higher than extending the existing validator."
+        }
+      },
+      {
+        "kind": "service_api",
+        "status": "rejected",
+        "rationale": "A hosted service would reduce offline reliability and add unnecessary cost and data exposure.",
+        "evaluation": {
+          "maintenance": "Introduces provider operations and availability risk.",
+          "license": "Introduces service terms and commercial review.",
+          "security": "Would transmit project contract data externally.",
+          "lock_in": "Creates provider lock-in.",
+          "integration_cost": "Materially higher than local validation."
+        }
+      }
+    ],
+    "custom_code": true,
+    "custom_code_reason": "A small extension to the existing validator is the missing layer and preserves dependency-free offline enforcement."
+  },
+  "evidence": {}
+}

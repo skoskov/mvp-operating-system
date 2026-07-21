@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.1.1] - 2026-07-22
+
+### Added
+
+- Proportional short/full Outcome-First and Reuse-First contract modes.
+- Work classification, beneficiary, result owner, non-goals, minimum proof, and
+  explicit independent-review verdicts.
+- Full-mode reuse evaluation for maintenance, license, security, lock-in, and
+  integration cost.
+
+### Changed
+
+- Short mode is limited to bounded local bugfix, refactor, maintenance, or test
+  work with every conditional scope disabled.
+- Features, integrations, external actions, product experiments, and conditional
+  scopes require full mode.
+- Legacy v2.1 contracts remain valid as full contracts.
+
 ## [2.1.0] - 2026-07-21
 
 ### Added

@@ -43,6 +43,10 @@ contract under `outputs/` and run `gate_check.py preflight`. If web, integration
 Hermes, public-deploy, or stateful scope applies, declare it explicitly so the
 final acceptance validator activates the matching evidence requirements.
 
+Use the short template only for bounded local bugfix, refactor, maintenance, or
+test work with every scope disabled. Features, integrations, external actions,
+product experiments, and any conditional scope require the full template.
+
 ## 6. Independent review
 
 Technical artifacts are reviewed by independent agents before Codex implementation.

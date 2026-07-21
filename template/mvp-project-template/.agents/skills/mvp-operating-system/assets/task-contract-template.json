@@ -1,6 +1,9 @@
 {
   "schema_version": 1,
   "task_id": "replace-with-task-id",
+  "gate_mode": "full",
+  "work_type": "feature",
+  "gate_mode_rationale": "replace",
   "scope": {
     "web": false,
     "public_deploy": false,
@@ -16,8 +19,12 @@
     "stateful": "replace"
   },
   "outcome": {
+    "beneficiary": "replace",
+    "result_owner": "replace",
     "observable_result": "replace",
     "acceptance_criteria": ["replace"],
+    "non_goals": ["replace"],
+    "minimum_proof": "replace",
     "realistic_data": "replace",
     "external_result": "replace",
     "cost_scale_contract": "replace",
@@ -37,12 +44,11 @@
   },
   "reuse": {
     "discovery": [
-      {"kind": "existing_project", "status": "not_applicable", "rationale": "replace", "remaining_gap": ""},
-      {"kind": "official_api_sdk_connector", "status": "not_applicable", "rationale": "replace"},
-      {"kind": "supported_github_project", "status": "not_applicable", "rationale": "replace"},
-      {"kind": "mcp_server", "status": "not_applicable", "rationale": "replace"},
-      {"kind": "library", "status": "not_applicable", "rationale": "replace"},
-      {"kind": "service_api", "status": "not_applicable", "rationale": "replace"}
+      {"kind": "existing_project", "status": "not_applicable", "rationale": "replace", "evaluation": {"maintenance": "replace", "license": "replace", "security": "replace", "lock_in": "replace", "integration_cost": "replace"}, "remaining_gap": ""},
+      {"kind": "official_api_sdk", "status": "not_applicable", "rationale": "replace", "evaluation": {"maintenance": "replace", "license": "replace", "security": "replace", "lock_in": "replace", "integration_cost": "replace"}},
+      {"kind": "platform_connector", "status": "not_applicable", "rationale": "replace", "evaluation": {"maintenance": "replace", "license": "replace", "security": "replace", "lock_in": "replace", "integration_cost": "replace"}},
+      {"kind": "maintained_open_source", "status": "not_applicable", "rationale": "replace", "evaluation": {"maintenance": "replace", "license": "replace", "security": "replace", "lock_in": "replace", "integration_cost": "replace"}},
+      {"kind": "service_api", "status": "not_applicable", "rationale": "replace", "evaluation": {"maintenance": "replace", "license": "replace", "security": "replace", "lock_in": "replace", "integration_cost": "replace"}}
     ],
     "custom_code": false,
     "custom_code_reason": ""
