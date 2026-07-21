@@ -227,7 +227,11 @@ def validate_bundle(
     ):
         raise ControlError("mvp-os.lock project_id does not match goal.json")
 
-    decisions = bundle["decisions.json"].get("decisions", [])
+    decisions_payload = bundle["decisions.json"]
+    decisions = decisions_payload.get("decisions", [])
+    source_event_catalog = decisions_payload.get("source_event_catalog")
+    if source_event_catalog is not None and not isinstance(source_event_catalog, dict):
+        raise ControlError("source_event_catalog must be an object")
     ids: set[str] = set()
     for item in decisions:
         if item.get("status") != "active":
@@ -236,8 +240,32 @@ def validate_bundle(
         if not decision_id or decision_id in ids:
             raise ControlError(f"missing or duplicate decision id: {decision_id}")
         ids.add(decision_id)
-        if not item.get("source_events"):
+        source_events = item.get("source_events")
+        if not source_events:
             raise ControlError(f"decision lacks source_events: {decision_id}")
+        if source_event_catalog is not None:
+            for event_id in source_events:
+                if event_id not in source_event_catalog:
+                    raise ControlError(
+                        f"decision source event is not traceable: {decision_id}: {event_id}"
+                    )
+    if source_event_catalog is not None:
+        for event_id, event in source_event_catalog.items():
+            if not isinstance(event_id, str) or not event_id:
+                raise ControlError("source_event_catalog has an invalid id")
+            if not isinstance(event, dict):
+                raise ControlError(f"source event must be an object: {event_id}")
+            if not isinstance(event.get("reference"), str) or not event["reference"]:
+                raise ControlError(f"source event lacks reference: {event_id}")
+            captured_at = event.get("captured_at")
+            if not isinstance(captured_at, str):
+                raise ControlError(f"source event lacks captured_at: {event_id}")
+            parse_time(captured_at)
+            content_hash = event.get("content_sha256")
+            if not isinstance(content_hash, str) or not re.fullmatch(
+                r"sha256:[a-f0-9]{64}", content_hash
+            ):
+                raise ControlError(f"source event lacks content_sha256: {event_id}")
 
     commands = bundle["commands.json"].get("commands", [])
     for item in commands:

@@ -24,6 +24,9 @@ Your job:
 - spawn or assign specialist agents only when useful;
 - keep docs/project-state.md current;
 - require evidence from commands, checks, diffs, logs, screenshots, or review findings;
+- require the final task-contract acceptance gate and repeat review after findings;
+- prevent agents from writing concurrently to shared build outputs;
+- require automatic rollback on failed public post-deploy browser QA;
 - decide whether the project is ready for owner review according to qa/acceptance-release-gate.md.
 
 Do not expand scope.

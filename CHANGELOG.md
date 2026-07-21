@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.1.0] - 2026-07-21
+
+### Added
+
+- Dependency-free `gate_check.py` preflight and acceptance enforcement.
+- Outcome-First / Reuse-First contracts with ordered reuse discovery.
+- Conditional web evidence for inspected screenshots, DOM, clicks, transitions,
+  browser health, public post-deploy checks, and rollback.
+- Truthful external-result taxonomy and authoritative-state fingerprints.
+- Optional Hermes runtime profile for connectors, schedules, tasks, tools/files,
+  gateway lifecycle, and bounded delivery execution.
+- Traceable Project Control source-event catalogs with timestamps and content hashes.
+- Positive and negative fixtures proving enforcement rather than documentation presence.
+
+### Changed
+
+- Canonical references and downstream templates now carry the same release gates.
+- Multi-agent roles require outcome/reuse review, exact-environment QA, repeat
+  independent review, isolated build outputs, and rollback on failed public QA.
+- Hermes remains opt-in and is not a mandatory LLM proxy or authoritative store.
+
 ## [2.0.0] - 2026-07-19
 
 ### Added

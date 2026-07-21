@@ -12,6 +12,10 @@ make verify
 
 Use the `mvp-operating-system` skill before implementation.
 
+Every custom implementation starts with an Outcome-First / Reuse-First task
+contract under `outputs/`. Validate it before implementation and again with final
+evidence before reporting READY.
+
 Do not start feature work until:
 
 - Idea Intake exists;

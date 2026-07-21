@@ -28,6 +28,21 @@ Do not complete goals by non-optimal means that change product behavior, UX fide
 
 Implementation starts only after Idea Intake, Launch Market Research, Brand / Design System / UX Flow, Standard Stack / Environment Preflight, Memory Preflight, Product/Technical Brief, Analytics / Observability Plan, Support Plan, Build / Deploy / Verification Plan, required Decision Cards, Token/Time Budget, OpenSpec, independent review, and approved implementation slice.
 
+Every custom implementation slice also requires a validated Outcome-First /
+Reuse-First contract. The contract defines the observable end-to-end result,
+acceptance, realistic data/external result, cost and scale, time and stop limits,
+forbidden simplifications, rollback, and ordered reuse discovery.
+
+## Truthful external results
+
+Keep intent creation, dispatch, platform acceptance, confirmed delivery, recipient
+read/reply, definitive failure, and uncertain failure separate. Dry-run, mock,
+replay, and synthetic activity never counts as a new external result.
+
+Hermes is optional. When selected, it provides connector, schedule, local task,
+file/tool, and gateway runtime. Product semantics, policy, durable state,
+reconciliation, audit, and UI metrics remain product-owned.
+
 ## No launch without release gate
 
 Do not call an MVP ready until the QA / Acceptance / Release Gate is complete.

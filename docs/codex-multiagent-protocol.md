@@ -37,12 +37,19 @@ The following remain canonical:
 ## Roles
 
 - `release_manager`: coordinates agents, prioritizes blockers, consolidates evidence, reports readiness for owner review.
-- `architect`: checks scope, architecture consistency, acceptance coverage, and task decomposition.
+- `architect`: checks outcome, reuse discovery, scope, architecture consistency, acceptance coverage, and task decomposition.
 - `implementer`: implements approved slices with small changes and verification.
-- `devops_qa`: verifies setup, env, deployment path, smoke checks, browser checks, logs, and release evidence.
+- `devops_qa`: verifies the exact environment, deployment path, browser evidence,
+  state transitions, fingerprints, logs, rollback, and release evidence.
 
 ## Rule
 
 Final launch still requires explicit owner approval.
 
 Passing checks, a completed release gate, or a release manager report can make the project ready for owner review, but they do not replace the owner launch decision.
+
+Independent findings require a separate repeat review after fixes. The implementer
+cannot replace that review with its own tests. Agents must not concurrently run
+builds that write to the same `.next`, `dist`, `build`, or equivalent mutable
+output. Public deploy requires a rollback path and post-deploy browser QA; failure
+triggers rollback rather than READY.

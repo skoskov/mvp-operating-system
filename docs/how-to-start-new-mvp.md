@@ -38,6 +38,11 @@ The human approves token/time budget and important decisions, not long specs.
 
 Create proposal/spec/tasks before implementation. Do not move to OpenSpec until Idea Intake, Launch Market Research, Brand / Design System / UX Flow, Standard Stack / Environment Preflight, Product/Technical Brief, Analytics / Observability Plan, Support Plan, and Build / Deploy / Verification Plan exist. Optional limited release planning does not block implementation.
 
+Before custom implementation, create the Outcome-First / Reuse-First JSON task
+contract under `outputs/` and run `gate_check.py preflight`. If web, integration,
+Hermes, public-deploy, or stateful scope applies, declare it explicitly so the
+final acceptance validator activates the matching evidence requirements.
+
 ## 6. Independent review
 
 Technical artifacts are reviewed by independent agents before Codex implementation.
@@ -63,6 +68,9 @@ After every non-final deploy/check/review cycle, update `iteration/pre-launch-it
 ## 11. Final review
 
 Use Codex GitHub Review or an independent reviewer.
+
+After fixing findings, run a separate repeat review. Validate final task evidence
+with `gate_check.py acceptance`; public deploy failure triggers rollback.
 
 ## 12. Learning update
 

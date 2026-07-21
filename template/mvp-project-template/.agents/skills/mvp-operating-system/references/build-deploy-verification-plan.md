@@ -14,6 +14,13 @@ Codex stops only when a real product, scope, budget, risk, or project-access dec
 Build goal:
 <what must be ready after implementation>
 
+Outcome / Reuse contract:
+- task contract path under outputs/:
+- preflight validation command:
+- preflight result:
+- observable end-to-end result:
+- custom-code reason, if any:
+
 Source inputs:
 - Idea Intake:
 - Launch Market Research:
@@ -97,6 +104,19 @@ Hard execution gate:
 - rollback evidence:
 - stop conditions for broken tools/infrastructure:
 - forbidden degraded workarounds:
+
+Conditional scope:
+- web:
+- public deploy:
+- integration:
+- Hermes:
+- stateful authoritative data:
+
+Final evidence manifest:
+- acceptance validation command:
+- exact environment and build/release ID:
+- state-transition coverage:
+- authoritative-row and authorization-ledger fingerprints, if applicable:
 
 Autonomous repair loop:
 1. implement slice

@@ -115,7 +115,7 @@ class SyncV2Tests(unittest.TestCase):
             self.assertEqual(result, 0)
             updated = json.loads((project / "mvp-os.lock").read_text())
             self.assertEqual(updated["schema_version"], 2)
-            self.assertEqual(updated["mvp_os_version"], "2.0.0")
+            self.assertEqual(updated["mvp_os_version"], "2.1.0")
             self.assertEqual(updated["sync_status"], "project-control-migration-required")
             self.assertEqual(updated["project_control"]["status"], "pending")
 

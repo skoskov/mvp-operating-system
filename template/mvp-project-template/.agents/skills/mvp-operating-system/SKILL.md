@@ -19,6 +19,18 @@ history are excluded unless the current release explicitly links them for trace.
 
 Use this skill for new MVPs, major features, recovery slices, and project restarts.
 
+## Outcome-First and Reuse-First gate
+
+Before custom implementation, define the complete observable product outcome and
+the full chain from input to independent verification. Document reuse discovery in
+the required order before choosing custom code. Use
+`references/outcome-reuse-gate.md` and validate the JSON contract under `outputs/`
+with `bin/gate_check.py preflight`.
+
+If a required chain link, acceptance criterion, realistic external result,
+cost/scale contract, time budget, stop condition, forbidden simplification, or
+rollback is missing, stop before implementation.
+
 ## Mission
 
 Move from high-level idea to working MVP while keeping the human focused on important product, business, scope, risk, budget, and technical trade-off decisions.
@@ -61,6 +73,8 @@ For substantial user-visible tasks, capture baseline and final comparison for pu
    - Apply `global/standard-stack.md` and check runtime, package manager, dependencies, deploy path, verification command, project settings, ports, and shared-resource boundaries.
    - Use `references/environment-preflight.md` and project `ops/environment-preflight.md`.
    - If the common environment is broken, stop and report instead of patching the project locally.
+   - If Hermes is selected, use `references/hermes-runtime.md`; do not treat it as
+     a mandatory LLM proxy or require it for projects that did not opt in.
 
 5. **Memory Preflight**
    - Read relevant Obsidian LLM Knowledge Base indexes and prior project notes.
@@ -90,6 +104,7 @@ For substantial user-visible tasks, capture baseline and final comparison for pu
    - Define build goal, source inputs, approved stack, architecture, deployment plan, implementation slices, acceptance criteria mapping, test strategy, verification commands, autonomous repair loop, and stop conditions.
    - Use `references/build-deploy-verification-plan.md`.
    - Every acceptance criterion must map to a test, eval, smoke check, or verification command.
+   - Include the validated Outcome-First / Reuse-First task contract.
 
 11. **Decision Cards**
    - Ask the human only for important trade-offs.
@@ -123,6 +138,8 @@ For substantial user-visible tasks, capture baseline and final comparison for pu
    - Check product promise, core UX, verification results, content readiness, release readiness, known limitations, and final status.
    - Use `references/acceptance-release-gate.md`.
    - Do not call the MVP ready if final status is BLOCKED.
+   - Validate final task evidence with `bin/gate_check.py acceptance` and
+     `references/evidence-manifest.md`.
 
 18. **Pre-launch Iteration Update**
    - Use after each non-final deploy/check/review cycle.

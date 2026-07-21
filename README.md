@@ -29,21 +29,22 @@ in a new chat. See `docs/project-control-v2.md`.
 4. Create mandatory Brand / Design System / UX Flow.
 5. Run Standard Stack / Environment Preflight.
 6. Run Memory Preflight from the Obsidian LLM Knowledge Base.
-7. Create Analytics / Observability Plan.
-8. Create Support / Feedback / User Operations.
-9. Optionally create Limited Release / Launch Plan for closed beta, controlled test, or explicit GTM request.
-10. Create Build / Deploy / Verification Plan.
-11. Ask the human only short Decision Cards when needed.
-12. Present Token/Time Budget before expensive work.
-13. Create OpenSpec proposal/spec/tasks.
-14. Run independent review for technical artifacts.
-15. Give Codex small approved implementation slices.
-16. Codex implements, runs commands, verifies, and repairs failures.
-17. Run QA / Acceptance / Release Gate.
-18. Run Pre-launch Iteration Update.
-19. Update Build / Deploy / Verification Plan and continue with the next implementation slice until the owner explicitly says the MVP is ready to launch.
-20. Run final PR review with Codex GitHub Review.
-21. Update Obsidian memory with decisions, failures, defaults, token/time usage, and lessons learned.
+7. Validate the Outcome-First / Reuse-First task contract.
+8. Create Analytics / Observability Plan.
+9. Create Support / Feedback / User Operations.
+10. Optionally create Limited Release / Launch Plan for closed beta, controlled test, or explicit GTM request.
+11. Create Build / Deploy / Verification Plan.
+12. Ask the human only short Decision Cards when needed.
+13. Present Token/Time Budget before expensive work.
+14. Create OpenSpec proposal/spec/tasks.
+15. Run independent review for technical artifacts.
+16. Give Codex small approved implementation slices.
+17. Codex implements, runs commands, verifies, and repairs failures.
+18. Run QA / Acceptance / Release Gate and final task-contract validation.
+19. Run Pre-launch Iteration Update.
+20. Update Build / Deploy / Verification Plan and continue with the next implementation slice until the owner explicitly says the MVP is ready to launch.
+21. Run final PR review with Codex GitHub Review.
+22. Update Obsidian memory with decisions, failures, defaults, token/time usage, and lessons learned.
 
 ## Repository contents
 

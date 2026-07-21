@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "current_version": "2.0.0",
+  "current_version": "2.1.0",
   "statuses": ["active", "paused", "archived"],
   "projects": [
     {
@@ -9,10 +9,10 @@
       "default_branch": "master",
       "status": "active",
       "lock_path": "mvp-os.lock",
-      "last_known_version": "1.0.0",
+      "last_known_version": "2.0.0",
       "last_known_status": "synced",
       "status_source": "project-lock",
-      "migration": "project-control-v2-pending",
+      "migration": "project-control-v2-active",
       "sync_mode": "pull-pr"
     }
   ]

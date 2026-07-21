@@ -64,6 +64,24 @@ Every substantial user-visible task must capture and compare baseline and final 
 
 If the final state is less functional, less clickable, less navigable, less visually faithful, or less product-complete than the baseline, the task is not complete and must not be reported as READY.
 
+For web scope, final evidence must include the exact URL/environment/build ID,
+visually inspected baseline/final desktop/mobile screenshots, DOM assertions, real
+click/navigation/filter checks, state transitions, empty/error/loading states,
+console/runtime/network/assets/overflow/mobile results, rollback, and public
+post-deploy verification when public deploy is in scope. HTTP 200, source review,
+DOM alone, or screenshots alone are insufficient.
+
+## Outcome-First / Reuse-First gate
+
+Before custom implementation, create the task contract under `outputs/` from the
+MVP OS template and run `gate_check.py preflight`. Define the complete observable
+outcome, full input-to-independent-verification chain, acceptance, realistic data,
+external result, cost/scale, time budget, stop condition, forbidden
+simplifications, rollback, and ordered reuse discovery.
+
+Hermes is opt-in. It is a connector, schedule, local task, file/tool, and gateway
+runtime, not a mandatory LLM proxy or authoritative product store.
+
 ## Ask the human only through Decision Cards
 
 Ask only when a decision affects:
@@ -117,6 +135,7 @@ After implementation:
 5. Update Build / Deploy / Verification Plan.
 6. Continue with the next implementation slice until the owner explicitly says the MVP is ready to launch.
 7. Run final PR review only after explicit launch readiness approval.
+8. Run `gate_check.py acceptance` for the completed task contract.
 8. Produce a short summary.
 9. Update the Obsidian LLM Knowledge Base.
 

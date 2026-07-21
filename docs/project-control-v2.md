@@ -40,6 +40,12 @@ project-control/
 `CURRENT.json` is the single atomic pointer. Releases are immutable after
 publication. Every current decision cites at least one source event.
 
+Backward-compatible v2.1 releases may include `source_event_catalog` in
+`decisions.json`. When present, every decision source event must resolve to one
+catalog entry containing a sanitized durable reference, capture timestamp, and
+content SHA-256. Startup validates this metadata without reading the referenced
+history or context store.
+
 ## Independent clocks
 
 - `mvp_os_version`: tooling compatibility.

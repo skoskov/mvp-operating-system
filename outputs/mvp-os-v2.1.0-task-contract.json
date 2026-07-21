@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "task_id": "mvp-os-v2.1.0-release",
+  "scope": {
+    "web": false,
+    "public_deploy": false,
+    "integration": false,
+    "hermes": false,
+    "stateful": false
+  },
+  "outcome": {
+    "observable_result": "MVP OS v2.1.0 is published as a backward-compatible release with executable conditional gates and synchronized downstream templates.",
+    "acceptance_criteria": [
+      "Outcome-First and Reuse-First preflight rejects incomplete contracts.",
+      "Web, integration, stateful, and optional Hermes acceptance reject false or incomplete evidence.",
+      "Project Control v2 remains compatible and new source-event catalogs are traceable.",
+      "Canonical and template skills are byte-identical.",
+      "Full verification and independent reviews pass before publication."
+    ],
+    "realistic_data": "Negative and positive fixtures reproduce the MaxCRM failure modes without live sends or private data.",
+    "external_result": "The source branch and annotated v2.1.0 tag are pushed after verification.",
+    "cost_scale_contract": "Use the Python standard library only; conditional gates add no runtime requirement to projects outside their declared scope.",
+    "time_budget": "Complete one bounded release cycle and stop on verification, review, Git, or publication failure.",
+    "stop_condition": "Stop before publication if any gate, source/template consistency check, Project Control check, or independent review fails.",
+    "forbidden_simplifications": [
+      "Do not replace executable enforcement with documentation-only checks.",
+      "Do not make Hermes mandatory.",
+      "Do not modify published Project Control release 000002.",
+      "Do not claim an official release before main, tag, verification, and push agree."
+    ],
+    "rollback": "Do not push the release tag on failure; if publication has not completed, keep v2.0.0 as the official release.",
+    "chain": {
+      "external_signal": "The MaxCRM improvement handoff identifies concrete product and process failures.",
+      "interpretation": "The failures are mapped to conditional MVP OS gates and canonical ownership boundaries.",
+      "decision_policy": "Backward compatibility and minimal dependency-free enforcement determine the v2.1 design.",
+      "action": "Update the skill, templates, validator, tests, decisions, release metadata, and Project Control release.",
+      "external_result": "The verified source release and matching tag are pushed.",
+      "product_display": "Bootstrap and release artifacts expose the current v2.1 architecture, exclusions, gates, and next step.",
+      "independent_verification": "Implementation and clean-context reviews pass against automated fixtures and the final release state."
+    }
+  },
+  "reuse": {
+    "discovery": [
+      {
+        "kind": "existing_project",
+        "status": "reused",
+        "rationale": "Extend Project Control v2, the existing hard execution gate, release templates, and standard-library test harness."
+      },
+      {
+        "kind": "official_api_sdk_connector",
+        "status": "not_applicable",
+        "rationale": "The enforcement is repository-local policy validation and needs no external API or SDK."
+      },
+      {
+        "kind": "supported_github_project",
+        "status": "not_applicable",
+        "rationale": "A third-party policy engine would add dependency and migration cost beyond the bounded JSON contract."
+      },
+      {
+        "kind": "mcp_server",
+        "status": "not_applicable",
+        "rationale": "Gate validation must remain deterministic and available without network or connector state."
+      },
+      {
+        "kind": "library",
+        "status": "rejected",
+        "rationale": "The Python standard library already covers JSON parsing, validation logic, CLI handling, and tests."
+      },
+      {
+        "kind": "service_api",
+        "status": "not_applicable",
+        "rationale": "A hosted service would weaken local reproducibility and add an unnecessary availability dependency."
+      }
+    ],
+    "custom_code": true,
+    "custom_code_reason": "A small repository-native validator is the minimal way to enforce the project-specific conditional contract without dependencies."
+  },
+  "evidence": {}
+}

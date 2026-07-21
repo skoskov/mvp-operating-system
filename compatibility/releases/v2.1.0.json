@@ -1,0 +1,13 @@
+{
+  "version": "2.1.0",
+  "previous_version": "2.0.0",
+  "summary": "Add executable Outcome-First, Reuse-First, web, integration, state, and optional Hermes gates.",
+  "human_summary_ru": "Новые conditional gates проверяют полный результат, reuse, browser evidence и честные integration states; Hermes остаётся необязательным.",
+  "managed_paths": [
+    {
+      "source": "skill/mvp-operating-system",
+      "destination": ".agents/skills/mvp-operating-system"
+    }
+  ],
+  "review_paths": ["AGENTS.md", "project-control/", "DECISIONS.md", "docs/", "build/", "qa/", "openspec/", "outputs/"]
+}

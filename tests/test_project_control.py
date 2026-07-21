@@ -149,6 +149,39 @@ class ProjectControlTests(unittest.TestCase):
             with self.assertRaises(project_control.ControlError):
                 project_control.validate_bundle(root)
 
+    def test_source_event_catalog_makes_decisions_traceable(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            make_project(root)
+            decisions_path = root / "project-control/releases/000001/decisions.json"
+            decisions = json.loads(decisions_path.read_text())
+            decisions["source_event_catalog"] = {
+                "event:2": {
+                    "reference": "context:demo/08-message-log/event-2.md",
+                    "captured_at": datetime.now(timezone.utc).isoformat(),
+                    "content_sha256": "sha256:" + "1" * 64,
+                }
+            }
+            write_json(decisions_path, decisions)
+            manifest_path = root / "project-control/releases/000001/manifest.json"
+            manifest = json.loads(manifest_path.read_text())
+            manifest["files"]["decisions.json"] = sha(decisions_path)
+            write_json(manifest_path, manifest)
+            current_path = root / "project-control/CURRENT.json"
+            current = json.loads(current_path.read_text())
+            current["manifest_sha256"] = sha(manifest_path)
+            write_json(current_path, current)
+            project_control.validate_bundle(root)
+
+            decisions["decisions"][0]["source_events"] = ["event:missing"]
+            write_json(decisions_path, decisions)
+            manifest["files"]["decisions.json"] = sha(decisions_path)
+            write_json(manifest_path, manifest)
+            current["manifest_sha256"] = sha(manifest_path)
+            write_json(current_path, current)
+            with self.assertRaisesRegex(project_control.ControlError, "not traceable"):
+                project_control.validate_bundle(root)
+
     def test_secret_value_in_manifest_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

@@ -249,3 +249,24 @@ Consequences:
 - `AGENTS.md`, `DECISIONS.md`, product docs, and OpenSpec remain review-only.
 - Sync opens a project PR and never auto-merges it.
 - The project lock is the actual applied-version record; the central registry stores desired state and last-known reporting data.
+
+## 2026-07-21 — Backward-compatible executable gates in MVP OS v2.1.0
+
+Decision:
+Release the MaxCRM-derived improvements as conditional, dependency-free MVP OS
+v2.1.0 gates while keeping Project Control schema v2 compatible.
+
+Reason:
+Build, HTTP, component, or connector success can exist without a verified product
+outcome. Documentation-only rules did not prove inspected browser behavior, state
+transitions, truthful external-result claims, reuse discovery, or optional runtime
+boundaries.
+
+Consequences:
+- Every custom implementation starts with a validated Outcome-First / Reuse-First contract.
+- Web acceptance requires inspected screenshots, DOM, clicks, transitions, exact environment, browser health, and public post-deploy evidence when applicable.
+- Integration states distinguish intent, dispatch, platform acceptance, delivery, recipient observation, definitive failure, and uncertainty.
+- Stateful work compares authoritative-row and authorization-ledger fingerprints.
+- Hermes is an optional runtime for connectors, schedules, tasks, tools/files, and gateway; product state and semantics remain product-owned.
+- New Project Control releases can make decision source events traceable through a hashed catalog without reading history at startup.
+- Independent findings require repeat review; agents cannot concurrently write shared build outputs.

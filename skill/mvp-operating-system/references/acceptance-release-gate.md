@@ -45,6 +45,8 @@ Technical acceptance:
 - build result:
 - deploy or preview result:
 - rollback path known:
+- task contract preflight result:
+- task contract acceptance result:
 
 Content acceptance:
 - no placeholders:
@@ -66,6 +68,28 @@ Regression gate:
 - final UI is not less navigable:
 - final UI is not less visually faithful:
 - no fallback/mock/static shell replaced the intended product without explicit Decision Card approval:
+
+Web evidence, when web scope applies:
+- exact URL/environment/build ID:
+- baseline/final desktop screenshots inspected:
+- baseline/final mobile screenshots inspected:
+- DOM assertions:
+- click/navigation/filter/back matrix:
+- empty/error/loading states:
+- state-transition checks:
+- counter-to-route/rendered-row equality, if applicable:
+- console/runtime/network/assets/overflow/mobile result:
+- public post-deploy result, if applicable:
+
+Integration truthfulness, when integration scope applies:
+- external-result state and observable event:
+- dry-run/mock/replay/synthetic explicitly marked:
+- no platform acceptance presented as delivery/read/reply:
+- uncertain result has no automatic retry:
+
+Integrity, when authoritative state is in scope:
+- authoritative-row fingerprint unchanged:
+- authorization-ledger fingerprint unchanged:
 
 Release readiness:
 - release URL:

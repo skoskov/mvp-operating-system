@@ -2,6 +2,13 @@
 
 Build goal:
 
+Outcome / Reuse contract:
+- Task contract path under outputs/:
+- Preflight validation command:
+- Preflight result:
+- Observable end-to-end result:
+- Custom-code reason, if any:
+
 Source inputs:
 - Idea Intake:
 - Launch Market Research:
@@ -72,6 +79,27 @@ Test strategy:
 Verification commands:
 - Primary:
 - Secondary, if needed:
+
+Hard execution gate:
+- Required stack elements:
+- Baseline screenshots/DOM/click map:
+- Public route checks, if any:
+- Rollback evidence:
+- Stop conditions for broken tools/infrastructure:
+- Forbidden degraded workarounds:
+
+Conditional scope:
+- Web:
+- Public deploy:
+- Integration:
+- Hermes:
+- Stateful authoritative data:
+
+Final evidence manifest:
+- Acceptance validation command:
+- Exact environment and build/release ID:
+- State-transition coverage:
+- Authoritative-row and authorization-ledger fingerprints, if applicable:
 
 Autonomous repair loop:
 1. Implement slice.

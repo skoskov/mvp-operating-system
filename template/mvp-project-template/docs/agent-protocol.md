@@ -40,6 +40,7 @@ Owns coordination and readiness.
 Owns scope and consistency.
 
 - Checks that scope, acceptance criteria, architecture, and tasks do not contradict each other.
+- Checks the observable outcome, full end-to-end chain, and ordered reuse discovery before implementation.
 - Updates planning docs only when needed.
 - Does not implement product code.
 - Does not expand scope without a Decision Card.
@@ -60,6 +61,9 @@ Owns setup, deployment, smoke checks, logs, and release evidence.
 
 - Verifies commands, env vars, migrations, seed data, deploy path, and smoke tests.
 - Uses browser checks for web UI flows when applicable.
+- Verifies the exact target environment, inspected desktop/mobile screenshots,
+  DOM, real clicks, state transitions, console/network/overflow, public
+  post-deploy behavior, fingerprints, and rollback when applicable.
 - Updates `qa/acceptance-release-gate.md`, `docs/project-state.md`, and release notes/runbook docs when present.
 - Does not add product features.
 
@@ -72,6 +76,9 @@ Owns setup, deployment, smoke checks, logs, and release evidence.
 - Do not create requirements in chat; write durable requirements to the proper source file.
 - Do not mark work done without checks or a documented reason checks could not run.
 - Do not let an agent approve its own major technical artifact.
+- Close reviewer findings with a separate repeat review after fixes.
+- Do not run concurrent builds that write to the same mutable output directory.
+- Roll back a public deploy when required post-deploy browser QA fails.
 
 ## Human escalation
 

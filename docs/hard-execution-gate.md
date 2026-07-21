@@ -20,6 +20,7 @@ If any required stack element is broken, flaky, unavailable, blocked, or unverif
 | Reverse proxy/CDN/public URL | Public demo work | Public route differs from origin, hangs, closes, caches stale content, or cannot be verified |
 | Screenshots and DOM | User-visible work | Baseline or final state cannot be captured |
 | Click/navigation checks | Interactive demo work | Any visible action is inert, broken, ambiguous, or unverified |
+| State transitions | Stateful UI work | Post-action state, counters, routes, or rendered rows diverge |
 | Rollback path | Public route/deploy changes | Rollback command or backup is missing |
 
 ## Forbidden Completion Patterns
@@ -39,7 +40,9 @@ These are forbidden unless the human explicitly approves the exact tradeoff befo
 
 ## Baseline And Final Comparison
 
-For every substantial user-visible task, capture baseline before edits and final state after implementation or deployment.
+For every substantial user-visible task, capture baseline before edits and final
+state after implementation or deployment. Create the artifact and visually inspect
+it; file existence is not evidence.
 
 Final verification must prove:
 
@@ -49,6 +52,26 @@ Final verification must prove:
 - browser-visible UI matches the intended product direction;
 - no console/runtime blockers affect the demo;
 - public route behavior matches the verified origin/local route.
+
+## Required Web Evidence
+
+For web scope, the evidence manifest must record:
+
+- exact target URL, environment, and release/build ID;
+- visually inspected baseline/final desktop/mobile screenshots;
+- DOM assertions for required elements, text, links, states, and record counts;
+- real click/navigation/filter/back coverage;
+- empty, error, and loading states, or a reason each is not applicable;
+- before/after state transitions and counter-to-route/rendered-row equality when
+  counters or filtered routes exist;
+- console, runtime, failed-network, asset, overflow, and mobile-navigation results;
+- baseline-versus-final verdict and rollback command;
+- the same post-deploy checks against the public URL when public deploy is in scope.
+
+Localhost, source inspection, screenshots alone, DOM alone, and HTTP 200 cannot
+replace verification of the scoped environment.
+
+Validate the final task contract with `gate_check.py acceptance`.
 
 If the final state regresses from baseline, the task is not complete.
 

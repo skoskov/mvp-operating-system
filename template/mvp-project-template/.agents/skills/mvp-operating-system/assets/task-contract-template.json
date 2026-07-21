@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "replace-with-task-id",
+  "scope": {
+    "web": false,
+    "public_deploy": false,
+    "integration": false,
+    "hermes": false,
+    "stateful": false
+  },
+  "outcome": {
+    "observable_result": "replace",
+    "acceptance_criteria": ["replace"],
+    "realistic_data": "replace",
+    "external_result": "replace",
+    "cost_scale_contract": "replace",
+    "time_budget": "replace",
+    "stop_condition": "replace",
+    "forbidden_simplifications": ["replace"],
+    "rollback": "replace",
+    "chain": {
+      "external_signal": "replace",
+      "interpretation": "replace",
+      "decision_policy": "replace",
+      "action": "replace",
+      "external_result": "replace",
+      "product_display": "replace",
+      "independent_verification": "replace"
+    }
+  },
+  "reuse": {
+    "discovery": [
+      {"kind": "existing_project", "status": "not_applicable", "rationale": "replace"},
+      {"kind": "official_api_sdk_connector", "status": "not_applicable", "rationale": "replace"},
+      {"kind": "supported_github_project", "status": "not_applicable", "rationale": "replace"},
+      {"kind": "mcp_server", "status": "not_applicable", "rationale": "replace"},
+      {"kind": "library", "status": "not_applicable", "rationale": "replace"},
+      {"kind": "service_api", "status": "not_applicable", "rationale": "replace"}
+    ],
+    "custom_code": false,
+    "custom_code_reason": ""
+  },
+  "evidence": {}
+}

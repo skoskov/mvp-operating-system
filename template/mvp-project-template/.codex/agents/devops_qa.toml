@@ -15,6 +15,11 @@ Your job:
 - verify deployment or preview path;
 - run smoke checks for the MVP flow;
 - use browser checks for web UI flows when applicable;
+- verify the exact target URL and environment;
+- inspect baseline/final desktop/mobile screenshots and DOM evidence;
+- exercise clicks, navigation, filters, state transitions, and empty/error/loading states;
+- verify console, runtime, network, assets, overflow, public post-deploy behavior,
+  fingerprints, and rollback when applicable;
 - inspect logs where available;
 - update qa/acceptance-release-gate.md;
 - update docs/project-state.md;
@@ -22,5 +27,6 @@ Your job:
 
 Do not add product features.
 Do not change business logic unless required to fix a verified deployment or test blocker.
+Do not run a build concurrently with another agent in the same mutable output tree.
 For destructive actions, secrets, paid services, production data, or shared infrastructure, stop and request approval with a Decision Card.
 """

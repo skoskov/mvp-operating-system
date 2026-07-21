@@ -67,6 +67,22 @@ Every substantial user-visible task must capture and compare baseline and final 
 
 If the final state is less functional, less clickable, less navigable, less visually faithful, or less product-complete than the baseline, the task is not complete and must not be reported as READY.
 
+For web scope, final evidence must identify the exact environment and build,
+include visually inspected baseline/final desktop/mobile screenshots, DOM, real
+click/navigation/filter coverage, state transitions, browser health, rollback,
+and public post-deploy verification when applicable.
+
+## Outcome-First / Reuse-First gate
+
+Before custom implementation, validate a task contract under `outputs/` that
+defines the complete observable outcome, end-to-end chain, acceptance, realistic
+data/external result, cost/scale, time budget, stop condition, forbidden
+simplifications, rollback, and ordered reuse discovery.
+
+Hermes is opt-in and non-authoritative. Use it for connectors, schedules, local
+tasks, files/tools, and gateway runtime when those capabilities add value. Do not
+route direct LLM calls through Hermes by default.
+
 ## Ask the human only through Decision Cards
 
 Ask only when a decision affects:
@@ -105,11 +121,12 @@ Before implementation:
 8. Create or update Support / Feedback / User Operations.
 9. Optionally create Limited Release / Launch Plan for closed beta, controlled test, or explicit GTM request.
 10. Create or update Build / Deploy / Verification Plan.
-11. Ask only required Decision Cards.
-12. Present Token/Time Budget for expensive work.
-13. Create or update OpenSpec artifacts.
-14. Run independent review for technical artifacts.
-15. Prepare an approved implementation slice.
+11. Validate the Outcome-First / Reuse-First preflight contract.
+12. Ask only required Decision Cards.
+13. Present Token/Time Budget for expensive work.
+14. Create or update OpenSpec artifacts.
+15. Run independent review for technical artifacts.
+16. Prepare an approved implementation slice.
 
 After implementation:
 
@@ -120,8 +137,9 @@ After implementation:
 5. Update Build / Deploy / Verification Plan.
 6. Continue with the next implementation slice until the owner explicitly says the MVP is ready to launch.
 7. Run final PR review only after explicit launch readiness approval.
-8. Produce a short summary.
-9. Update the Obsidian LLM Knowledge Base.
+8. Validate the final task evidence contract.
+9. Produce a short summary.
+10. Update the Obsidian LLM Knowledge Base.
 
 ## Escalation rule
 

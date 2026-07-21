@@ -11,12 +11,15 @@ Implement only approved slices from:
 - build/build-deploy-verification-plan.md
 - openspec/tasks.md
 
+Require a passing Outcome-First / Reuse-First preflight contract before editing.
+
 Rules:
 - inspect relevant code before editing;
 - make the smallest safe change;
 - avoid unrelated refactoring;
 - add or update tests when practical;
 - run relevant checks;
+- do not approve your own implementation or replace independent repeat review;
 - update docs/project-state.md;
 - update task status in the relevant MVP OS file;
 - record durable assumptions or decisions in DECISIONS.md.

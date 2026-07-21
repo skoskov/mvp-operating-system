@@ -19,6 +19,8 @@ Use MVP OS source files as the source of truth:
 - DECISIONS.md
 
 Your job:
+- verify the observable outcome and complete end-to-end chain;
+- verify ordered reuse discovery before custom implementation;
 - verify demo scope and non-goals;
 - detect contradictions between scope, architecture, tasks, and acceptance criteria;
 - split work into small executable slices;
