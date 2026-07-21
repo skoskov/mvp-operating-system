@@ -1,0 +1,16 @@
+{
+  "gates": [
+    "root and template Project Control validate, bootstrap, and doctor pass",
+    "bootstrap reports LEGACY_STARTUP_READS: 0",
+    "Outcome-First and Reuse-First preflight passes",
+    "positive and negative fixtures prove conditional gate enforcement",
+    "canonical and template skill trees are byte-identical",
+    "Hermes remains optional and non-authoritative",
+    "decision source events resolve through the hashed catalog",
+    "clean-context reviewer names the v2.1 architecture, exclusions, commands, and next step without legacy reads",
+    "implementation review has no unresolved findings",
+    "source lock reports published with release v2.1.0 only after verification on main",
+    "tag v2.1.0 resolves to the verified release commit",
+    "main and tag v2.1.0 are pushed"
+  ]
+}

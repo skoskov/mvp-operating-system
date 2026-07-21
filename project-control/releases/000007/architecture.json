@@ -1,0 +1,35 @@
+{
+  "components": [
+    {
+      "id": "project-control",
+      "role": "current operating truth for the MVP OS source repository"
+    },
+    {
+      "id": "release-source",
+      "role": "canonical source for tagged MVP OS releases"
+    },
+    {
+      "id": "gate-validator",
+      "role": "dependency-free conditional preflight and acceptance enforcement"
+    },
+    {
+      "id": "optional-hermes-profile",
+      "role": "non-authoritative connector, schedule, task, tool, file, and gateway runtime guidance"
+    },
+    {
+      "id": "downstream-sync",
+      "role": "pull-request distribution to registered projects only"
+    }
+  ],
+  "invariants": [
+    "one hash-verified CURRENT.json",
+    "immutable published releases",
+    "no source-repository self-sync",
+    "published tag points to the current source release commit",
+    "secret references only",
+    "Project Control v2 backward compatibility",
+    "conditional gates do not burden out-of-scope projects",
+    "canonical and template skill trees remain byte-identical",
+    "external-result claims never exceed observed evidence"
+  ]
+}
