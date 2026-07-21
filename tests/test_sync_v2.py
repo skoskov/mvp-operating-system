@@ -122,7 +122,32 @@ class SyncV2Tests(unittest.TestCase):
 
     def test_sync_refuses_candidate_source(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            project = Path(tmp)
+            root = Path(tmp)
+            source = root / "source"
+            project = root / "project"
+            source.mkdir()
+            project.mkdir()
+            (source / "VERSION").write_text("2.1.0\n", encoding="utf-8")
+            (source / "mvp-os.lock").write_text(
+                json.dumps(
+                    {
+                        "schema_version": 2,
+                        "project_id": "mvp-operating-system",
+                        "mvp_os_version": "2.1.0",
+                        "release": None,
+                        "publication_status": "candidate",
+                        "repository_role": "source",
+                        "sync_mode": "source",
+                        "source_repository": "skoskov/mvp-operating-system",
+                        "project_control": {
+                            "schema_version": 2,
+                            "status": "pending-review",
+                            "current_path": "project-control/CURRENT.json",
+                        },
+                    }
+                ) + "\n",
+                encoding="utf-8",
+            )
             (project / "mvp-os.lock").write_text(
                 json.dumps(
                     {
@@ -134,14 +159,7 @@ class SyncV2Tests(unittest.TestCase):
                 encoding="utf-8",
             )
             with self.assertRaisesRegex(SystemExit, "unpublished MVP OS candidate"):
-                mvp_os_sync.sync(
-                    ROOT,
-                    project,
-                    Path("mvp-os.lock"),
-                    True,
-                    "skoskov/crm-agent-mvp",
-                    False,
-                )
+                mvp_os_sync.require_published_source(source, "2.1.0")
 
     def test_newest_release_wins_for_repeated_destination(self) -> None:
         releases = [
