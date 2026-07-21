@@ -1,0 +1,20 @@
+{
+  "gates": [
+    "root and template Project Control validate, bootstrap, and doctor pass",
+    "bootstrap reports LEGACY_STARTUP_READS: 0",
+    "proportional Outcome-First and Reuse-First full preflight passes",
+    "short mode is limited to bounded local work without conditional scope",
+    "features, integrations, external actions, and product experiments require full mode",
+    "legacy v2.1 contracts remain valid as full contracts",
+    "positive and negative fixtures prove conditional gate enforcement",
+    "canonical and template skill trees are byte-identical",
+    "Hermes remains optional and non-authoritative",
+    "decision source events resolve through the hashed catalog",
+    "both reviews explicitly pass outcome, component-substitution, reuse, evidence, end-to-end, and cost-scale checks",
+    "clean-context reviewer names the v2.1.1 architecture, exclusions, commands, and next step without legacy reads",
+    "implementation review has no unresolved findings",
+    "source lock reports published with release v2.1.1 only after verification on main",
+    "tag v2.1.1 resolves to the verified release commit",
+    "main and tag v2.1.1 are pushed"
+  ]
+}

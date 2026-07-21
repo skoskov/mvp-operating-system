@@ -1,0 +1,26 @@
+{
+  "included": [
+    "MVP OS v2.1.1 release candidate",
+    "self-hosted Project Control",
+    "downstream pull-request sync",
+    "active-project v2 migration",
+    "proportional short and full Outcome-First and Reuse-First preflight",
+    "legacy v2.1 contract compatibility",
+    "explicit product review checks",
+    "conditional web, integration, state, and Hermes acceptance",
+    "traceable decision source-event catalog",
+    "clean-context and implementation review"
+  ],
+  "excluded": [
+    "source-repository self-sync",
+    "automatic project merge",
+    "secret values in release metadata",
+    "Project Control schema v3 migration",
+    "Hermes as a required capability for projects that did not opt in",
+    "Hermes as a mandatory LLM proxy or authoritative product store",
+    "documentation-only acceptance without executable fixtures",
+    "project-specific superseded technologies as inherited startup defaults",
+    "short mode for features, integrations, external actions, or product experiments",
+    "new third-party runtime dependencies"
+  ]
+}
