@@ -233,9 +233,9 @@ def validate_bundle(
     source_event_catalog_version = decisions_payload.get("source_event_catalog_version")
     if source_event_catalog is not None and not isinstance(source_event_catalog, dict):
         raise ControlError("source_event_catalog must be an object")
-    if source_event_catalog_version is not None and source_event_catalog_version != 1:
-        raise ControlError("source_event_catalog_version must be 1")
-    if source_event_catalog_version == 1 and source_event_catalog is None:
+    if source_event_catalog_version is not None and source_event_catalog_version not in {1, 2}:
+        raise ControlError("source_event_catalog_version must be 1 or 2")
+    if source_event_catalog_version in {1, 2} and source_event_catalog is None:
         raise ControlError("source_event_catalog_version requires source_event_catalog")
     ids: set[str] = set()
     for item in decisions:
@@ -274,6 +274,21 @@ def validate_bundle(
             reference_type = event.get("reference_type")
             if source_event_catalog_version is None:
                 continue
+            reference_hash = content_hash
+            if source_event_catalog_version == 2:
+                captured_content = event.get("captured_content")
+                if not isinstance(captured_content, str) or not captured_content.strip():
+                    raise ControlError(f"source event lacks captured_content: {event_id}")
+                captured_hash = "sha256:" + hashlib.sha256(
+                    captured_content.encode("utf-8")
+                ).hexdigest()
+                if captured_hash != content_hash:
+                    raise ControlError(f"source event captured content hash mismatch: {event_id}")
+                reference_hash = event.get("reference_content_sha256")
+                if not isinstance(reference_hash, str) or not re.fullmatch(
+                    r"sha256:[a-f0-9]{64}", reference_hash
+                ):
+                    raise ControlError(f"source event lacks reference_content_sha256: {event_id}")
             if reference_type == "local_file":
                 reference_path = Path(event["reference"])
                 if reference_path.is_absolute() or ".." in reference_path.parts:
@@ -281,13 +296,14 @@ def validate_bundle(
                 resolved_reference = safe_child(project_root, *reference_path.parts)
                 if resolved_reference.is_symlink() or not resolved_reference.is_file():
                     raise ControlError(f"source event local reference is unavailable: {event_id}")
-                if digest(resolved_reference) != content_hash:
+                if digest(resolved_reference) != reference_hash:
                     raise ControlError(f"source event content hash mismatch: {event_id}")
             elif reference_type == "immutable_external":
-                if not re.fullmatch(
+                external_match = re.fullmatch(
                     r"https://github\.com/[^/]+/[^/]+/blob/[a-f0-9]{40}/.+",
                     event["reference"],
-                ):
+                )
+                if not external_match:
                     raise ControlError(f"source event external reference is not immutable: {event_id}")
                 resolution = event.get("resolution")
                 if not isinstance(resolution, dict):
@@ -300,6 +316,12 @@ def validate_bundle(
                 resolver = resolution.get("resolver")
                 if not isinstance(resolver, str) or not resolver:
                     raise ControlError(f"source event resolution lacks resolver: {event_id}")
+                if source_event_catalog_version == 2:
+                    commit = event["reference"].split("/blob/", 1)[1].split("/", 1)[0]
+                    if resolution.get("commit") != commit:
+                        raise ControlError(f"source event resolution commit mismatch: {event_id}")
+                    if resolution.get("reference_content_sha256") != reference_hash:
+                        raise ControlError(f"source event resolution hash mismatch: {event_id}")
             else:
                 raise ControlError(f"source event reference_type is invalid: {event_id}")
 

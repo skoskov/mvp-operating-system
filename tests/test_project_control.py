@@ -158,13 +158,16 @@ class ProjectControlTests(unittest.TestCase):
             trace_path.write_text("source event two\n", encoding="utf-8")
             decisions_path = root / "project-control/releases/000001/decisions.json"
             decisions = json.loads(decisions_path.read_text())
-            decisions["source_event_catalog_version"] = 1
+            captured_content = "source event two"
+            decisions["source_event_catalog_version"] = 2
             decisions["source_event_catalog"] = {
                 "event:2": {
                     "reference": "trace/event-2.md",
                     "reference_type": "local_file",
                     "captured_at": datetime.now(timezone.utc).isoformat(),
-                    "content_sha256": sha(trace_path),
+                    "captured_content": captured_content,
+                    "content_sha256": "sha256:" + hashlib.sha256(captured_content.encode()).hexdigest(),
+                    "reference_content_sha256": sha(trace_path),
                 }
             }
             write_json(decisions_path, decisions)
@@ -178,7 +181,17 @@ class ProjectControlTests(unittest.TestCase):
             write_json(current_path, current)
             project_control.validate_bundle(root)
 
-            decisions["source_event_catalog"]["event:2"]["content_sha256"] = "sha256:" + "1" * 64
+            decisions["source_event_catalog"]["event:2"]["captured_content"] = "tampered"
+            write_json(decisions_path, decisions)
+            manifest["files"]["decisions.json"] = sha(decisions_path)
+            write_json(manifest_path, manifest)
+            current["manifest_sha256"] = sha(manifest_path)
+            write_json(current_path, current)
+            with self.assertRaisesRegex(project_control.ControlError, "captured content hash mismatch"):
+                project_control.validate_bundle(root)
+
+            decisions["source_event_catalog"]["event:2"]["captured_content"] = captured_content
+            decisions["source_event_catalog"]["event:2"]["reference_content_sha256"] = "sha256:" + "1" * 64
             write_json(decisions_path, decisions)
             manifest["files"]["decisions.json"] = sha(decisions_path)
             write_json(manifest_path, manifest)
@@ -187,7 +200,7 @@ class ProjectControlTests(unittest.TestCase):
             with self.assertRaisesRegex(project_control.ControlError, "content hash mismatch"):
                 project_control.validate_bundle(root)
 
-            decisions["source_event_catalog"]["event:2"]["content_sha256"] = sha(trace_path)
+            decisions["source_event_catalog"]["event:2"]["reference_content_sha256"] = sha(trace_path)
             decisions["decisions"][0]["source_events"] = ["event:missing"]
             write_json(decisions_path, decisions)
             manifest["files"]["decisions.json"] = sha(decisions_path)

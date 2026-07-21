@@ -29,4 +29,3 @@ and no automatic retry after an uncertain result.
 
 Hermes remains absent from required Project Control capabilities when a project did
 not opt in.
-
