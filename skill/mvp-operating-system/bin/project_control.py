@@ -233,9 +233,9 @@ def validate_bundle(
     source_event_catalog_version = decisions_payload.get("source_event_catalog_version")
     if source_event_catalog is not None and not isinstance(source_event_catalog, dict):
         raise ControlError("source_event_catalog must be an object")
-    if source_event_catalog_version is not None and source_event_catalog_version not in {1, 2}:
-        raise ControlError("source_event_catalog_version must be 1 or 2")
-    if source_event_catalog_version in {1, 2} and source_event_catalog is None:
+    if source_event_catalog_version is not None and source_event_catalog_version not in {1, 2, 3}:
+        raise ControlError("source_event_catalog_version must be 1, 2, or 3")
+    if source_event_catalog_version in {1, 2, 3} and source_event_catalog is None:
         raise ControlError("source_event_catalog_version requires source_event_catalog")
     ids: set[str] = set()
     for item in decisions:
@@ -275,7 +275,7 @@ def validate_bundle(
             if source_event_catalog_version is None:
                 continue
             reference_hash = content_hash
-            if source_event_catalog_version == 2:
+            if source_event_catalog_version in {2, 3}:
                 captured_content = event.get("captured_content")
                 if not isinstance(captured_content, str) or not captured_content.strip():
                     raise ControlError(f"source event lacks captured_content: {event_id}")
@@ -298,6 +298,12 @@ def validate_bundle(
                     raise ControlError(f"source event local reference is unavailable: {event_id}")
                 if digest(resolved_reference) != reference_hash:
                     raise ControlError(f"source event content hash mismatch: {event_id}")
+                if source_event_catalog_version == 3:
+                    reference_text = resolved_reference.read_text(encoding="utf-8")
+                    if event["captured_content"] not in reference_text:
+                        raise ControlError(
+                            f"source event captured content is absent from local reference: {event_id}"
+                        )
             elif reference_type == "immutable_external":
                 external_match = re.fullmatch(
                     r"https://github\.com/[^/]+/[^/]+/blob/[a-f0-9]{40}/.+",
@@ -316,7 +322,7 @@ def validate_bundle(
                 resolver = resolution.get("resolver")
                 if not isinstance(resolver, str) or not resolver:
                     raise ControlError(f"source event resolution lacks resolver: {event_id}")
-                if source_event_catalog_version == 2:
+                if source_event_catalog_version in {2, 3}:
                     commit = event["reference"].split("/blob/", 1)[1].split("/", 1)[0]
                     if resolution.get("commit") != commit:
                         raise ControlError(f"source event resolution commit mismatch: {event_id}")

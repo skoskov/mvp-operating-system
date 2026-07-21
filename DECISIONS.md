@@ -270,3 +270,5 @@ Consequences:
 - Hermes is an optional runtime for connectors, schedules, tasks, tools/files, and gateway; product state and semantics remain product-owned.
 - New Project Control releases can make decision source events traceable through a hashed catalog without reading history at startup.
 - Independent findings require repeat review; agents cannot concurrently write shared build outputs.
+- PASS evidence uses typed, claim-bound artifacts; screenshots must be distinct structurally valid PNGs with capture metadata.
+- Source-event catalog v3 proves embedded local evidence occurs in the referenced hash-matched file while retaining compatibility with older v2 bundles.

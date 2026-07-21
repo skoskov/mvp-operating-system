@@ -7,6 +7,8 @@ import argparse
 import hashlib
 import json
 import re
+import struct
+import zlib
 from pathlib import Path
 from typing import Any
 
@@ -37,6 +39,16 @@ OUTCOME_MEANINGS = {
     "recipient_replied": "a separate observable event confirms recipient reply",
     "failed_definitive": "a definitive failure was observed",
     "failed_uncertain": "the result is uncertain and must not be retried automatically",
+}
+OUTCOME_EVENT_TYPES = {
+    "intent_created": "durable_intent_record",
+    "dispatched": "connector_invocation_started",
+    "platform_accepted": "platform_acceptance_response",
+    "delivery_confirmed": "channel_delivery_confirmation",
+    "recipient_read": "recipient_read_event",
+    "recipient_replied": "recipient_reply_event",
+    "failed_definitive": "definitive_failure_response",
+    "failed_uncertain": "uncertain_connector_result",
 }
 PASS_OR_NA = {"PASS", "NOT_APPLICABLE"}
 PLACEHOLDERS = {"replace", "placeholder", "todo", "tbd", "n/a", "none"}
@@ -100,6 +112,7 @@ def artifact(
     expected_type: str,
     task_id: str,
     build_id: str | None = None,
+    expected_details: dict[str, Any] | None = None,
 ) -> Path:
     item = mapping(value, location)
     relative = Path(nonempty(item.get("path"), f"{location}.path"))
@@ -127,17 +140,39 @@ def artifact(
         raise GateError(f"{location}.sha256 does not match file content")
     if expected_type == "screenshot":
         payload = path.read_bytes()
-        valid_image = (
-            (path.suffix.lower() == ".png" and payload.startswith(b"\x89PNG\r\n\x1a\n"))
-            or (path.suffix.lower() in {".jpg", ".jpeg"} and payload.startswith(b"\xff\xd8\xff"))
-            or (
-                path.suffix.lower() == ".webp"
-                and payload.startswith(b"RIFF")
-                and payload[8:12] == b"WEBP"
-            )
-        )
-        if not valid_image or len(payload) < 32:
-            raise GateError(f"{location} is not a supported image artifact")
+        if path.suffix.lower() != ".png" or not payload.startswith(b"\x89PNG\r\n\x1a\n"):
+            raise GateError(f"{location} must be a structurally valid PNG")
+        offset = 8
+        seen_ihdr = False
+        seen_idat = False
+        seen_iend = False
+        while offset + 12 <= len(payload):
+            length = struct.unpack(">I", payload[offset : offset + 4])[0]
+            chunk_type = payload[offset + 4 : offset + 8]
+            chunk_end = offset + 12 + length
+            if chunk_end > len(payload):
+                raise GateError(f"{location} has a truncated PNG chunk")
+            chunk_data = payload[offset + 8 : offset + 8 + length]
+            expected_crc = struct.unpack(">I", payload[offset + 8 + length : chunk_end])[0]
+            if zlib.crc32(chunk_type + chunk_data) & 0xFFFFFFFF != expected_crc:
+                raise GateError(f"{location} has an invalid PNG checksum")
+            if chunk_type == b"IHDR":
+                if seen_ihdr or length != 13:
+                    raise GateError(f"{location} has an invalid PNG header")
+                width, height = struct.unpack(">II", chunk_data[:8])
+                if width < 1 or height < 1:
+                    raise GateError(f"{location} has invalid PNG dimensions")
+                seen_ihdr = True
+            elif chunk_type == b"IDAT":
+                seen_idat = True
+            elif chunk_type == b"IEND":
+                seen_iend = True
+                if chunk_end != len(payload):
+                    raise GateError(f"{location} has trailing PNG data")
+                break
+            offset = chunk_end
+        if not (seen_ihdr and seen_idat and seen_iend):
+            raise GateError(f"{location} is not a complete PNG")
         return path
     if path.suffix.lower() != ".json":
         raise GateError(f"{location} must be a typed JSON artifact")
@@ -160,6 +195,8 @@ def artifact(
         raise GateError(f"{location}.details must contain structured evidence")
     if build_id is not None and payload_json.get("release_build_id") != build_id:
         raise GateError(f"{location} release_build_id mismatch")
+    if expected_details is not None and details != expected_details:
+        raise GateError(f"{location}.details do not match the claimed evidence")
     return path
 
 
@@ -172,13 +209,14 @@ def evidence_result(
     *,
     allow_na: bool = True,
     build_id: str | None = None,
+    expected_details: dict[str, Any] | None = None,
 ) -> None:
     item = mapping(value, location)
     result(item.get("result"), f"{location}.result", allow_na=allow_na)
     if item.get("result") == "PASS":
         artifact(
             item.get("artifact"), project_root, f"{location}.artifact",
-            expected_type, task_id, build_id,
+            expected_type, task_id, build_id, expected_details,
         )
     else:
         nonempty(item.get("rationale"), f"{location}.rationale")
@@ -250,10 +288,15 @@ def validate_structured_checks(
         item = mapping(raw, f"{location}[{index}]")
         for field in required_fields:
             nonempty(item.get(field), f"{location}[{index}].{field}")
+        if "expected" in required_fields and item["expected"] != item["observed"]:
+            raise GateError(f"{location}[{index}] expected and observed values differ")
+        if "expected_after" in required_fields and item["expected_after"] != item["observed_after"]:
+            raise GateError(f"{location}[{index}] expected and observed state differ")
         result(item.get("result"), f"{location}[{index}].result", allow_na=False)
+        claimed_details = {field: item[field] for field in required_fields}
         artifact(
             item.get("artifact"), project_root, f"{location}[{index}].artifact",
-            expected_type, task_id, build_id,
+            expected_type, task_id, build_id, claimed_details,
         )
 
 
@@ -269,6 +312,7 @@ def validate_web(
     evidence_result(
         web.get("browser_preflight"), project_root, "evidence.web.browser_preflight",
         "browser_preflight", task_id, allow_na=False, build_id=build_id,
+        expected_details={"target_url": web["target_url"], "environment": web["environment"]},
     )
     screenshots = nonempty_list(web.get("screenshots"), "evidence.web.screenshots")
     required_shots = {
@@ -278,6 +322,7 @@ def validate_web(
     }
     observed_shots: set[tuple[str, str]] = set()
     screenshot_paths: set[Path] = set()
+    screenshot_hashes: set[str] = set()
     for index, shot in enumerate(screenshots):
         shot = mapping(shot, f"evidence.web.screenshots[{index}]")
         pair = (shot.get("phase"), shot.get("viewport"))
@@ -294,6 +339,20 @@ def validate_web(
         if screenshot_path in screenshot_paths:
             raise GateError("baseline/final desktop/mobile screenshots must be distinct")
         screenshot_paths.add(screenshot_path)
+        if shot["sha256"] in screenshot_hashes:
+            raise GateError("baseline/final desktop/mobile screenshot content must be distinct")
+        screenshot_hashes.add(shot["sha256"])
+        capture_details = {
+            "phase": shot["phase"],
+            "viewport": shot["viewport"],
+            "target_url": web["target_url"],
+            "image_sha256": shot["sha256"],
+        }
+        artifact(
+            shot.get("capture_artifact"), project_root,
+            f"evidence.web.screenshots[{index}].capture_artifact",
+            "screenshot_capture", task_id, build_id, capture_details,
+        )
     if observed_shots != required_shots:
         raise GateError("web evidence needs inspected baseline/final desktop/mobile screenshots")
 
@@ -307,13 +366,15 @@ def validate_web(
     )
     validate_structured_checks(
         web.get("state_transitions"), project_root, "evidence.web.state_transitions",
-        ("before", "action", "after"), "state_transition", task_id, build_id,
+        ("before", "action", "expected_after", "observed_after"),
+        "state_transition", task_id, build_id,
     )
     for key in ("empty", "error", "loading"):
         state = mapping(mapping(web.get("ui_states"), "evidence.web.ui_states").get(key), f"evidence.web.ui_states.{key}")
         evidence_result(
             state, project_root, f"evidence.web.ui_states.{key}",
             f"ui_state_{key}", task_id, build_id=build_id,
+            expected_details={"state": key, "target_url": web["target_url"]},
         )
     health = mapping(web.get("browser_health"), "evidence.web.browser_health")
     for key in ("console", "runtime", "network", "overflow", "assets", "mobile_navigation"):
@@ -321,14 +382,17 @@ def validate_web(
         evidence_result(
             item, project_root, f"evidence.web.browser_health.{key}",
             f"browser_health_{key}", task_id, build_id=build_id,
+            expected_details={"check": key, "target_url": web["target_url"]},
         )
     evidence_result(
         web.get("baseline_final_verdict"), project_root, "evidence.web.baseline_final_verdict",
         "baseline_final_verdict", task_id, allow_na=False, build_id=build_id,
+        expected_details={"target_url": web["target_url"], "verdict": "no_regression"},
     )
     artifact(
         web.get("build_artifact"), project_root, "evidence.web.build_artifact",
         "build_manifest", task_id, build_id,
+        {"target_url": web["target_url"], "environment": web["environment"]},
     )
     nonempty(web.get("rollback_command"), "evidence.web.rollback_command")
     if public_deploy:
@@ -336,6 +400,7 @@ def validate_web(
         evidence_result(
             web.get("public_post_deploy"), project_root, "evidence.web.public_post_deploy",
             "public_post_deploy", task_id, allow_na=False, build_id=build_id,
+            expected_details={"public_url": web["public_url"], "verified": True},
         )
         if web.get("environment") != "public":
             raise GateError("public deploy evidence must target the public environment")
@@ -352,10 +417,22 @@ def validate_integration(evidence: dict[str, Any], project_root: Path, task_id: 
         if item.get("meaning") != OUTCOME_MEANINGS[state]:
             raise GateError(f"evidence.integration.outcomes[{index}] overclaims or changes {state}")
         nonempty(item.get("observed_event"), f"evidence.integration.outcomes[{index}].observed_event")
+        if item.get("event_type") != OUTCOME_EVENT_TYPES[state]:
+            raise GateError(f"evidence.integration.outcomes[{index}].event_type is invalid")
+        event_id = item.get("observed_event_id")
+        if not isinstance(event_id, str) or not SHA256_PATTERN.fullmatch(event_id):
+            raise GateError(f"evidence.integration.outcomes[{index}].observed_event_id is invalid")
+        claimed_details = {
+            "state": state,
+            "meaning": item["meaning"],
+            "event_type": item["event_type"],
+            "observed_event": item["observed_event"],
+            "observed_event_id": event_id,
+        }
         artifact(
             item.get("artifact"), project_root,
             f"evidence.integration.outcomes[{index}].artifact",
-            "integration_outcome", task_id,
+            "integration_outcome", task_id, expected_details=claimed_details,
         )
     for index, item in enumerate(integration.get("non_real_modes", [])):
         item = mapping(item, f"evidence.integration.non_real_modes[{index}]")
@@ -373,9 +450,10 @@ def validate_fingerprints(evidence: dict[str, Any], project_root: Path, task_id:
         after = nonempty(item.get("after"), f"evidence.fingerprints.{key}.after")
         if before != after:
             raise GateError(f"evidence.fingerprints.{key} changed")
+        claimed_details = {"before": before, "after": after}
         artifact(
             item.get("artifact"), project_root, f"evidence.fingerprints.{key}.artifact",
-            f"fingerprint_{key}", task_id,
+            f"fingerprint_{key}", task_id, expected_details=claimed_details,
         )
 
 
@@ -389,6 +467,7 @@ def validate_hermes(evidence: dict[str, Any], project_root: Path, task_id: str) 
         evidence_result(
             hermes.get(key), project_root, f"evidence.hermes.{key}",
             f"hermes_{key}", task_id, allow_na=False,
+            expected_details={"capability": key, "verified": True},
         )
     if hermes.get("llm_routing") not in {"direct_model", "hermes_with_runtime_benefit", "not_needed"}:
         raise GateError("evidence.hermes.llm_routing is invalid")
@@ -425,14 +504,23 @@ def validate_contract(contract: dict[str, Any], phase: str, project_root: Path) 
     if scope["hermes"]:
         validate_hermes(evidence, project_root, task_id)
     review = mapping(evidence.get("review"), "evidence.review")
-    evidence_result(
-        review.get("implementation"), project_root, "evidence.review.implementation",
-        "implementation_review", task_id, allow_na=False,
-    )
-    evidence_result(
-        review.get("clean_context"), project_root, "evidence.review.clean_context",
-        "clean_context_review", task_id, allow_na=False,
-    )
+    for key, evidence_type in (
+        ("implementation", "implementation_review"),
+        ("clean_context", "clean_context_review"),
+    ):
+        item = mapping(review.get(key), f"evidence.review.{key}")
+        details = {
+            "reviewer": nonempty(item.get("reviewer"), f"evidence.review.{key}.reviewer"),
+            "head": nonempty(item.get("head"), f"evidence.review.{key}.head"),
+            "summary": nonempty(item.get("summary"), f"evidence.review.{key}.summary"),
+            "findings": item.get("findings"),
+        }
+        if not isinstance(details["findings"], list):
+            raise GateError(f"evidence.review.{key}.findings must be a list")
+        evidence_result(
+            item, project_root, f"evidence.review.{key}", evidence_type,
+            task_id, allow_na=False, expected_details=details,
+        )
 
 
 def main() -> int:

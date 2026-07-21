@@ -47,9 +47,12 @@ content SHA-256. Startup validates this metadata without reading the referenced
 history or context store.
 
 With `source_event_catalog_version: 1`, local references must remain under the
-project root and hash-match their files. External references must be immutable
-GitHub blob URLs pinned to a full commit and include an explicit resolution method,
-timestamp, and resolver. Older v2 bundles remain readable without this extension.
+project root and hash-match their files. Version 2 embeds the captured source text
+and binds it to its own content hash. Version 3 additionally requires embedded
+local source text to occur in the referenced, hash-matched file. External
+references must be immutable GitHub blob URLs pinned to a full commit and include
+an explicit resolution method, timestamp, resolver, and referenced-object hash.
+Older v2 bundles and catalog versions remain readable.
 
 ## Independent clocks
 

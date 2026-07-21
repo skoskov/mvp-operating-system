@@ -159,7 +159,7 @@ class ProjectControlTests(unittest.TestCase):
             decisions_path = root / "project-control/releases/000001/decisions.json"
             decisions = json.loads(decisions_path.read_text())
             captured_content = "source event two"
-            decisions["source_event_catalog_version"] = 2
+            decisions["source_event_catalog_version"] = 3
             decisions["source_event_catalog"] = {
                 "event:2": {
                     "reference": "trace/event-2.md",

@@ -5,6 +5,8 @@ import hashlib
 import tempfile
 import unittest
 import json
+import struct
+import zlib
 from pathlib import Path
 
 
@@ -21,8 +23,10 @@ def json_artifact(
     evidence_type: str,
     *,
     build_id: str | None = None,
+    details: dict | None = None,
+    name: str | None = None,
 ) -> dict:
-    relative = Path("outputs") / f"{evidence_type}.json"
+    relative = Path("outputs") / f"{name or evidence_type}.json"
     path = project_root / relative
     path.parent.mkdir(parents=True, exist_ok=True)
     payload = {
@@ -30,7 +34,7 @@ def json_artifact(
         "evidence_type": evidence_type,
         "task_id": "web-integration-proof",
         "result": "PASS",
-        "details": {"observed": f"verified {evidence_type}"},
+        "details": details or {"observed": f"verified {evidence_type}"},
     }
     if build_id is not None:
         payload["release_build_id"] = build_id
@@ -45,7 +49,22 @@ def screenshot_artifact(project_root: Path, name: str) -> dict:
     relative = Path("outputs") / f"{name}.png"
     path = project_root / relative
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_bytes(b"\x89PNG\r\n\x1a\n" + name.encode("utf-8") + b"0" * 64)
+    def chunk(kind: bytes, data: bytes) -> bytes:
+        return (
+            struct.pack(">I", len(data))
+            + kind
+            + data
+            + struct.pack(">I", zlib.crc32(kind + data) & 0xFFFFFFFF)
+        )
+
+    color = hashlib.sha256(name.encode("utf-8")).digest()[:3] + b"\xff"
+    png = (
+        b"\x89PNG\r\n\x1a\n"
+        + chunk(b"IHDR", struct.pack(">IIBBBBB", 1, 1, 8, 6, 0, 0, 0))
+        + chunk(b"IDAT", zlib.compress(b"\x00" + color))
+        + chunk(b"IEND", b"")
+    )
+    path.write_bytes(png)
     return {
         "path": str(relative),
         "sha256": "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest(),
@@ -54,15 +73,6 @@ def screenshot_artifact(project_root: Path, name: str) -> dict:
 
 def valid_contract(project_root: Path) -> dict:
     build_id = "release-1"
-
-    def passed(evidence_type: str, *, web: bool = False) -> dict:
-        return {
-            "result": "PASS",
-            "artifact": json_artifact(
-                project_root, evidence_type, build_id=build_id if web else None
-            ),
-        }
-
     return {
         "schema_version": 1,
         "task_id": "web-integration-proof",
@@ -107,17 +117,38 @@ def valid_contract(project_root: Path) -> dict:
         },
         "evidence": {
             "web": {
-                "browser_preflight": passed("browser_preflight", web=True),
+                "browser_preflight": {
+                    "result": "PASS",
+                    "artifact": json_artifact(
+                        project_root, "browser_preflight", build_id=build_id,
+                        details={"target_url": "https://example.test/app", "environment": "public"},
+                    ),
+                },
                 "target_url": "https://example.test/app",
                 "public_url": "https://example.test/app",
                 "environment": "public",
                 "release_build_id": build_id,
-                "build_artifact": json_artifact(project_root, "build_manifest", build_id=build_id),
+                "build_artifact": json_artifact(
+                    project_root, "build_manifest", build_id=build_id,
+                    details={"target_url": "https://example.test/app", "environment": "public"},
+                ),
                 "screenshots": [
                     {
                         "phase": phase,
                         "viewport": viewport,
                         **screenshot_artifact(project_root, f"{phase}-{viewport}"),
+                        "capture_artifact": json_artifact(
+                            project_root, "screenshot_capture", build_id=build_id,
+                            details={
+                                "phase": phase,
+                                "viewport": viewport,
+                                "target_url": "https://example.test/app",
+                                "image_sha256": screenshot_artifact(
+                                    project_root, f"{phase}-{viewport}"
+                                )["sha256"],
+                            },
+                            name=f"screenshot_capture_{phase}_{viewport}",
+                        ),
                         "inspected": True,
                     }
                     for phase in ("baseline", "final")
@@ -125,26 +156,66 @@ def valid_contract(project_root: Path) -> dict:
                 ],
                 "dom_assertions": [{
                     "assertion": "main heading exists", "expected": "one", "observed": "one",
-                    "result": "PASS", "artifact": json_artifact(project_root, "dom_assertion", build_id=build_id),
+                    "result": "PASS",
+                    "artifact": json_artifact(
+                        project_root, "dom_assertion", build_id=build_id,
+                        details={"assertion": "main heading exists", "expected": "one", "observed": "one"},
+                    ),
                 }],
                 "click_navigation_matrix": [{
                     "control": "approve", "action": "click", "expected": "history", "observed": "history",
-                    "result": "PASS", "artifact": json_artifact(project_root, "click_navigation", build_id=build_id),
+                    "result": "PASS",
+                    "artifact": json_artifact(
+                        project_root, "click_navigation", build_id=build_id,
+                        details={"control": "approve", "action": "click", "expected": "history", "observed": "history"},
+                    ),
                 }],
                 "state_transitions": [{
-                    "before": "pending 2", "action": "approve", "after": "pending 1",
-                    "result": "PASS", "artifact": json_artifact(project_root, "state_transition", build_id=build_id),
+                    "before": "pending 2", "action": "approve",
+                    "expected_after": "pending 1", "observed_after": "pending 1",
+                    "result": "PASS",
+                    "artifact": json_artifact(
+                        project_root, "state_transition", build_id=build_id,
+                        details={
+                            "before": "pending 2", "action": "approve",
+                            "expected_after": "pending 1", "observed_after": "pending 1",
+                        },
+                    ),
                 }],
                 "ui_states": {
-                    key: passed(f"ui_state_{key}", web=True)
+                    key: {
+                        "result": "PASS",
+                        "artifact": json_artifact(
+                            project_root, f"ui_state_{key}", build_id=build_id,
+                            details={"state": key, "target_url": "https://example.test/app"},
+                        ),
+                    }
                     for key in ("empty", "error", "loading")
                 },
                 "browser_health": {
-                    key: passed(f"browser_health_{key}", web=True)
+                    key: {
+                        "result": "PASS",
+                        "artifact": json_artifact(
+                            project_root, f"browser_health_{key}", build_id=build_id,
+                            details={"check": key, "target_url": "https://example.test/app"},
+                        ),
+                    }
                     for key in ("console", "runtime", "network", "overflow", "assets", "mobile_navigation")
                 },
-                "baseline_final_verdict": passed("baseline_final_verdict", web=True),
-                "public_post_deploy": passed("public_post_deploy", web=True),
+                "baseline_final_verdict": {
+                    "result": "PASS",
+                    "artifact": json_artifact(
+                        project_root, "baseline_final_verdict", build_id=build_id,
+                        details={"target_url": "https://example.test/app", "verdict": "no_regression"},
+                    ),
+                },
+                "public_post_deploy": {
+                    "result": "PASS",
+                    "artifact": json_artifact(
+                        project_root, "public_post_deploy", build_id=build_id,
+                        details={"public_url": "https://example.test/app", "verified": True},
+                    ),
+                },
                 "rollback_command": "./scripts/rollback.sh",
             },
             "integration": {
@@ -152,8 +223,19 @@ def valid_contract(project_root: Path) -> dict:
                     {
                         "state": "platform_accepted",
                         "meaning": gate_check.OUTCOME_MEANINGS["platform_accepted"],
+                        "event_type": "platform_acceptance_response",
                         "observed_event": "provider returned an accepted response",
-                        "artifact": json_artifact(project_root, "integration_outcome"),
+                        "observed_event_id": "sha256:" + "c" * 64,
+                        "artifact": json_artifact(
+                            project_root, "integration_outcome",
+                            details={
+                                "state": "platform_accepted",
+                                "meaning": gate_check.OUTCOME_MEANINGS["platform_accepted"],
+                                "event_type": "platform_acceptance_response",
+                                "observed_event": "provider returned an accepted response",
+                                "observed_event_id": "sha256:" + "c" * 64,
+                            },
+                        ),
                     }
                 ],
                 "non_real_modes": [
@@ -164,22 +246,53 @@ def valid_contract(project_root: Path) -> dict:
                 "authoritative_rows": {
                     "before": "sha256:" + "a" * 64,
                     "after": "sha256:" + "a" * 64,
-                    "artifact": json_artifact(project_root, "fingerprint_authoritative_rows"),
+                    "artifact": json_artifact(
+                        project_root, "fingerprint_authoritative_rows",
+                        details={"before": "sha256:" + "a" * 64, "after": "sha256:" + "a" * 64},
+                    ),
                 },
                 "authorization_ledger": {
                     "before": "sha256:" + "b" * 64,
                     "after": "sha256:" + "b" * 64,
-                    "artifact": json_artifact(project_root, "fingerprint_authorization_ledger"),
+                    "artifact": json_artifact(
+                        project_root, "fingerprint_authorization_ledger",
+                        details={"before": "sha256:" + "b" * 64, "after": "sha256:" + "b" * 64},
+                    ),
                 },
             },
             "hermes": {
                 "optional": True,
                 "authoritative": False,
-                "version_config": passed("hermes_version_config"),
-                "gateway_lifecycle": passed("hermes_gateway_lifecycle"),
-                "channels": passed("hermes_channels"),
-                "cron_jobs": passed("hermes_cron_jobs"),
-                "tools_files": passed("hermes_tools_files"),
+                "version_config": {
+                    "result": "PASS", "artifact": json_artifact(
+                        project_root, "hermes_version_config",
+                        details={"capability": "version_config", "verified": True},
+                    )
+                },
+                "gateway_lifecycle": {
+                    "result": "PASS", "artifact": json_artifact(
+                        project_root, "hermes_gateway_lifecycle",
+                        details={"capability": "gateway_lifecycle", "verified": True},
+                    )
+                },
+                "channels": {
+                    "result": "PASS", "artifact": json_artifact(
+                        project_root, "hermes_channels",
+                        details={"capability": "channels", "verified": True},
+                    )
+                },
+                "cron_jobs": {
+                    "result": "PASS", "artifact": json_artifact(
+                        project_root, "hermes_cron_jobs",
+                        details={"capability": "cron_jobs", "verified": True},
+                    )
+                },
+                "tools_files": {
+                    "result": "PASS", "artifact": json_artifact(
+                        project_root, "hermes_tools_files",
+                        details={"capability": "tools_files", "verified": True},
+                    )
+                },
                 "llm_routing": "direct_model",
                 "restart": {"service_notifications": "silent"},
                 "send_capability": {
@@ -192,8 +305,28 @@ def valid_contract(project_root: Path) -> dict:
                 },
             },
             "review": {
-                "implementation": passed("implementation_review"),
-                "clean_context": passed("clean_context_review"),
+                "implementation": {
+                    "result": "PASS", "reviewer": "independent-reviewer",
+                    "head": "abc123", "summary": "Implementation review passed.", "findings": [],
+                    "artifact": json_artifact(
+                        project_root, "implementation_review",
+                        details={
+                            "reviewer": "independent-reviewer", "head": "abc123",
+                            "summary": "Implementation review passed.", "findings": [],
+                        },
+                    ),
+                },
+                "clean_context": {
+                    "result": "PASS", "reviewer": "clean-context-reviewer",
+                    "head": "abc123", "summary": "Clean-context review passed.", "findings": [],
+                    "artifact": json_artifact(
+                        project_root, "clean_context_review",
+                        details={
+                            "reviewer": "clean-context-reviewer", "head": "abc123",
+                            "summary": "Clean-context review passed.", "findings": [],
+                        },
+                    ),
+                },
             },
         },
     }
@@ -251,6 +384,27 @@ class GateCheckTests(unittest.TestCase):
         with self.assertRaisesRegex(gate_check.GateError, "evidence_type"):
             gate_check.validate_contract(contract, "acceptance", self.root)
 
+    def test_web_acceptance_rejects_contradictory_observation(self) -> None:
+        contract = valid_contract(self.root)
+        contract["evidence"]["web"]["dom_assertions"][0]["observed"] = "zero"
+        with self.assertRaisesRegex(gate_check.GateError, "expected and observed"):
+            gate_check.validate_contract(contract, "acceptance", self.root)
+
+    def test_integration_artifact_must_match_observed_claim(self) -> None:
+        contract = valid_contract(self.root)
+        contract["evidence"]["integration"]["outcomes"][0]["observed_event"] = "different response"
+        with self.assertRaisesRegex(gate_check.GateError, "do not match"):
+            gate_check.validate_contract(contract, "acceptance", self.root)
+
+    def test_screenshot_requires_complete_png_structure(self) -> None:
+        contract = valid_contract(self.root)
+        shot = contract["evidence"]["web"]["screenshots"][0]
+        path = self.root / shot["path"]
+        path.write_bytes(b"\x89PNG\r\n\x1a\n" + b"not-an-image" * 4)
+        shot["sha256"] = "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+        with self.assertRaisesRegex(gate_check.GateError, "PNG"):
+            gate_check.validate_contract(contract, "acceptance", self.root)
+
     def test_artifact_rejects_intermediate_symlink_escape(self) -> None:
         with tempfile.TemporaryDirectory() as outside_tmp:
             outside = Path(outside_tmp)
@@ -274,7 +428,7 @@ class GateCheckTests(unittest.TestCase):
     def test_public_acceptance_rejects_local_environment(self) -> None:
         contract = valid_contract(self.root)
         contract["evidence"]["web"]["environment"] = "local"
-        with self.assertRaisesRegex(gate_check.GateError, "public environment"):
+        with self.assertRaisesRegex(gate_check.GateError, "do not match|public environment"):
             gate_check.validate_contract(contract, "acceptance", self.root)
 
     def test_web_acceptance_requires_state_transitions(self) -> None:
