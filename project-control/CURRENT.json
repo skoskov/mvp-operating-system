@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "release_id": "000009",
-  "manifest_sha256": "sha256:edfdf0c2782e523fd0bd6ebf1266c70943bf2a0fbdb727fa155782d7f809fc99",
-  "activated_at": "2026-07-21T19:00:00+00:00"
+  "release_id": "000010",
+  "manifest_sha256": "sha256:152c9d5b7488d8d8df7c77f7f797355fbe4ae63c2a5b20293bbcaa0df2463689",
+  "activated_at": "2026-07-21T19:30:00+00:00"
 }
