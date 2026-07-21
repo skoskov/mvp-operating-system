@@ -36,6 +36,10 @@ Document the search in this order:
 Record scale limits and the acceptable time to add another source. Stop and reopen
 reuse discovery when the limit is exceeded.
 
+Every scope flag includes a rationale. Template placeholders are invalid. When an
+existing component is reused but custom code is still needed, record the remaining
+gap; otherwise custom code is blocked.
+
 ## Enforcement
 
 Store the task contract as JSON under `outputs/` and run:
@@ -45,4 +49,3 @@ python3 .agents/skills/mvp-operating-system/bin/gate_check.py preflight <contrac
 ```
 
 Implementation requires `MVP OS GATE: PASS (preflight)`.
-

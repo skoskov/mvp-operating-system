@@ -8,6 +8,13 @@
     "hermes": false,
     "stateful": false
   },
+  "scope_rationale": {
+    "web": "replace",
+    "public_deploy": "replace",
+    "integration": "replace",
+    "hermes": "replace",
+    "stateful": "replace"
+  },
   "outcome": {
     "observable_result": "replace",
     "acceptance_criteria": ["replace"],
@@ -30,7 +37,7 @@
   },
   "reuse": {
     "discovery": [
-      {"kind": "existing_project", "status": "not_applicable", "rationale": "replace"},
+      {"kind": "existing_project", "status": "not_applicable", "rationale": "replace", "remaining_gap": ""},
       {"kind": "official_api_sdk_connector", "status": "not_applicable", "rationale": "replace"},
       {"kind": "supported_github_project", "status": "not_applicable", "rationale": "replace"},
       {"kind": "mcp_server", "status": "not_applicable", "rationale": "replace"},

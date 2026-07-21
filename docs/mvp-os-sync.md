@@ -15,6 +15,10 @@ requires root `mvp-os.lock.publication_status` to be `published`, its `release`
 to match `v<VERSION>`, successful verification, merge to `main`, and push of the
 matching tag. Candidate source locks keep `release: null`.
 
+Downstream sync refuses candidate source locks. `validate` may inspect a candidate,
+but `sync` requires `publication_status: published`, the matching release value,
+and a tag resolving to source HEAD.
+
 Only projects with registry status `active` receive automated sync work. `paused`
 and `archived` projects remain visible but are not updated.
 

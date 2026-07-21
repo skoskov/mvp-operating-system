@@ -104,20 +104,44 @@ class SyncV2Tests(unittest.TestCase):
                 json.dumps(lock) + "\n", encoding="utf-8"
             )
             with redirect_stdout(StringIO()):
-                result = mvp_os_sync.sync(
-                    ROOT,
-                    project,
-                    Path("mvp-os.lock"),
-                    False,
-                    "skoskov/crm-agent-mvp",
-                    False,
-                )
+                with patch.object(mvp_os_sync, "require_published_source"):
+                    result = mvp_os_sync.sync(
+                        ROOT,
+                        project,
+                        Path("mvp-os.lock"),
+                        False,
+                        "skoskov/crm-agent-mvp",
+                        False,
+                    )
             self.assertEqual(result, 0)
             updated = json.loads((project / "mvp-os.lock").read_text())
             self.assertEqual(updated["schema_version"], 2)
             self.assertEqual(updated["mvp_os_version"], "2.1.0")
             self.assertEqual(updated["sync_status"], "project-control-migration-required")
             self.assertEqual(updated["project_control"]["status"], "pending")
+
+    def test_sync_refuses_candidate_source(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            project = Path(tmp)
+            (project / "mvp-os.lock").write_text(
+                json.dumps(
+                    {
+                        "schema_version": 2,
+                        "project_id": "crm-agent-mvp",
+                        "mvp_os_version": "2.0.0",
+                    }
+                ) + "\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(SystemExit, "unpublished MVP OS candidate"):
+                mvp_os_sync.sync(
+                    ROOT,
+                    project,
+                    Path("mvp-os.lock"),
+                    True,
+                    "skoskov/crm-agent-mvp",
+                    False,
+                )
 
     def test_newest_release_wins_for_repeated_destination(self) -> None:
         releases = [

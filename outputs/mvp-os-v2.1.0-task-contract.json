@@ -8,6 +8,13 @@
     "hermes": false,
     "stateful": false
   },
+  "scope_rationale": {
+    "web": "This release changes operating rules and validators, not a web product.",
+    "public_deploy": "No web or public application deployment is part of this source release.",
+    "integration": "The release defines integration policy but performs no external connector execution.",
+    "hermes": "Hermes is documented and tested as an optional profile but is not executed by this release task.",
+    "stateful": "Immutable Project Control publication is intentionally versioned rather than expected to remain fingerprint-identical."
+  },
   "outcome": {
     "observable_result": "MVP OS v2.1.0 is published as a backward-compatible release with executable conditional gates and synchronized downstream templates.",
     "acceptance_criteria": [
@@ -44,7 +51,8 @@
       {
         "kind": "existing_project",
         "status": "reused",
-        "rationale": "Extend Project Control v2, the existing hard execution gate, release templates, and standard-library test harness."
+        "rationale": "Extend Project Control v2, the existing hard execution gate, release templates, and standard-library test harness.",
+        "remaining_gap": "The existing system had no executable conditional task-contract validator or complete evidence schema."
       },
       {
         "kind": "official_api_sdk_connector",

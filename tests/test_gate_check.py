@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import importlib.util
+import hashlib
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -13,7 +15,13 @@ gate_check = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(gate_check)
 
 
-def valid_contract() -> dict:
+def valid_contract(project_root: Path) -> dict:
+    evidence_path = project_root / "outputs/evidence.txt"
+    evidence_path.parent.mkdir(parents=True, exist_ok=True)
+    evidence_path.write_text("verified evidence\n", encoding="utf-8")
+    evidence_hash = "sha256:" + hashlib.sha256(evidence_path.read_bytes()).hexdigest()
+    evidence_artifact = {"path": "outputs/evidence.txt", "sha256": evidence_hash}
+    passed = {"result": "PASS", "artifact": evidence_artifact}
     return {
         "schema_version": 1,
         "task_id": "web-integration-proof",
@@ -23,6 +31,10 @@ def valid_contract() -> dict:
             "integration": True,
             "hermes": True,
             "stateful": True,
+        },
+        "scope_rationale": {
+            key: f"The test explicitly enables {key}."
+            for key in ("web", "public_deploy", "integration", "hermes", "stateful")
         },
         "outcome": {
             "observable_result": "A user action produces a truthful public result.",
@@ -54,28 +66,44 @@ def valid_contract() -> dict:
         },
         "evidence": {
             "web": {
-                "browser_preflight": "PASS",
+                "browser_preflight": passed,
                 "target_url": "https://example.test/app",
                 "public_url": "https://example.test/app",
                 "environment": "public",
                 "release_build_id": "release-1",
+                "build_artifact": evidence_artifact,
                 "screenshots": [
-                    {"phase": phase, "viewport": viewport, "path": f"outputs/{phase}-{viewport}.png", "inspected": True}
+                    {
+                        "phase": phase,
+                        "viewport": viewport,
+                        "path": "outputs/evidence.txt",
+                        "sha256": evidence_hash,
+                        "inspected": True,
+                    }
                     for phase in ("baseline", "final")
                     for viewport in ("desktop", "mobile")
                 ],
-                "dom_assertions": ["main heading and required link exist"],
-                "click_navigation_matrix": ["approve -> history"],
-                "state_transitions": ["pending 2 -> approve -> pending 1"],
+                "dom_assertions": [{
+                    "assertion": "main heading exists", "expected": "one", "observed": "one",
+                    "result": "PASS", "artifact": evidence_artifact,
+                }],
+                "click_navigation_matrix": [{
+                    "control": "approve", "action": "click", "expected": "history", "observed": "history",
+                    "result": "PASS", "artifact": evidence_artifact,
+                }],
+                "state_transitions": [{
+                    "before": "pending 2", "action": "approve", "after": "pending 1",
+                    "result": "PASS", "artifact": evidence_artifact,
+                }],
                 "ui_states": {
-                    key: {"result": "PASS"} for key in ("empty", "error", "loading")
+                    key: passed for key in ("empty", "error", "loading")
                 },
                 "browser_health": {
-                    key: {"result": "PASS"}
+                    key: passed
                     for key in ("console", "runtime", "network", "overflow", "assets", "mobile_navigation")
                 },
-                "baseline_final_verdict": "PASS",
-                "public_post_deploy": "PASS",
+                "baseline_final_verdict": passed,
+                "public_post_deploy": passed,
                 "rollback_command": "./scripts/rollback.sh",
             },
             "integration": {
@@ -84,6 +112,7 @@ def valid_contract() -> dict:
                         "state": "platform_accepted",
                         "meaning": gate_check.OUTCOME_MEANINGS["platform_accepted"],
                         "observed_event": "provider returned an accepted response",
+                        "artifact": evidence_artifact,
                     }
                 ],
                 "non_real_modes": [
@@ -91,17 +120,17 @@ def valid_contract() -> dict:
                 ],
             },
             "fingerprints": {
-                "authoritative_rows": {"before": "sha256:rows", "after": "sha256:rows"},
-                "authorization_ledger": {"before": "sha256:ledger", "after": "sha256:ledger"},
+                "authoritative_rows": {"before": evidence_hash, "after": evidence_hash, "artifact": evidence_artifact},
+                "authorization_ledger": {"before": evidence_hash, "after": evidence_hash, "artifact": evidence_artifact},
             },
             "hermes": {
                 "optional": True,
                 "authoritative": False,
-                "version_config": "PASS",
-                "gateway_lifecycle": "PASS",
-                "channels": "PASS",
-                "cron_jobs": "PASS",
-                "tools_files": "PASS",
+                "version_config": passed,
+                "gateway_lifecycle": passed,
+                "channels": passed,
+                "cron_jobs": passed,
+                "tools_files": passed,
                 "llm_routing": "direct_model",
                 "restart": {"service_notifications": "silent"},
                 "send_capability": {
@@ -113,86 +142,108 @@ def valid_contract() -> dict:
                     "automatic_retry_after_uncertain": False,
                 },
             },
-            "review": {"implementation": "PASS", "clean_context": "PASS"},
+            "review": {"implementation": passed, "clean_context": passed},
         },
     }
 
 
 class GateCheckTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.temp = tempfile.TemporaryDirectory()
+        self.root = Path(self.temp.name)
+
+    def tearDown(self) -> None:
+        self.temp.cleanup()
+
     def test_valid_contract_passes_preflight_and_acceptance(self) -> None:
-        contract = valid_contract()
-        gate_check.validate_contract(contract, "preflight")
-        gate_check.validate_contract(contract, "acceptance")
+        contract = valid_contract(self.root)
+        gate_check.validate_contract(contract, "preflight", self.root)
+        gate_check.validate_contract(contract, "acceptance", self.root)
 
     def test_preflight_requires_complete_outcome_chain(self) -> None:
-        contract = valid_contract()
+        contract = valid_contract(self.root)
         del contract["outcome"]["chain"]["external_result"]
         with self.assertRaisesRegex(gate_check.GateError, "canonical ordered"):
-            gate_check.validate_contract(contract, "preflight")
+            gate_check.validate_contract(contract, "preflight", self.root)
 
     def test_preflight_requires_reuse_search_order(self) -> None:
-        contract = valid_contract()
+        contract = valid_contract(self.root)
         contract["reuse"]["discovery"].reverse()
         with self.assertRaisesRegex(gate_check.GateError, "canonical search order"):
-            gate_check.validate_contract(contract, "preflight")
+            gate_check.validate_contract(contract, "preflight", self.root)
+
+    def test_stock_template_placeholders_fail_preflight(self) -> None:
+        template = gate_check.load_contract(
+            ROOT / "skill/mvp-operating-system/assets/task-contract-template.json"
+        )
+        with self.assertRaisesRegex(gate_check.GateError, "task_id"):
+            gate_check.validate_contract(template, "preflight", ROOT)
 
     def test_web_acceptance_requires_visual_inspection(self) -> None:
-        contract = valid_contract()
+        contract = valid_contract(self.root)
         contract["evidence"]["web"]["screenshots"][0]["inspected"] = False
         with self.assertRaisesRegex(gate_check.GateError, "not visually inspected"):
-            gate_check.validate_contract(contract, "acceptance")
+            gate_check.validate_contract(contract, "acceptance", self.root)
+
+    def test_web_acceptance_requires_resolvable_hashed_artifacts(self) -> None:
+        contract = valid_contract(self.root)
+        contract["evidence"]["web"]["screenshots"][0]["path"] = "outputs/missing.png"
+        with self.assertRaisesRegex(gate_check.GateError, "regular file"):
+            gate_check.validate_contract(contract, "acceptance", self.root)
 
     def test_public_acceptance_rejects_local_environment(self) -> None:
-        contract = valid_contract()
+        contract = valid_contract(self.root)
         contract["evidence"]["web"]["environment"] = "local"
         with self.assertRaisesRegex(gate_check.GateError, "public environment"):
-            gate_check.validate_contract(contract, "acceptance")
+            gate_check.validate_contract(contract, "acceptance", self.root)
 
     def test_web_acceptance_requires_state_transitions(self) -> None:
-        contract = valid_contract()
+        contract = valid_contract(self.root)
         contract["evidence"]["web"]["state_transitions"] = []
         with self.assertRaisesRegex(gate_check.GateError, "state_transitions"):
-            gate_check.validate_contract(contract, "acceptance")
+            gate_check.validate_contract(contract, "acceptance", self.root)
 
     def test_stateful_acceptance_rejects_changed_fingerprint(self) -> None:
-        contract = valid_contract()
+        contract = valid_contract(self.root)
         contract["evidence"]["fingerprints"]["authorization_ledger"]["after"] = "sha256:changed"
         with self.assertRaisesRegex(gate_check.GateError, "authorization_ledger changed"):
-            gate_check.validate_contract(contract, "acceptance")
+            gate_check.validate_contract(contract, "acceptance", self.root)
 
     def test_platform_acceptance_cannot_overclaim_delivery(self) -> None:
-        contract = valid_contract()
+        contract = valid_contract(self.root)
         contract["evidence"]["integration"]["outcomes"][0]["meaning"] = "recipient received and read it"
         with self.assertRaisesRegex(gate_check.GateError, "overclaims"):
-            gate_check.validate_contract(contract, "acceptance")
+            gate_check.validate_contract(contract, "acceptance", self.root)
 
     def test_non_real_mode_cannot_claim_external_result(self) -> None:
-        contract = valid_contract()
+        contract = valid_contract(self.root)
         contract["evidence"]["integration"]["non_real_modes"][0]["new_external_result"] = True
         with self.assertRaisesRegex(gate_check.GateError, "cannot claim"):
-            gate_check.validate_contract(contract, "acceptance")
+            gate_check.validate_contract(contract, "acceptance", self.root)
 
     def test_hermes_must_remain_optional_and_non_authoritative(self) -> None:
-        contract = valid_contract()
+        contract = valid_contract(self.root)
         contract["evidence"]["hermes"]["optional"] = False
         with self.assertRaisesRegex(gate_check.GateError, "remain optional"):
-            gate_check.validate_contract(contract, "acceptance")
-        contract = valid_contract()
+            gate_check.validate_contract(contract, "acceptance", self.root)
+        contract = valid_contract(self.root)
         contract["evidence"]["hermes"]["authoritative"] = True
         with self.assertRaisesRegex(gate_check.GateError, "authoritative"):
-            gate_check.validate_contract(contract, "acceptance")
+            gate_check.validate_contract(contract, "acceptance", self.root)
 
     def test_hermes_uncertain_result_cannot_auto_retry(self) -> None:
-        contract = valid_contract()
+        contract = valid_contract(self.root)
         contract["evidence"]["hermes"]["send_capability"]["automatic_retry_after_uncertain"] = True
         with self.assertRaisesRegex(gate_check.GateError, "automatically retry"):
-            gate_check.validate_contract(contract, "acceptance")
+            gate_check.validate_contract(contract, "acceptance", self.root)
 
     def test_acceptance_requires_independent_reviews(self) -> None:
-        contract = valid_contract()
-        contract["evidence"]["review"]["clean_context"] = "NOT_APPLICABLE"
+        contract = valid_contract(self.root)
+        contract["evidence"]["review"]["clean_context"] = {
+            "result": "NOT_APPLICABLE", "rationale": "not reviewed"
+        }
         with self.assertRaisesRegex(gate_check.GateError, "clean_context"):
-            gate_check.validate_contract(contract, "acceptance")
+            gate_check.validate_contract(contract, "acceptance", self.root)
 
 
 class DistributionConsistencyTests(unittest.TestCase):

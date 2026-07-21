@@ -257,6 +257,15 @@ def validate(source_root: Path) -> None:
     print(f"MVP OS compatibility metadata valid: v{current}")
 
 
+def require_published_source(source_root: Path, current: str) -> None:
+    lock = load_json(source_root / "mvp-os.lock")
+    if lock.get("publication_status") != "published":
+        raise SystemExit("Downstream sync refuses an unpublished MVP OS candidate")
+    release = f"v{current}"
+    if lock.get("release") != release or not tag_points_to_head(source_root, release):
+        raise SystemExit("Downstream sync requires the published tag to point to HEAD")
+
+
 def sync(
     source_root: Path,
     project_root: Path,
@@ -266,6 +275,7 @@ def sync(
     allow_overwrite: bool,
 ) -> int:
     validate(source_root)
+    require_published_source(source_root, source_version(source_root))
     lock = load_json(project_root / lock_path)
     project_id = lock.get("project_id")
     registry = load_json(source_root / "compatibility" / "projects.json")

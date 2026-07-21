@@ -46,6 +46,11 @@ catalog entry containing a sanitized durable reference, capture timestamp, and
 content SHA-256. Startup validates this metadata without reading the referenced
 history or context store.
 
+With `source_event_catalog_version: 1`, local references must remain under the
+project root and hash-match their files. External references must be immutable
+GitHub blob URLs pinned to a full commit and include an explicit resolution method,
+timestamp, and resolver. Older v2 bundles remain readable without this extension.
+
 ## Independent clocks
 
 - `mvp_os_version`: tooling compatibility.

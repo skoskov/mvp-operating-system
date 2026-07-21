@@ -136,8 +136,8 @@ After implementation:
 6. Continue with the next implementation slice until the owner explicitly says the MVP is ready to launch.
 7. Run final PR review only after explicit launch readiness approval.
 8. Run `gate_check.py acceptance` for the completed task contract.
-8. Produce a short summary.
-9. Update the Obsidian LLM Knowledge Base.
+9. Produce a short summary.
+10. Update the Obsidian LLM Knowledge Base.
 
 ## Escalation rule
 

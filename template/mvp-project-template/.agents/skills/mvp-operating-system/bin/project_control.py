@@ -230,8 +230,13 @@ def validate_bundle(
     decisions_payload = bundle["decisions.json"]
     decisions = decisions_payload.get("decisions", [])
     source_event_catalog = decisions_payload.get("source_event_catalog")
+    source_event_catalog_version = decisions_payload.get("source_event_catalog_version")
     if source_event_catalog is not None and not isinstance(source_event_catalog, dict):
         raise ControlError("source_event_catalog must be an object")
+    if source_event_catalog_version is not None and source_event_catalog_version != 1:
+        raise ControlError("source_event_catalog_version must be 1")
+    if source_event_catalog_version == 1 and source_event_catalog is None:
+        raise ControlError("source_event_catalog_version requires source_event_catalog")
     ids: set[str] = set()
     for item in decisions:
         if item.get("status") != "active":
@@ -266,6 +271,37 @@ def validate_bundle(
                 r"sha256:[a-f0-9]{64}", content_hash
             ):
                 raise ControlError(f"source event lacks content_sha256: {event_id}")
+            reference_type = event.get("reference_type")
+            if source_event_catalog_version is None:
+                continue
+            if reference_type == "local_file":
+                reference_path = Path(event["reference"])
+                if reference_path.is_absolute() or ".." in reference_path.parts:
+                    raise ControlError(f"source event has unsafe local reference: {event_id}")
+                resolved_reference = safe_child(project_root, *reference_path.parts)
+                if resolved_reference.is_symlink() or not resolved_reference.is_file():
+                    raise ControlError(f"source event local reference is unavailable: {event_id}")
+                if digest(resolved_reference) != content_hash:
+                    raise ControlError(f"source event content hash mismatch: {event_id}")
+            elif reference_type == "immutable_external":
+                if not re.fullmatch(
+                    r"https://github\.com/[^/]+/[^/]+/blob/[a-f0-9]{40}/.+",
+                    event["reference"],
+                ):
+                    raise ControlError(f"source event external reference is not immutable: {event_id}")
+                resolution = event.get("resolution")
+                if not isinstance(resolution, dict):
+                    raise ControlError(f"source event lacks external resolution: {event_id}")
+                if resolution.get("method") != "resolved_content_sha256":
+                    raise ControlError(f"source event resolution method is invalid: {event_id}")
+                if not isinstance(resolution.get("resolved_at"), str):
+                    raise ControlError(f"source event resolution lacks timestamp: {event_id}")
+                parse_time(resolution["resolved_at"])
+                resolver = resolution.get("resolver")
+                if not isinstance(resolver, str) or not resolver:
+                    raise ControlError(f"source event resolution lacks resolver: {event_id}")
+            else:
+                raise ControlError(f"source event reference_type is invalid: {event_id}")
 
     commands = bundle["commands.json"].get("commands", [])
     for item in commands:
