@@ -20,6 +20,8 @@ expected, and observed values being accepted. Browser screenshots are distinct,
 structurally valid PNG files with typed capture sidecars bound to phase, viewport,
 target, and image hash. Missing files, hash mismatches, placeholders, contradictory
 observations, reused screenshots, and unlinked PASS claims block acceptance.
+Both independent reviews must have no findings and identify the same full commit
+recorded as `source_commit` in the current Project Control manifest.
 
 For stateful work, preserve and compare authoritative-row and authorization-ledger
 fingerprints across export, build, browser QA, and deployment.

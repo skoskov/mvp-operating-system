@@ -50,6 +50,7 @@ OUTCOME_EVENT_TYPES = {
     "failed_definitive": "definitive_failure_response",
     "failed_uncertain": "uncertain_connector_result",
 }
+FULL_COMMIT_PATTERN = re.compile(r"[0-9a-f]{40}")
 PASS_OR_NA = {"PASS", "NOT_APPLICABLE"}
 PLACEHOLDERS = {"replace", "placeholder", "todo", "tbd", "n/a", "none"}
 SHA256_PATTERN = re.compile(r"sha256:[a-f0-9]{64}")
@@ -485,6 +486,22 @@ def validate_hermes(evidence: dict[str, Any], project_root: Path, task_id: str) 
             raise GateError("Hermes cannot automatically retry uncertain sends")
 
 
+def current_release_source_commit(project_root: Path) -> str:
+    try:
+        current = json.loads((project_root / "project-control/CURRENT.json").read_text(encoding="utf-8"))
+        release_id = current["release_id"]
+        if not isinstance(release_id, str) or not re.fullmatch(r"[0-9]{6}", release_id):
+            raise GateError("current Project Control release_id is invalid")
+        manifest_path = project_root / "project-control/releases" / release_id / "manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        source_commit = manifest["source_commit"]
+    except (FileNotFoundError, KeyError, json.JSONDecodeError) as exc:
+        raise GateError("current Project Control manifest is required for review evidence") from exc
+    if not isinstance(source_commit, str) or not FULL_COMMIT_PATTERN.fullmatch(source_commit):
+        raise GateError("current Project Control source_commit is invalid")
+    return source_commit
+
+
 def validate_contract(contract: dict[str, Any], phase: str, project_root: Path) -> None:
     if contract.get("schema_version") != 1:
         raise GateError("schema_version must be 1")
@@ -504,6 +521,7 @@ def validate_contract(contract: dict[str, Any], phase: str, project_root: Path) 
     if scope["hermes"]:
         validate_hermes(evidence, project_root, task_id)
     review = mapping(evidence.get("review"), "evidence.review")
+    reviewed_head = current_release_source_commit(project_root)
     for key, evidence_type in (
         ("implementation", "implementation_review"),
         ("clean_context", "clean_context_review"),
@@ -517,6 +535,12 @@ def validate_contract(contract: dict[str, Any], phase: str, project_root: Path) 
         }
         if not isinstance(details["findings"], list):
             raise GateError(f"evidence.review.{key}.findings must be a list")
+        if details["findings"]:
+            raise GateError(f"evidence.review.{key}.findings must be empty before acceptance")
+        if not FULL_COMMIT_PATTERN.fullmatch(details["head"]) or details["head"] != reviewed_head:
+            raise GateError(
+                f"evidence.review.{key}.head must match current Project Control source_commit"
+            )
         evidence_result(
             item, project_root, f"evidence.review.{key}", evidence_type,
             task_id, allow_na=False, expected_details=details,

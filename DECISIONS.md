@@ -272,3 +272,4 @@ Consequences:
 - Independent findings require repeat review; agents cannot concurrently write shared build outputs.
 - PASS evidence uses typed, claim-bound artifacts; screenshots must be distinct structurally valid PNGs with capture metadata.
 - Source-event catalog v3 proves embedded local evidence occurs in the referenced hash-matched file while retaining compatibility with older v2 bundles.
+- Acceptance requires zero review findings and binds both reviews to the current Project Control release source commit.

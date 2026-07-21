@@ -307,22 +307,22 @@ def valid_contract(project_root: Path) -> dict:
             "review": {
                 "implementation": {
                     "result": "PASS", "reviewer": "independent-reviewer",
-                    "head": "abc123", "summary": "Implementation review passed.", "findings": [],
+                    "head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "summary": "Implementation review passed.", "findings": [],
                     "artifact": json_artifact(
                         project_root, "implementation_review",
                         details={
-                            "reviewer": "independent-reviewer", "head": "abc123",
+                            "reviewer": "independent-reviewer", "head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
                             "summary": "Implementation review passed.", "findings": [],
                         },
                     ),
                 },
                 "clean_context": {
                     "result": "PASS", "reviewer": "clean-context-reviewer",
-                    "head": "abc123", "summary": "Clean-context review passed.", "findings": [],
+                    "head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "summary": "Clean-context review passed.", "findings": [],
                     "artifact": json_artifact(
                         project_root, "clean_context_review",
                         details={
-                            "reviewer": "clean-context-reviewer", "head": "abc123",
+                            "reviewer": "clean-context-reviewer", "head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
                             "summary": "Clean-context review passed.", "findings": [],
                         },
                     ),
@@ -336,6 +336,14 @@ class GateCheckTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
+        release = self.root / "project-control/releases/000001"
+        release.mkdir(parents=True)
+        (self.root / "project-control/CURRENT.json").write_text(
+            json.dumps({"release_id": "000001"}) + "\n", encoding="utf-8"
+        )
+        (release / "manifest.json").write_text(
+            json.dumps({"source_commit": "a" * 40}) + "\n", encoding="utf-8"
+        )
 
     def tearDown(self) -> None:
         self.temp.cleanup()
@@ -477,6 +485,34 @@ class GateCheckTests(unittest.TestCase):
             "result": "NOT_APPLICABLE", "rationale": "not reviewed"
         }
         with self.assertRaisesRegex(gate_check.GateError, "clean_context"):
+            gate_check.validate_contract(contract, "acceptance", self.root)
+
+    def test_acceptance_rejects_unresolved_review_findings(self) -> None:
+        contract = valid_contract(self.root)
+        review = contract["evidence"]["review"]["implementation"]
+        review["findings"] = [{"priority": "P0", "status": "unresolved"}]
+        review["artifact"] = json_artifact(
+            self.root, "implementation_review",
+            details={
+                "reviewer": review["reviewer"], "head": review["head"],
+                "summary": review["summary"], "findings": review["findings"],
+            },
+        )
+        with self.assertRaisesRegex(gate_check.GateError, "findings must be empty"):
+            gate_check.validate_contract(contract, "acceptance", self.root)
+
+    def test_acceptance_binds_reviews_to_release_source_commit(self) -> None:
+        contract = valid_contract(self.root)
+        review = contract["evidence"]["review"]["implementation"]
+        review["head"] = "b" * 40
+        review["artifact"] = json_artifact(
+            self.root, "implementation_review",
+            details={
+                "reviewer": review["reviewer"], "head": review["head"],
+                "summary": review["summary"], "findings": [],
+            },
+        )
+        with self.assertRaisesRegex(gate_check.GateError, "source_commit"):
             gate_check.validate_contract(contract, "acceptance", self.root)
 
 
