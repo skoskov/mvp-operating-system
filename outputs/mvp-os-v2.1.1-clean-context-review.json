@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "evidence_type": "clean_context_review",
+  "task_id": "mvp-os-v2.1.1-proportional-gate",
+  "result": "PASS",
+  "details": {
+    "reviewer": "clean-context-reviewer-2026-07-23-final",
+    "head": "3899afc1f87b32d79d66c9d39786fc80e3cf611d",
+    "summary": "Project Control 000013 hash-chain valid. Source commit exists. Classification covers actual Git diff. Legacy migration precedes validator activation. Candidate ready for evidence recording and publication.",
+    "findings": [],
+    "checks": {
+      "gate_classification": true,
+      "outcome_alignment": true,
+      "component_substitution": true,
+      "reuse": true,
+      "evidence": true,
+      "end_to_end": true,
+      "cost_scale": true
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "evidence_type": "implementation_review",
+  "task_id": "mvp-os-v2.1.1-proportional-gate",
+  "result": "PASS",
+  "details": {
+    "reviewer": "Codex implementation reviewer",
+    "head": "3899afc1f87b32d79d66c9d39786fc80e3cf611d",
+    "summary": "Project Control 000013 hash-chain valid. Direct planned-path validation passes. Previous findings remain fixed. Full verification passes 63 tests.",
+    "findings": [],
+    "checks": {
+      "gate_classification": true,
+      "outcome_alignment": true,
+      "component_substitution": true,
+      "reuse": true,
+      "evidence": true,
+      "end_to_end": true,
+      "cost_scale": true
+    }
+  }
+}
