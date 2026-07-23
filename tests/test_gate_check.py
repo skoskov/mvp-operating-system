@@ -8,6 +8,7 @@ import json
 import struct
 import zlib
 from pathlib import Path
+from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -348,6 +349,7 @@ def short_contract(project_root: Path) -> dict:
         "work_type": "bugfix",
         "gate_mode_rationale": "A bounded local bugfix changes no external or user-facing flow.",
         "classification": {
+            "base_commit": "b" * 40,
             "planned_paths": ["validator.py", "tests/test_validator.py"],
             "behavior_change": "internal",
             "public_api_change": False,
@@ -408,6 +410,7 @@ def explicit_full_contract(project_root: Path) -> dict:
         "work_type": "feature",
         "gate_mode_rationale": "The feature changes an observable end-to-end product flow.",
         "classification": {
+            "base_commit": "b" * 40,
             "planned_paths": ["app/flow.py", "tests/test_flow.py"],
             "behavior_change": "user_visible",
             "public_api_change": False,
@@ -526,14 +529,23 @@ class GateCheckTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         release = self.root / "project-control/releases/000001"
         release.mkdir(parents=True)
-        (self.root / "project-control/CURRENT.json").write_text(
-            json.dumps({"release_id": "000001"}) + "\n", encoding="utf-8"
-        )
-        (release / "manifest.json").write_text(
+        manifest_path = release / "manifest.json"
+        manifest_path.write_text(
             json.dumps({"source_commit": "a" * 40}) + "\n", encoding="utf-8"
         )
+        (self.root / "project-control/CURRENT.json").write_text(
+            json.dumps({
+                "release_id": "000001",
+                "manifest_sha256": gate_check.file_digest(manifest_path),
+            }) + "\n",
+            encoding="utf-8",
+        )
+        self.real_validate_planned_paths = gate_check.validate_planned_paths
+        self.planned_paths_patch = patch.object(gate_check, "validate_planned_paths")
+        self.planned_paths_patch.start()
 
     def tearDown(self) -> None:
+        self.planned_paths_patch.stop()
         self.temp.cleanup()
 
     def test_valid_contract_passes_preflight_and_acceptance(self) -> None:
@@ -802,6 +814,25 @@ class GateCheckTests(unittest.TestCase):
         )
         with self.assertRaisesRegex(gate_check.GateError, "source_commit"):
             gate_check.validate_contract(contract, "acceptance", self.root)
+
+    def test_review_binding_rejects_tampered_current_manifest(self) -> None:
+        contract = valid_contract(self.root)
+        manifest = self.root / "project-control/releases/000001/manifest.json"
+        manifest.write_text(json.dumps({"source_commit": "c" * 40}) + "\n", encoding="utf-8")
+        with self.assertRaisesRegex(gate_check.GateError, "manifest hash mismatch"):
+            gate_check.validate_contract(contract, "acceptance", self.root)
+
+    def test_planned_paths_rejects_unclassified_changed_path(self) -> None:
+        classification = {
+            "base_commit": "b" * 40,
+            "planned_paths": ["app/"],
+        }
+        completed = type("Completed", (), {"stdout": "app/flow.py\nREADME.md\n"})()
+        with patch.object(gate_check.subprocess, "run", return_value=completed):
+            with self.assertRaisesRegex(gate_check.GateError, "README.md"):
+                self.real_validate_planned_paths(
+                    classification, self.root, "a" * 40,
+                )
 
 
 class DistributionConsistencyTests(unittest.TestCase):

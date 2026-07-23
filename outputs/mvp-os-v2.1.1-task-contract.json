@@ -5,8 +5,12 @@
   "work_type": "feature",
   "gate_mode_rationale": "The release changes mandatory task classification and acceptance policy for all downstream projects.",
   "classification": {
+    "base_commit": "4e3bcbc80bf8d0a87855f3a2f26ac28b4c591ced",
     "planned_paths": [
-      "skill/mvp-operating-system/bin/gate_check.py",
+      "README.md",
+      "VERSION",
+      "mvp-os.lock",
+      "skill/mvp-operating-system/bin/",
       "skill/mvp-operating-system/assets/",
       "skill/mvp-operating-system/references/",
       "global/AGENTS.md",
@@ -15,9 +19,11 @@
       "tests/",
       "outputs/mvp-os-v2.1.1-task-contract.json",
       "outputs/mvp-os-v2.1.1-preflight-review.json",
+      "outputs/mvp-os-v2.1.1-review-iteration-1.json",
       "DECISIONS.md",
       "CHANGELOG.md",
       "compatibility/",
+      "scripts/mvp_os_sync.py",
       "project-control/"
     ],
     "behavior_change": "user_visible",

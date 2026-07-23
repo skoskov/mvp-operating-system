@@ -40,6 +40,8 @@ external actions, product experiments, and conditional scopes use full mode. New
 schema v2 contracts require independent preflight classification review;
 schema v1 is accepted only for an unchanged legacy contract whose exact SHA-256
 is registered in the current hash-verified Project Control acceptance.
+The v2.1.1 sync registers existing schema v1 task contracts before replacing the
+validator; new work cannot enter that migration allowlist.
 
 ## Truthful external results
 

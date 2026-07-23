@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import re
+import subprocess
 import struct
 import zlib
 from pathlib import Path
@@ -306,6 +307,9 @@ def validate_gate_mode(
         raise GateError("work_type is invalid")
     nonempty(contract.get("gate_mode_rationale"), "gate_mode_rationale")
     classification = mapping(contract.get("classification"), "classification")
+    base_commit = classification.get("base_commit")
+    if not isinstance(base_commit, str) or not FULL_COMMIT_PATTERN.fullmatch(base_commit):
+        raise GateError("classification.base_commit must be a full Git commit")
     string_list(classification.get("planned_paths"), "classification.planned_paths")
     behavior_change = classification.get("behavior_change")
     if behavior_change not in {"none", "internal", "user_visible", "external"}:
@@ -635,18 +639,51 @@ def validate_hermes(evidence: dict[str, Any], project_root: Path, task_id: str) 
 
 def current_release_source_commit(project_root: Path) -> str:
     try:
-        current = json.loads((project_root / "project-control/CURRENT.json").read_text(encoding="utf-8"))
+        current_path = project_root / "project-control/CURRENT.json"
+        current = json.loads(current_path.read_text(encoding="utf-8"))
         release_id = current["release_id"]
         if not isinstance(release_id, str) or not re.fullmatch(r"[0-9]{6}", release_id):
             raise GateError("current Project Control release_id is invalid")
         manifest_path = project_root / "project-control/releases" / release_id / "manifest.json"
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        if current.get("manifest_sha256") != file_digest(manifest_path):
+            raise GateError("current Project Control manifest hash mismatch")
         source_commit = manifest["source_commit"]
     except (FileNotFoundError, KeyError, json.JSONDecodeError) as exc:
         raise GateError("current Project Control manifest is required for review evidence") from exc
     if not isinstance(source_commit, str) or not FULL_COMMIT_PATTERN.fullmatch(source_commit):
         raise GateError("current Project Control source_commit is invalid")
     return source_commit
+
+
+def validate_planned_paths(
+    classification: dict[str, Any], project_root: Path, source_commit: str,
+) -> None:
+    base_commit = classification["base_commit"]
+    try:
+        completed = subprocess.run(
+            ["git", "diff", "--name-only", f"{base_commit}..{source_commit}"],
+            cwd=project_root,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except (OSError, subprocess.CalledProcessError) as exc:
+        raise GateError("classification Git diff cannot be resolved") from exc
+    planned = classification["planned_paths"]
+    unexpected = []
+    for changed in completed.stdout.splitlines():
+        if not any(
+            changed == item.rstrip("/") or (
+                item.endswith("/") and changed.startswith(item)
+            )
+            for item in planned
+        ):
+            unexpected.append(changed)
+    if unexpected:
+        raise GateError(
+            "classification.planned_paths omits changed paths: " + ", ".join(unexpected)
+        )
 
 
 def validate_contract(
@@ -678,6 +715,12 @@ def validate_contract(
         validate_hermes(evidence, project_root, task_id)
     review = mapping(evidence.get("review"), "evidence.review")
     reviewed_head = current_release_source_commit(project_root)
+    if schema_version == 2:
+        validate_planned_paths(
+            mapping(contract.get("classification"), "classification"),
+            project_root,
+            reviewed_head,
+        )
     for key, evidence_type in (
         ("implementation", "implementation_review"),
         ("clean_context", "clean_context_review"),

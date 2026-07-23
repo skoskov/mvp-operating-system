@@ -6,6 +6,10 @@ data/dependency classification. Schema v1 is accepted only for a legacy contract
 whose exact file SHA-256 is registered in the current hash-verified Project
 Control `acceptance.json` under `legacy_task_contract_sha256`. Editing the file
 invalidates that registration; all new contracts use schema v2.
+The v2.1.1 downstream sync runs `bin/register_legacy_contracts.py` before
+activating the new validator. It scans existing task contracts under `outputs/`
+and publishes a new hash-verified Project Control release containing their exact
+hashes. The command is also available for an explicit pre-upgrade migration.
 
 ## Proportional modes
 
@@ -76,7 +80,9 @@ or unresolved finding blocks acceptance.
 
 Schema v2 preflight also requires an independent typed review artifact confirming
 gate classification and those checks before implementation starts. Post-
-implementation reviews repeat them against the completed source commit.
+implementation reviews repeat them against the completed source commit. At
+acceptance, `classification.base_commit` and `planned_paths` are checked against
+the actual Git diff to that source commit.
 
 ## Enforcement
 

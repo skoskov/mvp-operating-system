@@ -306,6 +306,15 @@ def sync(
             )
         ]
     managed_paths = effective_managed_paths(releases)
+    if not dry_run and version_key(applied) < version_key("2.1.1"):
+        registration = (
+            source_root
+            / "skill/mvp-operating-system/bin/register_legacy_contracts.py"
+        )
+        subprocess.run(
+            [sys.executable, str(registration), "--project-root", str(project_root)],
+            check=True,
+        )
     drift = any(
         path_differs(
             safe_path(source_root, item["source"]),

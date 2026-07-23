@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "evidence_type": "review_iteration",
+  "task_id": "mvp-os-v2.1.1-proportional-gate",
+  "result": "FAIL",
+  "reviewed_head": "3f77e2b7fd62e1bbf1ff40cf72efce9376cc4c78",
+  "findings": [
+    {
+      "id": "classification-diff-binding",
+      "status": "addressed_pending_rereview",
+      "summary": "planned_paths was not compared with the actual source diff."
+    },
+    {
+      "id": "review-manifest-hash-binding",
+      "status": "addressed_pending_rereview",
+      "summary": "Review source_commit was read without verifying CURRENT manifest_sha256."
+    },
+    {
+      "id": "legacy-schema-v1-migration",
+      "status": "addressed_pending_rereview",
+      "summary": "Existing schema v1 contracts lacked an automatic pre-activation registration path."
+    },
+    {
+      "id": "incorrect-project-control-source-sha",
+      "status": "addressed_pending_rereview",
+      "summary": "Project Control 000011 used an abbreviated SHA expanded incorrectly instead of the actual Git object."
+    }
+  ]
+}

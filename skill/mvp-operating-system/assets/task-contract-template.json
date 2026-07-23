@@ -5,6 +5,7 @@
   "work_type": "feature",
   "gate_mode_rationale": "replace",
   "classification": {
+    "base_commit": "replace-with-full-base-commit",
     "planned_paths": ["replace"],
     "behavior_change": "user_visible",
     "public_api_change": false,

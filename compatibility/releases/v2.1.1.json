@@ -1,7 +1,7 @@
 {
   "version": "2.1.1",
   "previous_version": "2.1.0",
-  "summary": "Add proportional short/full Outcome-First and Reuse-First contract modes.",
+  "summary": "Add proportional short/full Outcome-First and Reuse-First contract modes with automatic hash registration for existing schema v1 contracts.",
   "human_summary_ru": "Short gate разрешён только для локальных ограниченных изменений; функции, интеграции, внешние действия и эксперименты требуют full gate.",
   "managed_paths": [
     {

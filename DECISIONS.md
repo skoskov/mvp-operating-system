@@ -291,6 +291,8 @@ Consequences:
 - New contracts use schema v2.
 - Schema v1 is accepted only for an unchanged legacy contract whose exact SHA-256 is registered in the current hash-verified Project Control acceptance.
 - Any schema v1 edit changes the hash and requires migration to schema v2 rather than re-registration as new work.
+- Downstream v2.1.1 sync registers existing schema v1 task-contract hashes in a new Project Control release before activating the validator.
+- Final acceptance compares `classification.base_commit..source_commit` against `planned_paths`.
 - New contracts name beneficiary, result owner, non-goals, and minimum proof.
 - New contracts classify planned paths and behavior/API/data/dependency changes and require independent preflight review.
 - Full reuse discovery evaluates maintenance, license, security, lock-in, and integration cost.
