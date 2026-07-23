@@ -83,8 +83,9 @@ Use short mode only for bounded local bugfix, refactor, maintenance, or test wor
 with internal/no behavior change, no public API/data/dependency change, and every
 conditional scope disabled. Use full mode for features, integrations, external
 actions, product experiments, and any conditional scope. New contracts use schema
-v2 and include an independent preflight classification review. Unchanged schema
-v1 contracts remain legacy full contracts.
+v2 and include an independent preflight classification review. Schema v1 is
+accepted only for an unchanged legacy contract whose exact SHA-256 is registered
+in the current hash-verified Project Control acceptance.
 
 Hermes is opt-in. It is a connector, schedule, local task, file/tool, and gateway
 runtime, not a mandatory LLM proxy or authoritative product store.

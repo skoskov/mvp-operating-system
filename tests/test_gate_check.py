@@ -72,7 +72,7 @@ def screenshot_artifact(project_root: Path, name: str) -> dict:
     }
 
 
-def valid_contract(project_root: Path) -> dict:
+def legacy_contract(project_root: Path) -> dict:
     build_id = "release-1"
     return {
         "schema_version": 1,
@@ -401,7 +401,7 @@ def short_contract(project_root: Path) -> dict:
 
 
 def explicit_full_contract(project_root: Path) -> dict:
-    contract = valid_contract(project_root)
+    contract = legacy_contract(project_root)
     contract.update({
         "schema_version": 2,
         "gate_mode": "full",
@@ -468,6 +468,30 @@ def explicit_full_contract(project_root: Path) -> dict:
             },
         )
     return contract
+
+
+def valid_contract(project_root: Path) -> dict:
+    return explicit_full_contract(project_root)
+
+
+def register_legacy_contract(project_root: Path, contract: dict) -> Path:
+    contract_path = project_root / "outputs/legacy-contract.json"
+    contract_path.parent.mkdir(parents=True, exist_ok=True)
+    contract_path.write_text(json.dumps(contract, sort_keys=True) + "\n", encoding="utf-8")
+    release = project_root / "project-control/releases/000001"
+    acceptance_path = release / "acceptance.json"
+    acceptance_path.write_text(json.dumps({
+        "legacy_task_contract_sha256": [gate_check.file_digest(contract_path)]
+    }) + "\n", encoding="utf-8")
+    manifest_path = release / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["files"] = {"acceptance.json": gate_check.file_digest(acceptance_path)}
+    manifest_path.write_text(json.dumps(manifest) + "\n", encoding="utf-8")
+    current_path = project_root / "project-control/CURRENT.json"
+    current = json.loads(current_path.read_text(encoding="utf-8"))
+    current["manifest_sha256"] = gate_check.file_digest(manifest_path)
+    current_path.write_text(json.dumps(current) + "\n", encoding="utf-8")
+    return contract_path
 
 
 def short_acceptance_contract(project_root: Path) -> dict:
@@ -538,11 +562,28 @@ class GateCheckTests(unittest.TestCase):
         with self.assertRaisesRegex(gate_check.GateError, "requires gate_mode"):
             gate_check.validate_contract(contract, "preflight", self.root)
 
-    def test_schema_v1_remains_legacy_and_rejects_new_mode_fields(self) -> None:
-        contract = valid_contract(self.root)
+    def test_schema_v1_requires_registered_hash(self) -> None:
+        contract = legacy_contract(self.root)
+        contract_path = register_legacy_contract(self.root, contract)
+        contract_path.write_text(json.dumps(contract, indent=2) + "\n", encoding="utf-8")
+        with self.assertRaisesRegex(gate_check.GateError, "hash is not registered"):
+            gate_check.validate_contract(
+                contract, "preflight", self.root, contract_path,
+            )
+
+    def test_registered_schema_v1_contract_remains_valid(self) -> None:
+        contract = legacy_contract(self.root)
+        contract_path = register_legacy_contract(self.root, contract)
+        gate_check.validate_contract(contract, "preflight", self.root, contract_path)
+
+    def test_registered_schema_v1_rejects_new_mode_fields(self) -> None:
+        contract = legacy_contract(self.root)
         contract["gate_mode"] = "full"
+        contract_path = register_legacy_contract(self.root, contract)
         with self.assertRaisesRegex(gate_check.GateError, "schema_version 1 is legacy"):
-            gate_check.validate_contract(contract, "preflight", self.root)
+            gate_check.validate_contract(
+                contract, "preflight", self.root, contract_path,
+            )
 
     def test_short_mode_rejects_user_visible_behavior(self) -> None:
         contract = short_contract(self.root)

@@ -38,7 +38,8 @@ refactor, maintenance, or test work with internal/no behavior change, no public
 API/data/dependency change, and no conditional scope. Features, integrations,
 external actions, product experiments, and conditional scopes use full mode. New
 schema v2 contracts require independent preflight classification review;
-unchanged schema v1 contracts remain legacy full contracts.
+schema v1 is accepted only for an unchanged legacy contract whose exact SHA-256
+is registered in the current hash-verified Project Control acceptance.
 
 ## Truthful external results
 

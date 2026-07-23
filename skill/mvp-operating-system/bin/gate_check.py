@@ -98,6 +98,44 @@ def load_contract(path: Path) -> dict[str, Any]:
     return value
 
 
+def file_digest(path: Path) -> str:
+    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def validate_legacy_v1_registration(contract_path: Path | None, project_root: Path) -> None:
+    if contract_path is None:
+        raise GateError("schema_version 1 requires a registered contract file")
+    root = project_root.resolve()
+    try:
+        relative = contract_path.resolve(strict=True).relative_to(root)
+    except (FileNotFoundError, ValueError) as exc:
+        raise GateError("legacy schema_version 1 contract must stay under project root") from exc
+    current = root
+    for part in relative.parts:
+        current = current / part
+        if current.is_symlink():
+            raise GateError("legacy schema_version 1 contract path contains a symlink")
+    current_path = root / "project-control/CURRENT.json"
+    try:
+        current_payload = json.loads(current_path.read_text(encoding="utf-8"))
+        release_id = current_payload["release_id"]
+        manifest_path = root / "project-control/releases" / release_id / "manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        acceptance_path = manifest_path.parent / "acceptance.json"
+        acceptance = json.loads(acceptance_path.read_text(encoding="utf-8"))
+    except (OSError, KeyError, json.JSONDecodeError) as exc:
+        raise GateError("cannot read legacy schema_version 1 registry") from exc
+    if not isinstance(release_id, str) or not re.fullmatch(r"[0-9]{6}", release_id):
+        raise GateError("legacy schema_version 1 registry has invalid release_id")
+    if current_payload.get("manifest_sha256") != file_digest(manifest_path):
+        raise GateError("legacy schema_version 1 registry manifest hash mismatch")
+    if manifest.get("files", {}).get("acceptance.json") != file_digest(acceptance_path):
+        raise GateError("legacy schema_version 1 registry acceptance hash mismatch")
+    allowed = acceptance.get("legacy_task_contract_sha256", [])
+    if not isinstance(allowed, list) or file_digest(contract_path) not in allowed:
+        raise GateError("schema_version 1 contract hash is not registered in current Project Control")
+
+
 def nonempty(value: Any, location: str) -> str:
     if (
         not isinstance(value, str)
@@ -611,10 +649,15 @@ def current_release_source_commit(project_root: Path) -> str:
     return source_commit
 
 
-def validate_contract(contract: dict[str, Any], phase: str, project_root: Path) -> None:
+def validate_contract(
+    contract: dict[str, Any], phase: str, project_root: Path,
+    contract_path: Path | None = None,
+) -> None:
     schema_version = contract.get("schema_version")
     if schema_version not in {1, 2}:
         raise GateError("schema_version must be 1 or 2")
+    if schema_version == 1:
+        validate_legacy_v1_registration(contract_path, project_root)
     task_id = nonempty(contract.get("task_id"), "task_id")
     scope = validate_scope(contract)
     gate_mode = validate_gate_mode(contract, scope, schema_version)
@@ -674,7 +717,10 @@ def main() -> int:
     parser.add_argument("--project-root", type=Path, default=Path("."))
     args = parser.parse_args()
     try:
-        validate_contract(load_contract(args.contract), args.phase, args.project_root.resolve())
+        contract_path = args.contract.resolve()
+        validate_contract(
+            load_contract(contract_path), args.phase, args.project_root.resolve(), contract_path
+        )
     except GateError as exc:
         print(f"MVP OS GATE: BLOCKED: {exc}")
         return 2

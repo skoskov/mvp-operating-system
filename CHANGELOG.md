@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.1.1] - 2026-07-22
+## [2.1.1] - 2026-07-23
 
 ### Added
 
@@ -18,7 +18,8 @@
   work with every conditional scope disabled.
 - Features, integrations, external actions, product experiments, and conditional
   scopes require full mode.
-- Unchanged schema v1 contracts remain valid as legacy full contracts.
+- Schema v1 is accepted only for an unchanged legacy file whose exact SHA-256
+  is registered in current hash-verified Project Control acceptance.
 
 ## [2.1.0] - 2026-07-21
 

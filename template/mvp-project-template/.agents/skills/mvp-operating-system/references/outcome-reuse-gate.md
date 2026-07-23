@@ -2,8 +2,10 @@
 
 New contracts use schema v2. Before custom implementation, set `gate_mode`,
 `work_type`, a specific `gate_mode_rationale`, planned paths, and behavior/API/
-data/dependency classification. Schema v1 is accepted only as the unchanged
-legacy full-contract format.
+data/dependency classification. Schema v1 is accepted only for a legacy contract
+whose exact file SHA-256 is registered in the current hash-verified Project
+Control `acceptance.json` under `legacy_task_contract_sha256`. Editing the file
+invalidates that registration; all new contracts use schema v2.
 
 ## Proportional modes
 

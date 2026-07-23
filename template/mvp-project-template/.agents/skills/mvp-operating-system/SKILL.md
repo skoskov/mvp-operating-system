@@ -29,6 +29,8 @@ product experiments, and any conditional scope use full mode. New contracts use
 schema v2 and require an independent preflight classification review. Define
 the observable product outcome and required proof. Full mode also defines the
 complete chain from input to independent verification and structured reuse risk.
+Schema v1 is accepted only for an unchanged legacy contract whose exact SHA-256
+is registered in the current hash-verified Project Control acceptance.
 Use
 `references/outcome-reuse-gate.md` and validate the JSON contract under `outputs/`
 with `bin/gate_check.py preflight`.

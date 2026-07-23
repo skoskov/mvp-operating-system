@@ -48,6 +48,8 @@ test work with internal/no behavior change, no public API/data/dependency change
 and every scope disabled. Features, integrations, external actions, product
 experiments, and any conditional scope require the full template. An independent
 reviewer validates classification and the evidence plan before preflight passes.
+Do not author schema v1 contracts. Schema v1 is accepted only when the exact
+legacy file SHA-256 is registered by the current Project Control acceptance.
 
 ## 6. Independent review
 
