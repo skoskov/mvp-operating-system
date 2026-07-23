@@ -1,0 +1,179 @@
+{
+  "decisions": [
+    {
+      "id": "MVPOS-ADR-001",
+      "status": "active",
+      "statement": "The MVP OS source repository self-hosts Project Control as its only startup authority.",
+      "source_events": [
+        "release:000002:ADR-001"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "MVPOS-ADR-002",
+      "status": "active",
+      "statement": "The source repository never self-syncs; downstream pull-request sync remains a separate distribution mechanism.",
+      "source_events": [
+        "release:000002:ADR-002"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "MVPOS-ADR-004",
+      "status": "active",
+      "statement": "Secret values are forbidden in every Project Control field, including command arguments, source-event references, and manifests.",
+      "source_events": [
+        "release:000002:ADR-004"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "MVPOS-ADR-005",
+      "status": "active",
+      "statement": "Custom implementation requires a validated Outcome-First and Reuse-First contract; final conditional evidence is machine-validated before READY.",
+      "source_events": [
+        "context:mvp-os-improvement-handoff:2026-07-21",
+        "context:mvp-os-v2.1-implement:2026-07-21"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "MVPOS-ADR-006",
+      "status": "active",
+      "statement": "Hermes is an optional non-authoritative runtime for connectors, schedules, local tasks, files, tools, and gateway lifecycle; it is not a mandatory LLM proxy.",
+      "source_events": [
+        "context:mvp-os-improvement-handoff:2026-07-21"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "MVPOS-ADR-007",
+      "status": "active",
+      "statement": "New Project Control releases catalog decision source events with sanitized durable references, timestamps, and content hashes while startup remains history-free.",
+      "source_events": [
+        "context:mvp-os-improvement-handoff:2026-07-21"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "MVPOS-ADR-009",
+      "status": "active",
+      "statement": "Task contracts use proportional short and full Outcome-First and Reuse-First modes; short mode is limited to bounded local work without conditional scope.",
+      "source_events": [
+        "decision:proportional-gate:2026-07-22"
+      ],
+      "supersedes": []
+    },
+    {
+      "id": "MVPOS-ADR-010",
+      "status": "active",
+      "statement": "MVP OS v2.1.1 becomes official only after merge to main, matching tag creation, successful verification, independent review, and push of both main and tag.",
+      "source_events": [
+        "contract:mvp-os-v2.1.1:2026-07-22"
+      ],
+      "supersedes": [
+        "MVPOS-ADR-008"
+      ]
+    },
+    {
+      "id": "MVPOS-ADR-012",
+      "status": "active",
+      "statement": "Schema v1 task contracts pass only when their exact file SHA-256 is registered in current hash-verified Project Control acceptance.",
+      "source_events": [
+        "decision:legacy-contract-hash-binding:2026-07-23"
+      ],
+      "supersedes": [
+        "MVPOS-ADR-011"
+      ]
+    }
+  ],
+  "source_event_catalog_version": 3,
+  "source_event_catalog": {
+    "release:000002:ADR-001": {
+      "reference": "project-control/releases/000002/decisions.json",
+      "reference_type": "local_file",
+      "captured_at": "2026-07-19T10:08:04+00:00",
+      "captured_content": "The MVP OS source repository self-hosts Project Control as its only startup authority.",
+      "content_sha256": "sha256:0c3a81ed086d13e1a82ae8ce011a116c2389fa5cf58482137c6c41076bc3b8e9",
+      "reference_content_sha256": "sha256:5c71338217b0f7e5d520442faf0d7d69ac1f7632c441b85330d70cfd0d16c875"
+    },
+    "release:000002:ADR-002": {
+      "reference": "project-control/releases/000002/decisions.json",
+      "reference_type": "local_file",
+      "captured_at": "2026-07-19T10:08:04+00:00",
+      "captured_content": "The source repository never self-syncs; downstream pull-request sync remains a separate distribution mechanism.",
+      "content_sha256": "sha256:f604fd1789235e1c1bf55785e255ff38fcf70a4c78fec02763b5d8613bc647a5",
+      "reference_content_sha256": "sha256:5c71338217b0f7e5d520442faf0d7d69ac1f7632c441b85330d70cfd0d16c875"
+    },
+    "release:000002:ADR-004": {
+      "reference": "project-control/releases/000002/decisions.json",
+      "reference_type": "local_file",
+      "captured_at": "2026-07-19T10:08:04+00:00",
+      "captured_content": "Secret values are forbidden in every Project Control field, including command arguments, source-event references, and manifests.",
+      "content_sha256": "sha256:99d2057077cf6d4c932284cfb6cb13602f6593f571cb2d050fbf4ef1cc7380fe",
+      "reference_content_sha256": "sha256:5c71338217b0f7e5d520442faf0d7d69ac1f7632c441b85330d70cfd0d16c875"
+    },
+    "context:mvp-os-improvement-handoff:2026-07-21": {
+      "reference": "https://github.com/skoskov/context/blob/5502cc9eb7b64591c06b732aed83eff8c84debb7/mvp-operating-system-context/08-message-log/2026-07-21-improvement-handoff.md",
+      "reference_type": "immutable_external",
+      "captured_at": "2026-07-21T00:00:00+05:00",
+      "captured_content": "изучи вот этот handoff там не только Hermes, но и прочие важные вещи\n/Users/skoskov/Documents/_DEV/crm-agent-mvp/outputs/mvp-os-improvement-handoff-2026-07-21.md",
+      "content_sha256": "sha256:7a9aa8511923c1f95c8b933b7db02bf66cc20f32be93aabc96b82816e9d09410",
+      "reference_content_sha256": "sha256:0ca19008f181082431c736bfda8654e9994ff811309b6b247d3e3576c14996cc",
+      "resolution": {
+        "method": "resolved_content_sha256",
+        "resolved_at": "2026-07-21T08:27:32+00:00",
+        "resolver": "git-context-commit:5502cc9eb7b64591c06b732aed83eff8c84debb7",
+        "commit": "5502cc9eb7b64591c06b732aed83eff8c84debb7",
+        "reference_content_sha256": "sha256:0ca19008f181082431c736bfda8654e9994ff811309b6b247d3e3576c14996cc"
+      }
+    },
+    "context:mvp-os-v2.1-implement:2026-07-21": {
+      "reference": "https://github.com/skoskov/context/blob/5502cc9eb7b64591c06b732aed83eff8c84debb7/mvp-operating-system-context/08-message-log/2026-07-21-release-v2.1.0.md",
+      "reference_type": "immutable_external",
+      "captured_at": "2026-07-21T00:00:00+05:00",
+      "captured_content": "окей давай Выпустить обратно совместимый MVP OS v2.1.0\nIMPLEMENT",
+      "content_sha256": "sha256:b2cb1c4fca8c63531b4002918f1e00734bccddb6d01e8aed76c273ce1b8f8fb6",
+      "reference_content_sha256": "sha256:e02464e41529c45502e583f08a9774f281d7fbfcfc2d113f1bcd5771294c4f74",
+      "resolution": {
+        "method": "resolved_content_sha256",
+        "resolved_at": "2026-07-21T08:27:32+00:00",
+        "resolver": "git-context-commit:5502cc9eb7b64591c06b732aed83eff8c84debb7",
+        "commit": "5502cc9eb7b64591c06b732aed83eff8c84debb7",
+        "reference_content_sha256": "sha256:e02464e41529c45502e583f08a9774f281d7fbfcfc2d113f1bcd5771294c4f74"
+      }
+    },
+    "decision:proportional-gate:2026-07-22": {
+      "reference": "project-control/releases/000009/decisions.json",
+      "reference_type": "local_file",
+      "captured_at": "2026-07-22T00:00:00+05:00",
+      "captured_content": "Task contracts use proportional short and full Outcome-First and Reuse-First modes; short mode is limited to bounded local work without conditional scope.",
+      "content_sha256": "sha256:bf5e3243f547c7f8658be365f7e0e222ff95597f3ac12fdab771857260d99cda",
+      "reference_content_sha256": "sha256:910ec32032d5f3e1ff68a5ccfd58953c1d735db2176ed522a13a760ee4905b86"
+    },
+    "contract:mvp-os-v2.1.1:2026-07-22": {
+      "reference": "project-control/releases/000009/goal.json",
+      "reference_type": "local_file",
+      "captured_at": "2026-07-22T00:00:00+05:00",
+      "captured_content": "Publish backward-compatible MVP OS v2.1.1 with proportional Outcome-First and Reuse-First contract modes.",
+      "content_sha256": "sha256:a111a981cf2d2ad64b5cf83abbd3fe6015026e63b831b6e14071ecba4f00850a",
+      "reference_content_sha256": "sha256:f41735e79b89903296a224711a2894ec8e79a649f41a8b773f73c46fba7457e5"
+    },
+    "decision:proportional-schema-v2:2026-07-22": {
+      "reference": "project-control/releases/000010/scope.json",
+      "reference_type": "local_file",
+      "captured_at": "2026-07-22T00:00:00+05:00",
+      "captured_content": "schema v2 classification and independent preflight review",
+      "content_sha256": "sha256:4bc1158f9da4946508d0e3cc95b20a49b0a9ef630efd8b53eab20530e8144c2e",
+      "reference_content_sha256": "sha256:c6b88158c033c101ac97d9bc5ef422a9dd02f7a924bac77db1d7bc337adb5656"
+    },
+    "decision:legacy-contract-hash-binding:2026-07-23": {
+      "reference": "project-control/releases/000011/acceptance.json",
+      "reference_type": "local_file",
+      "captured_at": "2026-07-23T00:00:00+05:00",
+      "captured_content": "schema v1 passes only when its exact file SHA-256 is registered in current hash-verified Project Control acceptance",
+      "content_sha256": "sha256:44de7f62f5942ec088b46c8ee417ff3ca9dcac78ee0b602b074017df7f98cd1b",
+      "reference_content_sha256": "sha256:6726daaa396c4f44d61e83b43bf8d823e039a9e77d544d3715ab9ee84957239f"
+    }
+  }
+}

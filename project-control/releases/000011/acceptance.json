@@ -1,0 +1,24 @@
+{
+  "gates": [
+    "root and template Project Control validate, bootstrap, and doctor pass",
+    "bootstrap reports LEGACY_STARTUP_READS: 0",
+    "proportional Outcome-First and Reuse-First full preflight passes",
+    "short mode is limited to bounded local work without conditional scope",
+    "features, integrations, external actions, and product experiments require full mode",
+    "schema v1 passes only when its exact file SHA-256 is registered in current hash-verified Project Control acceptance",
+    "new contracts use schema v2 with planned-path and behavior/API/data/dependency classification",
+    "typed independent preflight review passes before implementation",
+    "custom code requires every reuse candidate to be reused or rejected",
+    "positive and negative fixtures prove conditional gate enforcement",
+    "canonical and template skill trees are byte-identical",
+    "Hermes remains optional and non-authoritative",
+    "decision source events resolve through the hashed catalog",
+    "both reviews explicitly pass outcome, component-substitution, reuse, evidence, end-to-end, and cost-scale checks",
+    "clean-context reviewer names the v2.1.1 architecture, exclusions, commands, and next step without legacy reads",
+    "implementation review has no unresolved findings",
+    "source lock reports published with release v2.1.1 only after verification on main",
+    "tag v2.1.1 resolves to the verified release commit",
+    "main and tag v2.1.1 are pushed"
+  ],
+  "legacy_task_contract_sha256": []
+}

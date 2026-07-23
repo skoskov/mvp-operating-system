@@ -1,0 +1,71 @@
+{
+  "commands": [
+    {
+      "id": "bootstrap",
+      "argv": [
+        "python3",
+        "skill/mvp-operating-system/bin/project_control.py",
+        "bootstrap",
+        "--project-root",
+        "."
+      ],
+      "side_effect": "read_only",
+      "required": true
+    },
+    {
+      "id": "validate",
+      "argv": [
+        "python3",
+        "skill/mvp-operating-system/bin/project_control.py",
+        "validate",
+        "--project-root",
+        "."
+      ],
+      "side_effect": "read_only",
+      "required": true
+    },
+    {
+      "id": "doctor",
+      "argv": [
+        "python3",
+        "skill/mvp-operating-system/bin/project_control.py",
+        "doctor",
+        "--project-root",
+        "."
+      ],
+      "side_effect": "read_only",
+      "required": true
+    },
+    {
+      "id": "verify",
+      "argv": [
+        "python3",
+        "scripts/verify.py"
+      ],
+      "side_effect": "read_only",
+      "required": true
+    },
+    {
+      "id": "gate_preflight",
+      "argv": [
+        "python3",
+        "skill/mvp-operating-system/bin/gate_check.py",
+        "preflight",
+        "outputs/mvp-os-v2.1.1-task-contract.json"
+      ],
+      "side_effect": "read_only",
+      "required": true
+    },
+    {
+      "id": "gate_acceptance",
+      "argv": [
+        "python3",
+        "skill/mvp-operating-system/bin/gate_check.py",
+        "acceptance",
+        "outputs/mvp-os-v2.1.1-task-contract.json"
+      ],
+      "side_effect": "read_only",
+      "required": true
+    }
+  ]
+}
