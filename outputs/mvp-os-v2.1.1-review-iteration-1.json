@@ -24,6 +24,11 @@
       "id": "incorrect-project-control-source-sha",
       "status": "addressed_pending_rereview",
       "summary": "Project Control 000011 used an abbreviated SHA expanded incorrectly instead of the actual Git object."
+    },
+    {
+      "id": "canonical-skill-planned-path",
+      "status": "addressed_pending_rereview",
+      "summary": "The candidate contract omitted the changed canonical SKILL.md path."
     }
   ]
 }
